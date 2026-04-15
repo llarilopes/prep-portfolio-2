@@ -1,188 +1,478 @@
+estou construindo um controle de projetos no git.
+já tenho o código abaixo, mas preciso inserir mais umas funcionalidades: Toda vez que eu inserir a data de início da Sprint e a duração em um determinado campo, preciso que o sistema já sugira quais devem ser as datas de review, retro e nova planning.
+
+Além disso, tenho alguns contorles internos a fazer como descreve a minha chefe nos chats para os líderes:
+
+OBS: CP = COntrole de Projetos
+SGR = Sistema de Gerenciamento de Requisitos
+Cliente 360 = Onde o cliente acompanha o andamento dos projetos no geral, relatórios, requisitos, chamaos etc.
+
+'''
+Bom diaaa, meus líderes maravilhosos! Tudo bem com vocês?
+Queria alinhar um ponto importante nas esteiras de desenvolvimento e requisitos. Sei que vocês vêm evoluindo na organização dos planejamentos, mas ainda temos algumas quebras de fluxo que precisamos ajustar. Ainda temos planejamento de desenvolvimento sendo enviado por e-mail para os clientes sem o devido registro no CP. Quanto aos requisitos, já temos analistas que enviaram o planejamento, mas ele ainda não foi inserido no CP, assim como há casos em que o planejamento do mês ainda nem foi enviado e já estamos na metade do mês.
+E aqui entra o papel de vocês como líderes: garantir que o fluxo aconteça de ponta a ponta. E-mail e CP não são etapas separadas, são partes da mesma atividade. Se não está no CP, o processo não está completo.
+Usem o relatório no CP, deixei o print abaixo com o caminho de acesso pra facilitar. Ele vai ajudar a identificar esses pontos e direcionar os ajustes.
+Sobre o planejamento de requisitos, tem um ponto importante: o planejamento que o analista envia não é só para registro, é um insumo de gestão. A ideia não é que voces substituam o analista na conversa com o cliente, mas usar esse momento pra olhar o planejamento, provocar, alinhar e, se necessário, direcionar junto com nossos analistas.
+O requisito é responsabilidade do analista, mas a visão do líder complementa e fortalece, trazendo mais clareza, priorização e segurança na condução.
+Alinhem também com os analistas o envio desse planejamento até o 5º dia útil, pra dar tempo desse alinhamento acontecer.
+No final, é isso que sustenta nossa previsibilidade: o que a gente desenvolve começa nesse planejamento e ele precisa estar refletido no CP.
+Conto com vocês, pessoal 
+'''
+
+'''
+Bom diaaa, Wakanda! Tudo bem com vocês?
+Queria compartilhar um ponto com vocês que, pra mim, faz muita diferença na forma como a gente se posiciona como fábrica.
+Tenho visto o cuidado de vocês no acompanhamento dos projetos, e isso faz muita diferença no dia a dia. Justamente por isso, queria trazer um ajuste pra gente evoluir ainda mais.
+No dia a dia, algumas coisas vão acontecendo e, às vezes, o fluxo das cerimônias acaba não se fechando completamente, seja o envio do planejamento após a planning, o e-mail de entrega após a review/retro ou até a cadência das dailies.
+E trago isso aqui porque eu vejo em vocês um papel muito importante nisso.
+Mais do que validar funcionalidade, vocês são nossos guardiões do processo. São quem acompanha o ciclo de ponta a ponta e conseguem perceber quando algo não está fechando como deveria.
+As cerimônias fazem parte de um ciclo (planning, daily, review, retro) e quando esse ciclo está redondo, tudo flui melhor. Então vale sempre esse olhar:
+teve planning → planejamento enviado no mesmo dia
+sprint rodando → daily acontecendo todos os dias
+teve review → e-mail de entrega enviado no mesmo dia
+na sequência → a retro deve acontecer o mais rápido possível
+Sempre que enxergarem algum ponto fora desse fluxo, vale alinhar com o líder, questionar e ajudar a ajustar. Esse olhar de vocês faz muita diferença no dia a dia dos projetos. É isso que mantém o padrão de Wakanda: organização, previsibilidade e entrega com qualidade. Sei que vocês têm um olhar muito forte pra isso e podem nos ajudar bastante. Conto com vocês 
+'''
+
+Também quero um espaço para inserir a transcrição das dailies dos projetos com sprint.
+
+Código atual: https://llarilopes.github.io/prep-portfolio/
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Projetos</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prep de Portfólio — Sexta-feira</title>
 <style>
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f5f3;
-  color: #1a1a18;
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; padding: 2rem 1rem; max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
 
-h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
+  /* NAV */
+  .nav { display: flex; gap: 6px; margin-bottom: 1.75rem; border-bottom: 1px solid #e0e0da; padding-bottom: 1rem; flex-wrap: wrap; }
+  .nav-btn { padding: 7px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #e0e0da; background: transparent; font-family: inherit; color: #888; transition: all 0.15s; }
+  .nav-btn.active { background: #1a1a18; color: #f5f5f3; border-color: #1a1a18; font-weight: 500; }
 
-.card {
-  background: #fff;
-  border: 1px solid #e0e0da;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
+  /* TABS */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .tab-btn { padding: 6px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid; background: transparent; font-family: inherit; transition: all 0.15s; }
+  .tab-btn.sprint      { color: #0F6E56; border-color: #0F6E56; }
+  .tab-btn.sustentacao { color: #185FA5; border-color: #185FA5; }
+  .tab-btn.inicial     { color: #854F0B; border-color: #854F0B; }
+  .tab-btn.pausado     { color: #5F5E5A; border-color: #5F5E5A; }
+  .tab-btn.sprint.active      { background: #E1F5EE; font-weight: 500; }
+  .tab-btn.sustentacao.active { background: #E6F1FB; font-weight: 500; }
+  .tab-btn.inicial.active     { background: #FAEEDA; font-weight: 500; }
+  .tab-btn.pausado.active     { background: #F1EFE8; font-weight: 500; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-label {
-  font-size: 12px;
-  color: #666;
-}
+  /* CARDS FORMULÁRIO */
+  .project-card { background: #fff; border: 0.5px solid #e0e0da; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .project-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; }
+  .project-client { font-size: 12px; color: #888; margin-left: 8px; font-weight: 400; }
+  .field { margin-bottom: 10px; }
+  .field label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+  .field textarea { width: 100%; resize: vertical; font-size: 13px; padding: 6px 10px; border-radius: 8px; border: 0.5px solid #e0e0da; background: #f5f5f3; color: #1a1a18; font-family: inherit; line-height: 1.5; }
+  .field textarea:focus { outline: none; border-color: #aaa; background: #fff; }
 
-textarea, input {
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
+  /* STATUS SELECTOR */
+  .status-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .status-opt { padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 0.5px solid #e0e0da; background: transparent; font-family: inherit; color: #888; }
+  .status-opt.sel-verde   { background: #E1F5EE; color: #0F6E56; border-color: #0F6E56; font-weight: 500; }
+  .status-opt.sel-amarelo { background: #FAEEDA; color: #854F0B; border-color: #854F0B; font-weight: 500; }
+  .status-opt.sel-vermelho{ background: #FDE8E8; color: #9B1C1C; border-color: #C81E1E; font-weight: 500; }
+  .status-opt.sel-cinza   { background: #F1EFE8; color: #5F5E5A; border-color: #5F5E5A; font-weight: 500; }
 
-textarea {
-  resize: vertical;
-}
+  /* AÇÕES */
+  .actions { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; }
+  .btn-primary { flex: 1; min-width: 200px; padding: 10px 16px; border-radius: 8px; border: 0.5px solid #ccc; background: #fff; color: #1a1a18; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500; transition: all 0.2s; }
+  .btn-primary.success { background: #E1F5EE; color: #0F6E56; border-color: #0F6E56; }
+  .btn-secondary { padding: 10px 16px; border-radius: 8px; border: 0.5px solid #e0e0da; background: transparent; color: #888; font-size: 13px; cursor: pointer; font-family: inherit; }
 
-.checklist label {
-  display: block;
-  font-size: 13px;
-}
+  /* RELATÓRIO */
+  .report-section { margin-bottom: 2rem; }
+  .report-section h2 { font-size: 14px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
+  .report-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .report-card { background: #fff; border: 0.5px solid #e0e0da; border-radius: 12px; padding: 1rem 1.25rem; position: relative; overflow: hidden; }
+  .report-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 12px 0 0 12px; }
+  .report-card.verde::before   { background: #0F6E56; }
+  .report-card.amarelo::before { background: #C57A00; }
+  .report-card.vermelho::before{ background: #C81E1E; }
+  .report-card.cinza::before   { background: #9E9D97; }
+  .report-card .rc-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .report-card .rc-client { font-size: 11px; color: #888; margin-bottom: 10px; }
+  .report-card .rc-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; margin-bottom: 10px; }
+  .badge-verde    { background: #E1F5EE; color: #0F6E56; }
+  .badge-amarelo  { background: #FAEEDA; color: #854F0B; }
+  .badge-vermelho { background: #FDE8E8; color: #9B1C1C; }
+  .badge-cinza    { background: #F1EFE8; color: #5F5E5A; }
+  .rc-row { margin-bottom: 6px; }
+  .rc-label { font-size: 11px; color: #888; margin-bottom: 2px; }
+  .rc-value { font-size: 13px; color: #1a1a18; line-height: 1.4; }
+  .rc-empty { font-size: 12px; color: #bbb; font-style: italic; }
+  .report-actions { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .mode-btn { padding: 7px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #e0e0da; background: transparent; font-family: inherit; color: #888; }
+  .mode-btn.active { background: #1a1a18; color: #f5f5f3; border-color: #1a1a18; font-weight: 500; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a18; color: #f0efe8; }
+    .project-card, .report-card, .btn-primary { background: #232321; border-color: #333; }
+    .field textarea { background: #2c2c2a; border-color: #444; color: #f0efe8; }
+    .field textarea:focus { background: #333; border-color: #666; }
+    .nav-btn.active { background: #f0efe8; color: #1a1a18; border-color: #f0efe8; }
+    .mode-btn.active { background: #f0efe8; color: #1a1a18; border-color: #f0efe8; }
+    .rc-value { color: #f0efe8; }
+    .btn-primary { color: #f0efe8; }
+    .btn-primary.success { background: #085041; color: #9FE1CB; border-color: #1D9E75; }
+  }
 </style>
 </head>
-
 <body>
 
-<h1>Controle de Projetos — Sprint</h1>
+<h1 id="page-title">Prep de portfólio — sexta-feira</h1>
+<p class="subtitle" id="page-sub">Preencha antes da reunião. Os dados são salvos automaticamente.</p>
 
-<div class="card">
-  <h3>Sempre Nova</h3>
+<!-- NAV PRINCIPAL -->
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('prep')">✏️ Preencher</button>
+  <button class="nav-btn" onclick="showPage('relatorio')">📋 Relatório</button>
+</div>
 
-  <label>Início da Sprint</label>
-  <input type="date" data-id="sempre_nova_inicio">
-
-  <label>Duração (dias)</label>
-  <input type="number" data-id="sempre_nova_duracao">
-
-  <label>Cerimônias</label>
-  <textarea data-id="sempre_nova_datas" readonly></textarea>
-
-  <label>Status</label>
-  <textarea data-id="sempre_nova_status"></textarea>
-
-  <div class="checklist">
-    <label><input type="checkbox" data-id="sempre_nova_planning_ok"> Planning</label>
-    <label><input type="checkbox" data-id="sempre_nova_planning_enviada"> Planning enviada</label>
-    <label><input type="checkbox" data-id="sempre_nova_cp"> No CP</label>
-    <label><input type="checkbox" data-id="sempre_nova_daily"> Dailies</label>
-    <label><input type="checkbox" data-id="sempre_nova_review"> Review</label>
-    <label><input type="checkbox" data-id="sempre_nova_entrega"> Entrega</label>
-    <label><input type="checkbox" data-id="sempre_nova_retro"> Retro</label>
+<!-- ===================== PÁGINA: PREENCHER ===================== -->
+<div id="page-prep">
+  <div class="tabs">
+    <button class="tab-btn sprint active" onclick="switchTab('sprint')">Sprint ativo</button>
+    <button class="tab-btn sustentacao" onclick="switchTab('sustentacao')">Sustentação</button>
+    <button class="tab-btn inicial" onclick="switchTab('inicial')">Inicial</button>
+    <button class="tab-btn pausado" onclick="switchTab('pausado')">Pausado</button>
   </div>
 
-  <label>Dailies</label>
-  <textarea data-id="sempre_nova_dailies"></textarea>
+  <!-- Sprint -->
+  <div id="tab-sprint" class="tab-panel active">
+    <div class="project-card">
+      <div class="project-title">Sempre Nova <span class="project-client">SEDU-ES</span></div>
+      <div class="status-row" data-status="sempre_nova"></div>
+      <div class="field"><label>Status da sprint</label><textarea rows="2" data-id="sempre_nova_status" placeholder="Ex: Sprint 1.5 em andamento, 8/13 USs concluídas"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="sempre_nova_proximos"></textarea></div>
+      <div class="field"><label>Riscos</label><textarea rows="2" data-id="sempre_nova_riscos"></textarea></div>
+      <div class="field"><label>Bloqueios</label><textarea rows="2" data-id="sempre_nova_bloqueios"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="sempre_nova_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">SIGEST</div>
+      <div class="status-row" data-status="sigest"></div>
+      <div class="field"><label>Status da sprint</label><textarea rows="2" data-id="sigest_status"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="sigest_proximos"></textarea></div>
+      <div class="field"><label>Riscos</label><textarea rows="2" data-id="sigest_riscos"></textarea></div>
+      <div class="field"><label>Bloqueios</label><textarea rows="2" data-id="sigest_bloqueios"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="sigest_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">SGTER</div>
+      <div class="status-row" data-status="sgter"></div>
+      <div class="field"><label>Status da sprint</label><textarea rows="2" data-id="sgter_status"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="sgter_proximos"></textarea></div>
+      <div class="field"><label>Riscos</label><textarea rows="2" data-id="sgter_riscos"></textarea></div>
+      <div class="field"><label>Bloqueios</label><textarea rows="2" data-id="sgter_bloqueios"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="sgter_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">SGF</div>
+      <div class="status-row" data-status="sgf"></div>
+      <div class="field"><label>Status da sprint</label><textarea rows="2" data-id="sgf_status"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="sgf_proximos"></textarea></div>
+      <div class="field"><label>Riscos</label><textarea rows="2" data-id="sgf_riscos"></textarea></div>
+      <div class="field"><label>Bloqueios</label><textarea rows="2" data-id="sgf_bloqueios"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="sgf_obs"></textarea></div>
+    </div>
+  </div>
 
-  <label>Alertas</label>
-  <textarea data-id="sempre_nova_alertas" readonly></textarea>
+  <!-- Sustentação -->
+  <div id="tab-sustentacao" class="tab-panel">
+    <div class="project-card">
+      <div class="project-title">Alimentação</div>
+      <div class="status-row" data-status="alimentacao"></div>
+      <div class="field"><label>Volume de tickets</label><textarea rows="2" data-id="alimentacao_tickets"></textarea></div>
+      <div class="field"><label>Em andamento</label><textarea rows="2" data-id="alimentacao_andamento"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="alimentacao_proximos"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="alimentacao_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">E-Gestão</div>
+      <div class="status-row" data-status="egestao"></div>
+      <div class="field"><label>Volume de tickets</label><textarea rows="2" data-id="egestao_tickets"></textarea></div>
+      <div class="field"><label>Em andamento</label><textarea rows="2" data-id="egestao_andamento"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="egestao_proximos"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="egestao_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">Questões</div>
+      <div class="status-row" data-status="questoes"></div>
+      <div class="field"><label>Volume de tickets</label><textarea rows="2" data-id="questoes_tickets"></textarea></div>
+      <div class="field"><label>Em andamento</label><textarea rows="2" data-id="questoes_andamento"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="questoes_proximos"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="questoes_obs"></textarea></div>
+    </div>
+  </div>
 
+  <!-- Inicial -->
+  <div id="tab-inicial" class="tab-panel">
+    <div class="project-card">
+      <div class="project-title">SISPC</div>
+      <div class="status-row" data-status="sispc"></div>
+      <div class="field"><label>Etapa atual</label><textarea rows="2" data-id="sispc_etapa"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="sispc_proximos"></textarea></div>
+      <div class="field"><label>Dependências</label><textarea rows="2" data-id="sispc_dependencias"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="sispc_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">Alimentação – Agricultura Familiar</div>
+      <div class="status-row" data-status="alim_af"></div>
+      <div class="field"><label>Etapa atual</label><textarea rows="2" data-id="alim_af_etapa"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="alim_af_proximos"></textarea></div>
+      <div class="field"><label>Dependências</label><textarea rows="2" data-id="alim_af_dependencias"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="alim_af_obs"></textarea></div>
+    </div>
+    <div class="project-card">
+      <div class="project-title">PES</div>
+      <div class="status-row" data-status="pes"></div>
+      <div class="field"><label>Etapa atual</label><textarea rows="2" data-id="pes_etapa"></textarea></div>
+      <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="pes_proximos"></textarea></div>
+      <div class="field"><label>Dependências</label><textarea rows="2" data-id="pes_dependencias"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="pes_obs"></textarea></div>
+    </div>
+  </div>
+
+  <!-- Pausado -->
+  <div id="tab-pausado" class="tab-panel">
+    <div class="project-card">
+      <div class="project-title">PGP/SIPD</div>
+      <div class="status-row" data-status="pgp"></div>
+      <div class="field"><label>Motivo da pausa</label><textarea rows="2" data-id="pgp_motivo"></textarea></div>
+      <div class="field"><label>Previsão de retomada</label><textarea rows="2" data-id="pgp_retomada"></textarea></div>
+      <div class="field"><label>Observações</label><textarea rows="2" data-id="pgp_obs"></textarea></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" id="btnCopy" onclick="copyMarkdown()">Copiar tudo para Notion (Markdown)</button>
+    <button class="btn-secondary" onclick="clearTab()">Limpar aba atual</button>
+  </div>
+</div>
+
+<!-- ===================== PÁGINA: RELATÓRIO ===================== -->
+<div id="page-relatorio" style="display:none">
+  <div class="report-actions">
+    <button class="mode-btn active" id="modeInterno" onclick="setMode('interno')">🔒 Interno</button>
+    <button class="mode-btn" id="modeCliente" onclick="setMode('cliente')">📤 Cliente</button>
+    <button class="btn-primary" id="btnCopyReport" onclick="copyReport()" style="flex:1;min-width:160px">Copiar relatório</button>
+  </div>
+  <div id="report-content"></div>
 </div>
 
 <script>
+const STORAGE_KEY = "prep_portfolio_v1";
+let activeTab = "sprint";
+let reportMode = "interno";
 
-const STORAGE_KEY = "controle_projetos_v3";
+const STATUS_OPTS = [
+  { key: "verde",    label: "✅ No prazo" },
+  { key: "amarelo",  label: "⚠️ Atenção" },
+  { key: "vermelho", label: "🔴 Em risco" },
+  { key: "cinza",    label: "⏸ Pausado" },
+];
 
-function load() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+const PROJECTS_META = {
+  sprint: [
+    { id: "sempre_nova", name: "Sempre Nova", client: "SEDU-ES",
+      fields_interno: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"},{k:"riscos",l:"Riscos"},{k:"bloqueios",l:"Bloqueios"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "sigest", name: "SIGEST", client: "",
+      fields_interno: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"},{k:"riscos",l:"Riscos"},{k:"bloqueios",l:"Bloqueios"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "sgter", name: "SGTER", client: "",
+      fields_interno: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"},{k:"riscos",l:"Riscos"},{k:"bloqueios",l:"Bloqueios"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "sgf", name: "SGF", client: "",
+      fields_interno: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"},{k:"riscos",l:"Riscos"},{k:"bloqueios",l:"Bloqueios"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"}] },
+  ],
+  sustentacao: [
+    { id: "alimentacao", name: "Alimentação", client: "",
+      fields_interno: [{k:"tickets",l:"Tickets"},{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "egestao", name: "E-Gestão", client: "",
+      fields_interno: [{k:"tickets",l:"Tickets"},{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "questoes", name: "Questões", client: "",
+      fields_interno: [{k:"tickets",l:"Tickets"},{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"}] },
+  ],
+  inicial: [
+    { id: "sispc", name: "SISPC", client: "",
+      fields_interno: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"},{k:"dependencias",l:"Dependências"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "alim_af", name: "Alimentação – Agric. Familiar", client: "",
+      fields_interno: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"},{k:"dependencias",l:"Dependências"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"}] },
+    { id: "pes", name: "PES", client: "",
+      fields_interno: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"},{k:"dependencias",l:"Dependências"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"}] },
+  ],
+  pausado: [
+    { id: "pgp", name: "PGP/SIPD", client: "",
+      fields_interno: [{k:"motivo",l:"Motivo"},{k:"retomada",l:"Previsão de retomada"},{k:"obs",l:"Obs."}],
+      fields_cliente: [{k:"retomada",l:"Previsão de retomada"}] },
+  ],
+};
+
+const TAB_LABELS = { sprint: "Sprint ativo", sustentacao: "Sustentação", inicial: "Inicial", pausado: "Pausado" };
+const STATUS_LABELS = { verde: "No prazo", amarelo: "Atenção", vermelho: "Em risco", cinza: "Pausado", "": "—" };
+
+function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+function save(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch {} }
+
+function buildStatusRow(el) {
+  const pid = el.dataset.status;
+  const d = load();
+  const cur = d["status_" + pid] || "";
+  el.innerHTML = STATUS_OPTS.map(o =>
+    `<button class="status-opt${cur===o.key?" sel-"+o.key:""}" onclick="setStatus('${pid}','${o.key}')">${o.label}</button>`
+  ).join("");
 }
 
-function save(d) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-}
-
-function calcularDatas(inicio, duracao) {
-  if (!inicio || !duracao) return "";
-
-  let start = new Date(inicio);
-
-  let review = new Date(start);
-  review.setDate(start.getDate() + duracao - 1);
-
-  let retro = new Date(review);
-  retro.setDate(review.getDate() + 1);
-
-  let planning = new Date(retro);
-
-  return `Review: ${review.toLocaleDateString()} | Retro: ${retro.toLocaleDateString()} | Planning: ${planning.toLocaleDateString()}`;
-}
-
-function validar(id) {
-  let d = load();
-  let a = [];
-
-  if (!d[id+"_planning_ok"]) a.push("⚠️ Sem planning");
-  if (!d[id+"_planning_enviada"]) a.push("⚠️ Não enviada");
-  if (!d[id+"_cp"]) a.push("⚠️ Fora do CP");
-  if (!d[id+"_daily"]) a.push("⚠️ Sem daily");
-  if (!d[id+"_review"]) a.push("⚠️ Sem review");
-  if (d[id+"_review"] && !d[id+"_entrega"]) a.push("⚠️ Sem entrega");
-  if (d[id+"_review"] && !d[id+"_retro"]) a.push("⚠️ Sem retro");
-
-  return a.join(" | ");
-}
-
-function atualizar() {
-  let d = load();
-
-  let inicio = d["sempre_nova_inicio"];
-  let duracao = Number(d["sempre_nova_duracao"]);
-
-  let datas = calcularDatas(inicio, duracao);
-  document.querySelector('[data-id="sempre_nova_datas"]').value = datas;
-  d["sempre_nova_datas"] = datas;
-
-  let alertas = validar("sempre_nova");
-  document.querySelector('[data-id="sempre_nova_alertas"]').value = alertas;
-  d["sempre_nova_alertas"] = alertas;
-
-  save(d);
+function setStatus(pid, val) {
+  const d = load(); d["status_" + pid] = val; save(d);
+  document.querySelectorAll(`.status-row[data-status="${pid}"]`).forEach(buildStatusRow);
 }
 
 function init() {
-  let d = load();
-
-  document.querySelectorAll("[data-id]").forEach(el => {
-
-    if (el.type === "checkbox") {
-      el.checked = d[el.dataset.id] || false;
-
-      el.addEventListener("change", () => {
-        let dd = load();
-        dd[el.dataset.id] = el.checked;
-        save(dd);
-        atualizar();
-      });
-
-    } else {
-      el.value = d[el.dataset.id] || "";
-
-      el.addEventListener("input", () => {
-        let dd = load();
-        dd[el.dataset.id] = el.value;
-        save(dd);
-        atualizar();
-      });
-    }
+  const d = load();
+  document.querySelectorAll("textarea[data-id]").forEach(el => {
+    if (d[el.dataset.id]) el.value = d[el.dataset.id];
+    el.addEventListener("input", () => { const dd = load(); dd[el.dataset.id] = el.value; save(dd); });
   });
+  document.querySelectorAll(".status-row[data-status]").forEach(buildStatusRow);
+}
 
-  atualizar();
+function showPage(page) {
+  document.getElementById("page-prep").style.display = page === "prep" ? "" : "none";
+  document.getElementById("page-relatorio").style.display = page === "relatorio" ? "" : "none";
+  document.querySelectorAll(".nav-btn").forEach((b, i) => b.classList.toggle("active", (i===0&&page==="prep")||(i===1&&page==="relatorio")));
+  if (page === "relatorio") renderReport();
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  document.querySelector(".tab-btn." + tab).classList.add("active");
+}
+
+function clearTab() {
+  const d = load();
+  document.querySelectorAll("#tab-" + activeTab + " textarea[data-id]").forEach(el => { el.value = ""; delete d[el.dataset.id]; });
+  save(d);
+}
+
+function setMode(m) {
+  reportMode = m;
+  document.getElementById("modeInterno").classList.toggle("active", m==="interno");
+  document.getElementById("modeCliente").classList.toggle("active", m==="cliente");
+  renderReport();
+}
+
+function renderReport() {
+  const d = load();
+  const today = new Date().toLocaleDateString("pt-BR", {weekday:"long", day:"2-digit", month:"long", year:"numeric"});
+  let html = `<p style="font-size:13px;color:#888;margin-bottom:1.5rem">${reportMode==="interno"?"Visão interna — inclui riscos, bloqueios e observações":"Visão cliente — status e próximos passos"} · ${today}</p>`;
+
+  for (const [tabKey, projs] of Object.entries(PROJECTS_META)) {
+    html += `<div class="report-section"><h2>${TAB_LABELS[tabKey]}</h2><div class="report-grid">`;
+    for (const proj of projs) {
+      const st = d["status_" + proj.id] || "";
+      const stClass = st || "cinza";
+      const stLabel = STATUS_LABELS[st] || "—";
+      const fields = reportMode === "interno" ? proj.fields_interno : proj.fields_cliente;
+      const badgeClass = "badge-" + (st || "cinza");
+      html += `<div class="report-card ${stClass}">
+        <div class="rc-name">${proj.name}</div>
+        ${proj.client ? `<div class="rc-client">${proj.client}</div>` : ""}
+        <span class="rc-badge ${badgeClass}">${stLabel}</span>`;
+      for (const f of fields) {
+        const val = (d[proj.id + "_" + f.k] || "").trim();
+        if (val) {
+          html += `<div class="rc-row"><div class="rc-label">${f.l}</div><div class="rc-value">${val.replace(/\n/g,"<br>")}</div></div>`;
+        }
+      }
+      const hasContent = fields.some(f => (d[proj.id + "_" + f.k] || "").trim());
+      if (!hasContent) html += `<div class="rc-empty">Nenhuma informação preenchida</div>`;
+      html += `</div>`;
+    }
+    html += `</div></div>`;
+  }
+  document.getElementById("report-content").innerHTML = html;
+}
+
+function copyReport() {
+  const d = load();
+  const today = new Date().toLocaleDateString("pt-BR");
+  const label = reportMode === "interno" ? "Interno" : "Cliente";
+  let md = `# Relatório de Portfólio — ${today} (${label})\n\n`;
+
+  for (const [tabKey, projs] of Object.entries(PROJECTS_META)) {
+    md += `## ${TAB_LABELS[tabKey]}\n\n`;
+    for (const proj of projs) {
+      const st = d["status_" + proj.id] || "";
+      const fields = reportMode === "interno" ? proj.fields_interno : proj.fields_cliente;
+      md += `### ${proj.name}${proj.client ? " (" + proj.client + ")" : ""}\n`;
+      md += `**Status:** ${STATUS_LABELS[st] || "—"}\n`;
+      for (const f of fields) {
+        const val = (d[proj.id + "_" + f.k] || "").trim();
+        if (val) md += `**${f.l}:** ${val}\n`;
+      }
+      md += "\n";
+    }
+  }
+
+  navigator.clipboard.writeText(md).then(() => {
+    const btn = document.getElementById("btnCopyReport");
+    btn.textContent = "Copiado!";
+    btn.classList.add("success");
+    setTimeout(() => { btn.textContent = "Copiar relatório"; btn.classList.remove("success"); }, 2500);
+  });
+}
+
+function copyMarkdown() {
+  const d = load();
+  const today = new Date().toLocaleDateString("pt-BR");
+  let md = `# Prep de Portfólio — ${today}\n\n`;
+  for (const [tabKey, projs] of Object.entries(PROJECTS_META)) {
+    md += `## ${TAB_LABELS[tabKey]}\n\n`;
+    for (const proj of projs) {
+      md += `### ${proj.name}${proj.client?" ("+proj.client+")":""}\n`;
+      for (const f of proj.fields_interno) {
+        const val = (d[proj.id+"_"+f.k]||"").trim();
+        if (val) md += `**${f.l}:** ${val}\n`;
+      }
+      md += "\n";
+    }
+  }
+  navigator.clipboard.writeText(md).then(() => {
+    const btn = document.getElementById("btnCopy");
+    btn.textContent = "Copiado!";
+    btn.classList.add("success");
+    setTimeout(() => { btn.textContent = "Copiar tudo para Notion (Markdown)"; btn.classList.remove("success"); }, 2500);
+  });
 }
 
 init();
-
 </script>
-
 </body>
 </html>
+
+Antes de gerar me confirme se entendeu.
