@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Projetos</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+textarea, input {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Controle de Projetos - Sprint</h2>
+
+<div class="card">
+  <h3>Sempre Nova</h3>
+
+  <label>Início da Sprint</label>
+  <input type="date" data-id="sempre_nova_inicio">
+
+  <label>Duração (dias)</label>
+  <input type="number" data-id="sempre_nova_duracao">
+
+  <label>Cerimônias</label>
+  <textarea data-id="sempre_nova_datas" readonly></textarea>
+
+  <label>Status</label>
+  <textarea data-id="sempre_nova_status"></textarea>
+
+  <label>Checklist</label><br>
+  <input type="checkbox" data-id="sempre_nova_planning_ok"> Planning<br>
+  <input type="checkbox" data-id="sempre_nova_planning_enviada"> Planning enviada<br>
+  <input type="checkbox" data-id="sempre_nova_cp"> No CP<br>
+  <input type="checkbox" data-id="sempre_nova_daily"> Daily<br>
+  <input type="checkbox" data-id="sempre_nova_review"> Review<br>
+  <input type="checkbox" data-id="sempre_nova_entrega"> Entrega<br>
+  <input type="checkbox" data-id="sempre_nova_retro"> Retro<br>
+
+  <label>Dailies</label>
+  <textarea data-id="sempre_nova_dailies"></textarea>
+
+  <label>Alertas</label>
+  <textarea data-id="sempre_nova_alertas" readonly></textarea>
+</div>
+
+<script>
+
+const STORAGE_KEY = "controle_projetos";
+
+function load() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+}
+
+function save(d) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+}
+
+function calcularDatas(inicio, duracao) {
+  if (!inicio || !duracao) return "";
+
+  let start = new Date(inicio);
+
+  let review = new Date(start);
+  review.setDate(start.getDate() + duracao - 1);
+
+  let retro = new Date(review);
+  retro.setDate(review.getDate() + 1);
+
+  let planning = new Date(retro);
+
+  return `Review: ${review.toLocaleDateString()} | Retro: ${retro.toLocaleDateString()} | Planning: ${planning.toLocaleDateString()}`;
+}
+
+function validar(id) {
+  let d = load();
+  let a = [];
+
+  if (!d[id+"_planning_ok"]) a.push("Sem planning");
+  if (!d[id+"_planning_enviada"]) a.push("Planning não enviada");
+  if (!d[id+"_cp"]) a.push("Fora do CP");
+  if (!d[id+"_daily"]) a.push("Sem daily");
+  if (!d[id+"_review"]) a.push("Sem review");
+  if (d[id+"_review"] && !d[id+"_entrega"]) a.push("Sem entrega");
+  if (d[id+"_review"] && !d[id+"_retro"]) a.push("Sem retro");
+
+  return a.join(" | ");
+}
+
+function init() {
+  let d = load();
+
+  document.querySelectorAll("[data-id]").forEach(el => {
+
+    if (el.type === "checkbox") {
+      el.checked = d[el.dataset.id] || false;
+
+      el.addEventListener("change", () => {
+        let dd = load();
+        dd[el.dataset.id] = el.checked;
+        save(dd);
+        atualizar();
+      });
+
+    } else {
+      el.value = d[el.dataset.id] || "";
+
+      el.addEventListener("input", () => {
+        let dd = load();
+        dd[el.dataset.id] = el.value;
+        save(dd);
+        atualizar();
+      });
+    }
+  });
+
+  atualizar();
+}
+
+function atualizar() {
+  let d = load();
+
+  let inicio = d["sempre_nova_inicio"];
+  let duracao = d["sempre_nova_duracao"];
+
+  let datas = calcularDatas(inicio, Number(duracao));
+  document.querySelector('[data-id="sempre_nova_datas"]').value = datas;
+
+  d["sempre_nova_datas"] = datas;
+
+  let alertas = validar("sempre_nova");
+  document.querySelector('[data-id="sempre_nova_alertas"]').value = alertas;
+
+  d["sempre_nova_alertas"] = alertas;
+
+  save(d);
+}
+
+init();
+
+</script>
+
+</body>
+</html>
