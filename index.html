@@ -2,20 +2,35 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Projetos</title>
 
 <style>
 body {
-  font-family: Arial;
-  background: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f3;
+  color: #1a1a18;
+  max-width: 800px;
+  margin: auto;
   padding: 20px;
 }
 
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
+h1 {
+  font-size: 20px;
   margin-bottom: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e0e0da;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 12px;
+  color: #666;
 }
 
 textarea, input {
@@ -23,13 +38,24 @@ textarea, input {
   margin-top: 5px;
   margin-bottom: 10px;
   padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.checklist label {
+  display: block;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Controle de Projetos - Sprint</h2>
+<h1>Controle de Projetos — Sprint</h1>
 
 <div class="card">
   <h3>Sempre Nova</h3>
@@ -46,25 +72,27 @@ textarea, input {
   <label>Status</label>
   <textarea data-id="sempre_nova_status"></textarea>
 
-  <label>Checklist</label><br>
-  <input type="checkbox" data-id="sempre_nova_planning_ok"> Planning<br>
-  <input type="checkbox" data-id="sempre_nova_planning_enviada"> Planning enviada<br>
-  <input type="checkbox" data-id="sempre_nova_cp"> No CP<br>
-  <input type="checkbox" data-id="sempre_nova_daily"> Daily<br>
-  <input type="checkbox" data-id="sempre_nova_review"> Review<br>
-  <input type="checkbox" data-id="sempre_nova_entrega"> Entrega<br>
-  <input type="checkbox" data-id="sempre_nova_retro"> Retro<br>
+  <div class="checklist">
+    <label><input type="checkbox" data-id="sempre_nova_planning_ok"> Planning</label>
+    <label><input type="checkbox" data-id="sempre_nova_planning_enviada"> Planning enviada</label>
+    <label><input type="checkbox" data-id="sempre_nova_cp"> No CP</label>
+    <label><input type="checkbox" data-id="sempre_nova_daily"> Dailies</label>
+    <label><input type="checkbox" data-id="sempre_nova_review"> Review</label>
+    <label><input type="checkbox" data-id="sempre_nova_entrega"> Entrega</label>
+    <label><input type="checkbox" data-id="sempre_nova_retro"> Retro</label>
+  </div>
 
   <label>Dailies</label>
   <textarea data-id="sempre_nova_dailies"></textarea>
 
   <label>Alertas</label>
   <textarea data-id="sempre_nova_alertas" readonly></textarea>
+
 </div>
 
 <script>
 
-const STORAGE_KEY = "controle_projetos";
+const STORAGE_KEY = "controle_projetos_v3";
 
 function load() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
@@ -94,15 +122,32 @@ function validar(id) {
   let d = load();
   let a = [];
 
-  if (!d[id+"_planning_ok"]) a.push("Sem planning");
-  if (!d[id+"_planning_enviada"]) a.push("Planning não enviada");
-  if (!d[id+"_cp"]) a.push("Fora do CP");
-  if (!d[id+"_daily"]) a.push("Sem daily");
-  if (!d[id+"_review"]) a.push("Sem review");
-  if (d[id+"_review"] && !d[id+"_entrega"]) a.push("Sem entrega");
-  if (d[id+"_review"] && !d[id+"_retro"]) a.push("Sem retro");
+  if (!d[id+"_planning_ok"]) a.push("⚠️ Sem planning");
+  if (!d[id+"_planning_enviada"]) a.push("⚠️ Não enviada");
+  if (!d[id+"_cp"]) a.push("⚠️ Fora do CP");
+  if (!d[id+"_daily"]) a.push("⚠️ Sem daily");
+  if (!d[id+"_review"]) a.push("⚠️ Sem review");
+  if (d[id+"_review"] && !d[id+"_entrega"]) a.push("⚠️ Sem entrega");
+  if (d[id+"_review"] && !d[id+"_retro"]) a.push("⚠️ Sem retro");
 
   return a.join(" | ");
+}
+
+function atualizar() {
+  let d = load();
+
+  let inicio = d["sempre_nova_inicio"];
+  let duracao = Number(d["sempre_nova_duracao"]);
+
+  let datas = calcularDatas(inicio, duracao);
+  document.querySelector('[data-id="sempre_nova_datas"]').value = datas;
+  d["sempre_nova_datas"] = datas;
+
+  let alertas = validar("sempre_nova");
+  document.querySelector('[data-id="sempre_nova_alertas"]').value = alertas;
+  d["sempre_nova_alertas"] = alertas;
+
+  save(d);
 }
 
 function init() {
@@ -133,25 +178,6 @@ function init() {
   });
 
   atualizar();
-}
-
-function atualizar() {
-  let d = load();
-
-  let inicio = d["sempre_nova_inicio"];
-  let duracao = d["sempre_nova_duracao"];
-
-  let datas = calcularDatas(inicio, Number(duracao));
-  document.querySelector('[data-id="sempre_nova_datas"]').value = datas;
-
-  d["sempre_nova_datas"] = datas;
-
-  let alertas = validar("sempre_nova");
-  document.querySelector('[data-id="sempre_nova_alertas"]').value = alertas;
-
-  d["sempre_nova_alertas"] = alertas;
-
-  save(d);
 }
 
 init();
