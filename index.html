@@ -1,753 +1,1614 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Meu Controle de Projetos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel da Líder — SEDU-ES</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f3;color:#1a1a18;min-height:100vh;padding:2rem 1rem;max-width:980px;margin:0 auto}
-h1{font-size:22px;font-weight:500;margin-bottom:4px}
-.subtitle{font-size:13px;color:#888;margin-bottom:1.5rem}
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* LOGIN */
-#login-screen{position:fixed;inset:0;background:#111110;display:flex;align-items:center;justify-content:center;z-index:9999}
-.login-box{background:#1e1e1c;border:0.5px solid #333;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:340px;text-align:center}
-.login-box h2{font-size:18px;font-weight:500;margin-bottom:6px;color:#f0efe8}
-.login-box p{font-size:13px;color:#888;margin-bottom:1.5rem}
-.login-box input{width:100%;padding:10px 14px;border-radius:8px;border:0.5px solid #444;font-size:14px;font-family:inherit;background:#2c2c2a;color:#f0efe8;margin-bottom:10px}
-.login-box input::placeholder{color:#666}
-.login-box input:focus{outline:none;border-color:#666;background:#333}
-.login-box button{width:100%;padding:10px;border-radius:8px;border:none;background:#f0efe8;color:#1a1a18;font-size:14px;font-family:inherit;font-weight:500;cursor:pointer}
-.login-error{font-size:12px;color:#f87171;margin-top:8px;display:none}
+:root {
+  --bg: #F5F2EC;
+  --surface: #FFFFFF;
+  --surface2: #F0EDE6;
+  --border: #D8D2C6;
+  --border-strong: #B8B0A0;
+  --text: #1A1714;
+  --text2: #4A4540;
+  --text3: #7A7268;
+  --accent: #1B4F8C;
+  --accent-light: #E8EEF7;
+  --accent2: #8C4B1B;
+  --accent2-light: #F7EDE8;
+  --green: #2D6A3F;
+  --green-light: #E8F2EB;
+  --orange: #B85C00;
+  --orange-light: #FFF0E0;
+  --yellow: #8C7200;
+  --yellow-light: #FFFBE0;
+  --red: #9B1C1C;
+  --red-light: #FEF2F2;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
 
-/* NAV */
-.nav{display:flex;gap:6px;margin-bottom:1.75rem;border-bottom:1px solid #e0e0da;padding-bottom:1rem;flex-wrap:wrap}
-.nav-btn{padding:7px 18px;border-radius:8px;font-size:13px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#888;transition:all .15s}
-.nav-btn.active{background:#1a1a18;color:#f5f5f3;border-color:#1a1a18;font-weight:500}
+html { scroll-behavior: smooth; font-size: 18px; }
 
-/* TABS CATEGORIA */
-.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
-.cat-btn{padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;border:0.5px solid;background:transparent;font-family:inherit;transition:all .15s}
-.cat-btn.sprint{color:#0F6E56;border-color:#0F6E56}.cat-btn.sprint.active{background:#E1F5EE;font-weight:500}
-.cat-btn.sustentacao{color:#185FA5;border-color:#185FA5}.cat-btn.sustentacao.active{background:#E6F1FB;font-weight:500}
-.cat-btn.inicial{color:#854F0B;border-color:#854F0B}.cat-btn.inicial.active{background:#FAEEDA;font-weight:500}
-.cat-btn.pausado{color:#5F5E5A;border-color:#5F5E5A}.cat-btn.pausado.active{background:#F1EFE8;font-weight:500}
-.cat-panel{display:none}.cat-panel.active{display:block}
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
 
-/* TABS PROJETO */
-.proj-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:0.5px solid #e0e0da}
-.proj-btn{padding:5px 14px;border-radius:8px;font-size:13px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#888;transition:all .15s}
-.proj-btn.active{background:#1a1a18;color:#f5f5f3;border-color:#1a1a18;font-weight:500}
-.proj-panel{display:none}.proj-panel.active{display:block}
+/* ===== LAYOUT ===== */
+.app { display: flex; min-height: 100vh; }
 
-/* CARDS */
-.project-card{background:#fff;border:0.5px solid #e0e0da;border-radius:12px;padding:1rem 1.25rem;margin-bottom:16px}
-.project-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.project-title{font-size:16px;font-weight:500}
-.project-client{font-size:12px;color:#888;font-weight:400;margin-left:6px}
-.proj-status-badge{font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500}
-.badge-verde{background:#E1F5EE;color:#0F6E56}.badge-amarelo{background:#FAEEDA;color:#854F0B}
-.badge-vermelho{background:#FDE8E8;color:#9B1C1C}.badge-cinza{background:#F1EFE8;color:#5F5E5A}
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--text);
+  color: #fff;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
 
-/* TABS DIAS */
-.day-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap;border-bottom:0.5px solid #e0e0da;padding-bottom:10px}
-.day-btn{padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#888;transition:all .15s}
-.day-btn.active{background:#1a1a18;color:#f5f5f3;border-color:#1a1a18;font-weight:500}
-.day-btn.geral{color:#0F6E56;border-color:#0F6E56}.day-btn.geral.active{background:#0F6E56;color:#fff}
-.day-panel{display:none}.day-panel.active{display:block}
+.sidebar-header {
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 
-/* CAMPOS */
-.section-divider{font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px;border-top:0.5px solid #e0e0da;padding-top:10px}
-.field{margin-bottom:10px}
-.field label{display:block;font-size:12px;color:#888;margin-bottom:4px}
-.field textarea{width:100%;resize:vertical;font-size:13px;padding:6px 10px;border-radius:8px;border:0.5px solid #e0e0da;background:#f5f5f3;color:#1a1a18;font-family:inherit;line-height:1.5}
-.field textarea:focus{outline:none;border-color:#aaa;background:#fff}
-.urgency-field textarea{border-color:#f0a500;background:#fffbf0}
-.urgency-field label{color:#854F0B;font-weight:500}
-.log-field textarea{border-color:#c0b0f0;background:#f8f5ff}
-.log-field label{color:#5533aa;font-weight:500}
-.daily-field textarea{border-color:#c0cef7;background:#f0f4ff}
-.daily-field label{color:#3355cc;font-weight:500}
-.retro-field textarea{border-color:#b0e0c0;background:#f0fff5}
-.retro-field label{color:#0F6E56;font-weight:500}
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.2;
+}
 
-/* STATUS */
-.status-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.status-opt{padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#888}
-.status-opt.sel-verde{background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;font-weight:500}
-.status-opt.sel-amarelo{background:#FAEEDA;color:#854F0B;border-color:#854F0B;font-weight:500}
-.status-opt.sel-vermelho{background:#FDE8E8;color:#9B1C1C;border-color:#C81E1E;font-weight:500}
-.status-opt.sel-cinza{background:#F1EFE8;color:#5F5E5A;border-color:#5F5E5A;font-weight:500}
+.sidebar-logo span {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
 
-/* RESPONSÁVEIS */
-.resp-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.resp-row input{font-size:12px;padding:4px 8px;border-radius:6px;border:0.5px solid #e0e0da;background:#f5f5f3;color:#1a1a18;font-family:inherit;flex:1;min-width:100px}
+.sidebar-date {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 8px;
+  font-family: 'Syne', sans-serif;
+}
 
-/* DATAS */
-.sprint-dates{background:#f0f4ff;border:0.5px solid #c0cef7;border-radius:8px;padding:10px 14px;margin-bottom:10px}
-.sprint-dates-title{font-size:12px;color:#3355cc;font-weight:500;margin-bottom:8px}
-.sprint-dates-inputs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-end}
-.sprint-dates-inputs label{font-size:12px;color:#555;display:flex;flex-direction:column;gap:3px}
-.sprint-dates-inputs input,.sprint-dates-inputs select{font-size:13px;padding:5px 8px;border-radius:6px;border:0.5px solid #c0cef7;background:#fff;font-family:inherit;color:#1a1a18}
-.sprint-dates-result{margin-top:6px}
-.days-counter{display:inline-block;font-size:12px;padding:3px 10px;border-radius:10px;font-weight:500}
-.days-ok{background:#E1F5EE;color:#0F6E56}
-.days-warn{background:#FAEEDA;color:#854F0B}
-.days-late{background:#FDE8E8;color:#9B1C1C}
+.sidebar-nav { padding: 1.5rem 0; flex: 1; }
 
-/* CHECKLIST */
-.checklist{background:#f9f9f7;border:0.5px solid #e0e0da;border-radius:8px;padding:10px 14px;margin-bottom:10px}
-.checklist-title{font-size:12px;color:#888;font-weight:500;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
-.check-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer}
-.check-item:last-child{margin-bottom:0}
-.check-item input[type=checkbox]{width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0}
-.check-item span{font-size:13px;color:#1a1a18;line-height:1.4}
-.check-item.checked span{color:#888;text-decoration:line-through}
+.nav-section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  padding: 0 1.5rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+}
 
-/* AÇÕES */
-.actions{display:flex;gap:8px;margin-top:1.5rem;flex-wrap:wrap}
-.btn-primary{flex:1;min-width:180px;padding:10px 16px;border-radius:8px;border:0.5px solid #ccc;background:#fff;color:#1a1a18;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500;transition:all .2s}
-.btn-primary.success{background:#E1F5EE;color:#0F6E56;border-color:#0F6E56}
-.btn-secondary{padding:10px 16px;border-radius:8px;border:0.5px solid #e0e0da;background:transparent;color:#888;font-size:13px;cursor:pointer;font-family:inherit}
-.btn-save{background:#1a1a18;color:#f5f5f3;border-color:#1a1a18}
+.nav-section-label:first-child { margin-top: 0; }
 
-/* RELATÓRIO */
-.report-actions{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
-.mode-btn{padding:7px 18px;border-radius:8px;font-size:13px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#888}
-.mode-btn.active{background:#1a1a18;color:#f5f5f3;border-color:#1a1a18;font-weight:500}
-.report-section{margin-bottom:2rem}
-.report-section h2{font-size:13px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
-.report-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
-.report-card{background:#fff;border:0.5px solid #e0e0da;border-radius:12px;padding:1rem 1.25rem;position:relative;overflow:hidden}
-.report-card::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;border-radius:12px 0 0 12px}
-.report-card.verde::before{background:#0F6E56}
-.report-card.amarelo::before{background:#C57A00}
-.report-card.vermelho::before{background:#C81E1E}
-.report-card.cinza::before{background:#9E9D97}
-.rc-name{font-size:15px;font-weight:500;margin-bottom:4px}
-.rc-client{font-size:11px;color:#888;margin-bottom:6px}
-.rc-resp{font-size:11px;color:#aaa;margin-bottom:8px}
-.rc-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500;margin-bottom:10px}
-.rc-row{margin-bottom:7px}
-.rc-label{font-size:11px;color:#888;margin-bottom:2px}
-.rc-value{font-size:13px;color:#1a1a18;line-height:1.45}
-.rc-urgency{background:#fffbf0;border:0.5px solid #f0a500;border-radius:6px;padding:6px 10px;margin-bottom:8px}
-.rc-urgency .rc-label{color:#854F0B;font-weight:500}
-.rc-log{background:#f8f5ff;border:0.5px solid #c0b0f0;border-radius:6px;padding:6px 10px;margin-bottom:8px}
-.rc-log .rc-label{color:#5533aa;font-weight:500}
-.rc-daily-week{background:#f0f4ff;border:0.5px solid #c0cef7;border-radius:6px;padding:6px 10px;margin-bottom:8px}
-.rc-daily-week .rc-label{color:#3355cc;font-weight:500;margin-bottom:6px}
-.rc-daily-day{margin-bottom:5px;font-size:12px;padding-bottom:4px;border-bottom:0.5px solid #e8eeff}
-.rc-daily-day:last-child{border-bottom:none;margin-bottom:0}
-.rc-daily-day strong{color:#3355cc;display:block;margin-bottom:2px}
-.rc-checklist{margin-top:8px;border-top:0.5px solid #f0f0ec;padding-top:8px}
-.rc-check-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:12px}
-.rc-check-ok{color:#0F6E56}.rc-check-nok{color:#C81E1E}
-.rc-empty{font-size:12px;color:#bbb;font-style:italic}
-.urgency-panel{background:#fffbf0;border:1px solid #f0a500;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem}
-.urgency-panel h3{font-size:14px;font-weight:500;color:#854F0B;margin-bottom:10px}
-.urgency-item{display:flex;gap:10px;margin-bottom:8px;font-size:13px}
-.urgency-item .proj-name{font-weight:500;min-width:120px;color:#854F0B}
-.no-urgency{font-size:13px;color:#aaa;font-style:italic}
-.exec-summary{background:#f0f4ff;border:0.5px solid #c0cef7;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem}
-.exec-summary h3{font-size:14px;font-weight:500;color:#3355cc;margin-bottom:10px}
-.exec-proj{margin-bottom:10px;padding-bottom:10px;border-bottom:0.5px solid #dde6ff}
-.exec-proj:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
-.exec-proj-name{font-size:13px;font-weight:500;margin-bottom:3px}
-.exec-proj-text{font-size:13px;color:#444;line-height:1.5}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.65rem 1.5rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  border-left: 3px solid transparent;
+}
 
-/* CONSOLIDADO */
-.history-list-wrap{display:flex;flex-direction:column;gap:10px}
-.history-item{background:#fff;border:0.5px solid #e0e0da;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.hist-date{font-size:14px;font-weight:500}
-.hist-meta{font-size:12px;color:#888;margin-top:2px}
-.hist-actions{display:flex;gap:6px}
-.hist-btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:0.5px solid #e0e0da;background:transparent;font-family:inherit;color:#555}
-.hist-btn.danger{color:#C81E1E;border-color:#C81E1E}
-.empty-state{text-align:center;padding:3rem 1rem;color:#aaa;font-size:14px}
-.alert-banner{background:#FAEEDA;border:0.5px solid #C57A00;border-radius:8px;padding:10px 14px;margin-bottom:1.5rem;font-size:13px;color:#854F0B;display:flex;align-items:center;gap:8px}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-item.active { color: #fff; background: rgba(255,255,255,0.1); border-left-color: #fff; }
 
-@media(prefers-color-scheme:dark){
-  body{background:#1a1a18;color:#f0efe8}
-  .project-card,.report-card,.btn-primary,.history-item{background:#232321;border-color:#333}
-  .checklist{background:#2a2a28;border-color:#444}
-  .check-item span{color:#f0efe8}.check-item.checked span{color:#666}
-  .field textarea{background:#2c2c2a;border-color:#444;color:#f0efe8}
-  .field textarea:focus{background:#333;border-color:#666}
-  .urgency-field textarea{background:#2e2a1a;border-color:#c57a00}
-  .log-field textarea{background:#1e1a2e;border-color:#7755cc}
-  .daily-field textarea{background:#1a1e33;border-color:#3355cc}
-  .retro-field textarea{background:#1a2e22;border-color:#0F6E56}
-  .resp-row input{background:#2c2c2a;border-color:#444;color:#f0efe8}
-  .sprint-dates{background:#1a1e33;border-color:#3355cc}
-  .sprint-dates-inputs input,.sprint-dates-inputs select{background:#232840;border-color:#3355cc;color:#f0efe8}
-  .nav-btn.active,.mode-btn.active{background:#f0efe8;color:#1a1a18;border-color:#f0efe8}
-  .rc-value{color:#f0efe8}
-  .btn-primary{color:#f0efe8}
-  .btn-primary.success{background:#085041;color:#9FE1CB;border-color:#1D9E75}
-  .btn-save{background:#f0efe8;color:#1a1a18}
-  .rc-urgency{background:#2e2a1a;border-color:#c57a00}
-  .rc-log{background:#1e1a2e;border-color:#7755cc}
-  .rc-daily-week{background:#1a1e33;border-color:#3355cc}
-  .urgency-panel{background:#2e2a1a;border-color:#c57a00}
-  .exec-summary{background:#1a1e33;border-color:#3355cc}
-  .exec-proj-text{color:#ccc}
-  .hist-btn{color:#aaa;border-color:#444}
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===== MAIN ===== */
+.main {
+  margin-left: 280px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.2rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topbar-subtitle {
+  font-size: 0.8rem;
+  color: var(--text3);
+  margin-top: 1px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ===== PAGE SECTION ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+.content { padding: 2.5rem 3rem; max-width: 1200px; }
+
+/* ===== SECTION TITLE ===== */
+.section-header {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.section-desc {
+  font-size: 0.95rem;
+  color: var(--text3);
+  margin-top: 6px;
+  max-width: 600px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  box-shadow: var(--shadow);
+}
+
+.card + .card { margin-top: 1.2rem; }
+
+/* ===== PROJECT CARDS ===== */
+.projects-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+
+.project-card:hover { box-shadow: var(--shadow-lg); }
+
+.project-card-header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.project-card-header.open { border-bottom-color: var(--border); }
+
+.project-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.project-info { flex: 1; }
+
+.project-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.project-full-name {
+  font-size: 0.82rem;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.project-badges {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.badge-sprint { background: var(--orange-light); color: var(--orange); }
+.badge-sustentacao { background: var(--green-light); color: var(--green); }
+.badge-iniciando { background: var(--accent-light); color: var(--accent); }
+.badge-retomando { background: var(--yellow-light); color: var(--yellow); }
+.badge-alerta { background: var(--red-light); color: var(--red); }
+
+.project-chevron {
+  font-size: 0.8rem;
+  color: var(--text3);
+  transition: transform 0.2s;
+  padding-top: 4px;
+  flex-shrink: 0;
+}
+
+.project-chevron.open { transform: rotate(90deg); }
+
+.project-card-body {
+  display: none;
+  padding: 1.8rem 2rem;
+  background: var(--surface2);
+}
+
+.project-card-body.open { display: block; }
+
+/* ===== PROJECT BODY LAYOUT ===== */
+.proj-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.proj-section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.8rem;
+}
+
+.proj-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem 1.4rem;
+}
+
+.proj-desc {
+  font-size: 0.92rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0.8rem;
+}
+
+.proj-tag {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ===== PERGUNTAS ===== */
+.questions-list { list-style: none; }
+
+.questions-list li {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text2);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.6;
+}
+
+.questions-list li:last-child { border-bottom: none; }
+
+.q-icon {
+  font-size: 0.8rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== ALERTA BOX ===== */
+.alerta-box {
+  background: var(--red-light);
+  border: 1px solid #FCA5A5;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  font-size: 0.88rem;
+  color: var(--red);
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+
+.alerta-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+/* ===== DEVOPS GUIDE ===== */
+.devops-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.status-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem 1.4rem;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.6rem;
+}
+
+.status-dot-big {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.status-translation {
+  font-size: 0.78rem;
+  color: var(--text3);
+  margin-left: auto;
+  font-style: italic;
+}
+
+.status-meaning {
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 0.6rem;
+}
+
+.status-action {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.sa-ok { background: var(--green-light); color: var(--green); }
+.sa-warn { background: var(--orange-light); color: var(--orange); }
+.sa-danger { background: var(--red-light); color: var(--red); }
+
+/* ===== TEMPO TABLE ===== */
+.tempo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.tempo-table th {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.tempo-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text2);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.tempo-table tr:last-child td { border-bottom: none; }
+
+/* ===== REPORT ===== */
+.report-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.5rem;
+}
+
+.report-field {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1.2rem;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--surface2);
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+  transition: border-color 0.15s;
+}
+
+.report-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.report-mini {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.btn {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover { background: #153d70; }
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover { background: var(--border); }
+
+/* ===== CERIMONIAS ===== */
+.cer-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cer-table th {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: left;
+  padding: 0.7rem 1.2rem;
+  border-bottom: 2px solid var(--border);
+  background: var(--surface2);
+}
+
+.cer-table td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text2);
+  vertical-align: middle;
+  line-height: 1.5;
+}
+
+.cer-table tr:last-child td { border-bottom: none; }
+.cer-table tr:hover td { background: var(--surface2); }
+
+.cer-input {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.8rem;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--surface);
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.cer-input:focus { outline: none; border-color: var(--accent); }
+
+.cer-what {
+  font-size: 0.78rem;
+  color: var(--text3);
+  margin-top: 3px;
+}
+
+/* ===== CHECKLIST DAILY ===== */
+.daily-list { list-style: none; }
+
+.daily-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-radius: 6px;
+}
+
+.daily-item:hover { background: var(--surface2); }
+.daily-item:last-child { border-bottom: none; }
+
+.daily-check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border-strong);
+  border-radius: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  background: var(--surface);
+}
+
+.daily-item.done .daily-check {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.daily-text { font-size: 0.92rem; color: var(--text2); line-height: 1.6; }
+.daily-item.done .daily-text { text-decoration: line-through; color: var(--text3); }
+.daily-tag { font-family: 'Syne', sans-serif; font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+
+/* ===== GLOSSARIO ===== */
+.gloss-item {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gloss-item:last-child { border-bottom: none; }
+
+.gloss-term {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.gloss-def {
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ===== INFO TABS ===== */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: none;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ===== HIGHLIGHT BOX ===== */
+.highlight {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 1rem 1.4rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.highlight strong { color: var(--accent); font-family: 'Syne', sans-serif; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ===== PRINT ===== */
+@media print {
+  .sidebar, .topbar { display: none; }
+  .main { margin-left: 0; }
+  .content { padding: 0; }
 }
 </style>
 </head>
 <body>
+<div class="app">
 
-<div id="login-screen">
-  <div class="login-box">
-    <h2>🔒 Meu Controle de Projetos</h2>
-    <p>Digite a senha para acessar</p>
-    <input type="password" id="pwd-input" placeholder="Senha" onkeydown="if(event.key==='Enter')checkPwd()">
-    <button onclick="checkPwd()">Entrar</button>
-    <div class="login-error" id="pwd-error">Senha incorreta. Tente novamente.</div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      Painel da Líder
+      <span>SEDU-ES · GTI · CRP</span>
+    </div>
+    <div class="sidebar-date" id="sidebarDate"></div>
   </div>
-</div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <button class="nav-item active" onclick="showPage('projetos')">
+      <div class="nav-dot" style="background:#F59E0B"></div> Meus Projetos
+    </button>
+    <button class="nav-item" onclick="showPage('checklist')">
+      <div class="nav-dot" style="background:#10B981"></div> Checklist Diário
+    </button>
+    <button class="nav-item" onclick="showPage('report')">
+      <div class="nav-dot" style="background:#6366F1"></div> Gerar Report
+    </button>
 
-<div id="app-content" style="display:none">
-<h1>Meu Controle de Projetos</h1>
-<p class="subtitle">Registre o dia a dia e gere o relatório de sexta automaticamente.</p>
-<div id="alert-5du" style="display:none" class="alert-banner">⚠️ <span id="alert-5du-text"></span></div>
+    <div class="nav-section-label">Azure DevOps</div>
+    <button class="nav-item" onclick="showPage('devops-status')">
+      <div class="nav-dot" style="background:#3B82F6"></div> Status & Fluxo
+    </button>
+    <button class="nav-item" onclick="showPage('devops-tempo')">
+      <div class="nav-dot" style="background:#8B5CF6"></div> Tempo Ideal por Status
+    </button>
+    <button class="nav-item" onclick="showPage('devops-testes')">
+      <div class="nav-dot" style="background:#EC4899"></div> Testes & Pareceres
+    </button>
 
-<div class="nav">
-  <button class="nav-btn active" onclick="showPage('projetos')">📁 Projetos</button>
-  <button class="nav-btn"        onclick="showPage('relatorio')">📋 Relatório</button>
-  <button class="nav-btn"        onclick="showPage('consolidado')">🕓 Consolidado</button>
-</div>
+    <div class="nav-section-label">Cerimônias</div>
+    <button class="nav-item" onclick="showPage('cerimonias')">
+      <div class="nav-dot" style="background:#14B8A6"></div> Calendário
+    </button>
 
-<div id="page-projetos">
-  <div class="cat-tabs">
-    <button class="cat-btn sprint active"  onclick="switchCat('sprint')">Sprint ativo</button>
-    <button class="cat-btn sustentacao"    onclick="switchCat('sustentacao')">Sustentação</button>
-    <button class="cat-btn inicial"        onclick="switchCat('inicial')">Inicial</button>
-    <button class="cat-btn pausado"        onclick="switchCat('pausado')">Pausado</button>
+    <div class="nav-section-label">Referência</div>
+    <button class="nav-item" onclick="showPage('glossario')">
+      <div class="nav-dot" style="background:#F97316"></div> Glossário Técnico
+    </button>
+    <button class="nav-item" onclick="showPage('perguntas')">
+      <div class="nav-dot" style="background:#EF4444"></div> Perguntas Prontas
+    </button>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbarTitle">Meus Projetos</div>
+      <div class="topbar-subtitle">Visão geral dos 10 projetos da SEDU-ES</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
+    </div>
   </div>
-  <div id="cat-sprint"      class="cat-panel active"><div class="proj-tabs" id="proj-tabs-sprint"></div><div id="sprint-cards"></div></div>
-  <div id="cat-sustentacao" class="cat-panel"><div class="proj-tabs" id="proj-tabs-sustentacao"></div><div id="sustentacao-cards"></div></div>
-  <div id="cat-inicial"     class="cat-panel"><div class="proj-tabs" id="proj-tabs-inicial"></div><div id="inicial-cards"></div></div>
-  <div id="cat-pausado"     class="cat-panel"><div class="proj-tabs" id="proj-tabs-pausado"></div><div id="pausado-cards"></div></div>
-  <div class="actions">
-    <button class="btn-primary btn-save" onclick="saveSnapshot()">💾 Salvar consolidado desta semana</button>
-    <button class="btn-primary" id="btnCopy" onclick="copyMarkdown()">Copiar para Notion</button>
-    <button class="btn-secondary" onclick="clearCat()">Limpar aba atual</button>
-  </div>
-</div>
 
-<div id="page-relatorio" style="display:none">
-  <div class="report-actions">
-    <button class="mode-btn active" id="modeInterno" onclick="setMode('interno')">🔒 Interno</button>
-    <button class="mode-btn"        id="modeCliente" onclick="setMode('cliente')">📤 Cliente</button>
-    <button class="btn-primary" id="btnCopyReport" onclick="copyReport()" style="flex:1;min-width:160px">Copiar relatório</button>
-  </div>
-  <div id="report-content"></div>
-</div>
+  <!-- ==================== PÁGINA: PROJETOS ==================== -->
+  <div class="page active" id="page-projetos">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Meus 10 Projetos</div>
+      <div class="section-desc">Clique em cada projeto para ver o resumo, o que ele faz e quais perguntas fazer ao time.</div>
+    </div>
 
-<div id="page-consolidado" style="display:none">
-  <p style="font-size:13px;color:#888;margin-bottom:1rem">Snapshots salvos semanalmente.</p>
-  <div id="history-list-el"></div>
-</div>
-</div>
+    <div class="projects-grid" id="projectsGrid">
+      <!-- Projetos serão inseridos via JS -->
+    </div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: CHECKLIST ==================== -->
+  <div class="page" id="page-checklist">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Checklist Diário</div>
+      <div class="section-desc">Sua rotina de 15 minutos para não perder o time de nenhum projeto. Marque cada item conforme analisa.</div>
+    </div>
+
+    <div class="card">
+      <div class="proj-section-title">🔴 Prioridade 1 — Sprint Ativa (SGTER, SIGEST, SEMPRE NOVA)</div>
+      <ul class="daily-list" id="checklistSprint"></ul>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem">
+      <div class="proj-section-title">🟡 Prioridade 2 — Retomando / Iniciando (QUESTÕES, SISPC, PGP, PES)</div>
+      <ul class="daily-list" id="checklistInicio"></ul>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem">
+      <div class="proj-section-title">🟢 Prioridade 3 — Sustentação (SGF, E-GESTÃO, ALIMENTAÇÃO)</div>
+      <ul class="daily-list" id="checklistSustentacao"></ul>
+    </div>
+
+    <div style="margin-top:1.2rem; display:flex; gap:1rem;">
+      <button class="btn btn-secondary" onclick="resetChecklist()">🔄 Reiniciar checklist</button>
+    </div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: REPORT ==================== -->
+  <div class="page" id="page-report">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Gerar Report</div>
+      <div class="section-desc">Preencha os campos abaixo e copie o texto formatado para enviar à sua chefe.</div>
+    </div>
+
+    <div class="report-block">
+      <div class="report-mini">
+        <div>
+          <div class="report-label">Data do Report</div>
+          <input type="date" class="report-field" id="reportData" style="min-height:unset; resize:none;">
+        </div>
+        <div>
+          <div class="report-label">Período de referência</div>
+          <input type="text" class="report-field" id="reportPeriodo" placeholder="Ex: Semana de 28/04 a 02/05" style="min-height:unset; resize:none;">
+        </div>
+      </div>
+    </div>
+
+    <div class="report-block">
+      <div class="report-label">Projetos com Sprint Ativa — O que está em andamento?</div>
+      <textarea class="report-field" id="reportSprint" placeholder="Ex: SGTER — sprint 12 em andamento, 8 itens Active, 3 Awaiting QA. SIGEST — validação da tela de contrato prevista para quinta. SEMPRE NOVA — aguardando parecer do QA no item de vistoria."></textarea>
+    </div>
+
+    <div class="report-block">
+      <div class="report-label">Sustentação — Há algum incidente ou chamado relevante?</div>
+      <textarea class="report-field" id="reportSustentacao" placeholder="Ex: E-GESTÃO — bug de conciliação bancária reportado na sexta, em análise. SGF — sem ocorrências. ALIMENTAÇÃO — atualização de cardápio realizada com sucesso."></textarea>
+    </div>
+
+    <div class="report-block">
+      <div class="report-label">Projetos em início/retomada — Qual o progresso?</div>
+      <textarea class="report-field" id="reportInicio" placeholder="Ex: SISPC — kickoff realizado, backlog em refinamento. PGP — primeiro módulo (RAT) em desenvolvimento. QUESTÕES — retomada aprovada pela GTI, planning previsto para próxima semana. PES — aguardando definição de ambiente."></textarea>
+    </div>
+
+    <div class="report-block">
+      <div class="report-label">Impedimentos e riscos que precisam de atenção da gestão</div>
+      <textarea class="report-field" id="reportRiscos" placeholder="Ex: SGTER — integração com DETRAN ainda pendente de acesso pelo cliente, risco para a sprint 13. QUESTÕES — GTI precisa confirmar priorização até sexta."></textarea>
+    </div>
+
+    <div class="report-block">
+      <div class="report-label">Próximos passos</div>
+      <textarea class="report-field" id="reportProximos" placeholder="Ex: Planning do SISPC na terça. Review do SGTER na quarta. Aguardando aprovação do escopo revisado do PES."></textarea>
+    </div>
+
+    <div style="display:flex; gap:1rem; margin-top:1rem;">
+      <button class="btn btn-primary" onclick="gerarReport()">📋 Gerar texto do report</button>
+      <button class="btn btn-secondary" onclick="limparReport()">🗑️ Limpar</button>
+    </div>
+
+    <div id="reportOutput" style="display:none; margin-top:1.5rem;">
+      <div class="report-label">Texto gerado — copie e cole no e-mail ou Teams</div>
+      <textarea class="report-field" id="reportTexto" style="min-height:400px; font-family: monospace; font-size:0.85rem;" readonly></textarea>
+      <button class="btn btn-secondary" style="margin-top:0.8rem;" onclick="copiarReport()">📋 Copiar texto</button>
+    </div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: DEVOPS STATUS ==================== -->
+  <div class="page" id="page-devops-status">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Status do Azure DevOps</div>
+      <div class="section-desc">O que cada status significa e o que você deve fazer quando vê cada um.</div>
+    </div>
+
+    <div class="highlight">
+      <strong>Como funciona o fluxo normal:</strong> Proposed → Active → Awaiting QA → Resolved → Closed.<br>
+      Se algo deu errado: vai para <strong>Revised</strong> (volta para corrigir) ou <strong>Refused</strong> (descartado). <strong>Paused</strong> = travado, exige atenção imediata.
+    </div>
+
+    <div class="devops-status-grid" id="devopsStatusGrid"></div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: DEVOPS TEMPO ==================== -->
+  <div class="page" id="page-devops-tempo">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Tempo Ideal por Status</div>
+      <div class="section-desc">Quanto tempo é normal um item ficar em cada status — por tipo de projeto.</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('sprint')">Sprint Ativa</button>
+      <button class="tab-btn" onclick="showTab('sustentacao-tab')">Sustentação</button>
+      <button class="tab-btn" onclick="showTab('inicio-tab')">Iniciando / Retomando</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-sprint">
+      <div class="highlight"><strong>Projetos:</strong> SGTER, SIGEST, SEMPRE NOVA — ritmo acelerado, cada dia conta.</div>
+      <div class="card" style="margin-top:1rem; padding:0; overflow:hidden;">
+        <table class="tempo-table">
+          <thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Active</strong></td><td>até 3 dias</td><td>acima de 3 dias sem atualização</td><td>Pergunte se há impedimento</td></tr>
+            <tr><td><strong>Awaiting QA</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Cobre quem vai testar e quando</td></tr>
+            <tr><td><strong>Resolved</strong></td><td>até 1 dia</td><td>acima de 1 dia</td><td>Você precisa validar ou delegar</td></tr>
+            <tr><td><strong>Revised</strong></td><td>horas</td><td>sem movimento no mesmo dia</td><td>Dev provavelmente não foi avisado — aja agora</td></tr>
+            <tr><td><strong>Paused</strong></td><td>0 — ação imediata</td><td>qualquer Paused em sprint</td><td>Escale imediatamente</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-sustentacao-tab">
+      <div class="highlight"><strong>Projetos:</strong> SGF, E-GESTÃO, ALIMENTAÇÃO — ritmo mais tranquilo, mas sem deixar acumular.</div>
+      <div class="card" style="margin-top:1rem; padding:0; overflow:hidden;">
+        <table class="tempo-table">
+          <thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Verifique se o escopo não mudou</td></tr>
+            <tr><td><strong>Awaiting QA</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Cobre agenda de teste</td></tr>
+            <tr><td><strong>Resolved</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Inclua na sua validação semanal</td></tr>
+            <tr><td><strong>Paused</strong></td><td>até 3 dias com justificativa</td><td>sem motivo registrado</td><td>Exija comentário no Discussion</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-inicio-tab">
+      <div class="highlight"><strong>Projetos:</strong> QUESTÕES, SISPC, PGP, PES — não podem travar logo no início.</div>
+      <div class="card" style="margin-top:1rem; padding:0; overflow:hidden;">
+        <table class="tempo-table">
+          <thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Proposed (acúmulo)</strong></td><td>sinal de alerta</td><td>muitos itens parados</td><td>Solicite reunião de priorização</td></tr>
+            <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Pergunte o que está travando</td></tr>
+            <tr><td><strong>Paused</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Risco de perder o embalo inicial — resolva já</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: TESTES ==================== -->
+  <div class="page" id="page-devops-testes">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Testes & Pareceres</div>
+      <div class="section-desc">Como saber se os testes estão sendo feitos e como cobrar pareceres registrados.</div>
+    </div>
+
+    <div class="card">
+      <div class="proj-section-title">Status de Teste — o que cada um significa</div>
+      <table class="tempo-table" style="margin-top:0.5rem;">
+        <thead><tr><th>Status</th><th>Tradução</th><th>O que significa</th></tr></thead>
+        <tbody>
+          <tr><td>✅ <strong>Passed</strong></td><td>Aprovado</td><td>Testou e funcionou — está pronto para Resolved</td></tr>
+          <tr><td>❌ <strong>Failed</strong></td><td>Reprovado</td><td>Testou e encontrou erro — deve ir para Revised</td></tr>
+          <tr><td>🚫 <strong>Blocked</strong></td><td>Bloqueado</td><td>Não conseguiu nem testar — há um impedimento</td></tr>
+          <tr><td>⏸️ <strong>Not Run</strong></td><td>Não executado</td><td>Caso de teste criado mas nunca executado</td></tr>
+          <tr><td>🔵 <strong>Active</strong></td><td>Ativo</td><td>Caso de teste criado, aguardando execução</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem;">
+      <div class="proj-section-title">⚠️ Armadilha mais comum</div>
+      <div class="alerta-box">
+        <div class="alerta-label">Item Resolved ≠ Item testado</div>
+        Muitos devs marcam como Resolved sem que o QA tenha validado. Sempre cruze: item Resolved → tem Test Case com status Passed? Se não tiver, o item não foi testado formalmente.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem;">
+      <div class="proj-section-title">Como verificar se os testes estão acontecendo</div>
+      <ul class="questions-list">
+        <li><span class="q-icon">1️⃣</span> No DevOps, vá em <strong>Test Plans</strong> — lá ficam os casos de teste por projeto</li>
+        <li><span class="q-icon">2️⃣</span> Verifique se o item em Awaiting QA tem um Test Case criado</li>
+        <li><span class="q-icon">3️⃣</span> Veja se o Test Case foi executado (status Passed, Failed ou Blocked)</li>
+        <li><span class="q-icon">4️⃣</span> Item com Awaiting QA e Test Case em "Not Run" há mais de 2 dias = teste não aconteceu</li>
+        <li><span class="q-icon">5️⃣</span> Sempre pergunte: os testes foram executados em ambiente de homologação?</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem;">
+      <div class="proj-section-title">Quando cobrar um Parecer</div>
+      <ul class="questions-list">
+        <li><span class="q-icon">📝</span> Item foi de <strong>Resolved para Revised</strong> → QA deve ter registrado o motivo no Discussion</li>
+        <li><span class="q-icon">📝</span> Item está <strong>Paused</strong> → deve ter comentário explicando o bloqueio</li>
+        <li><span class="q-icon">📝</span> Item foi <strong>Refused</strong> → motivo da recusa deve estar documentado</li>
+        <li><span class="q-icon">📝</span> Teste <strong>Failed</strong> → descrição do erro deve estar no item</li>
+      </ul>
+      <div class="highlight" style="margin-top:1rem;">
+        <strong>Frase assertiva para cobrar:</strong><br>
+        "Por favor, registre o motivo diretamente no item do DevOps, na aba Discussion. Assim eu consigo acompanhar sem precisar perguntar."
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: CERIMÔNIAS ==================== -->
+  <div class="page" id="page-cerimonias">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Calendário de Cerimônias</div>
+      <div class="section-desc">Registre as datas das cerimônias de cada projeto. Os dados ficam salvos no navegador.</div>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="cer-table" id="cerimoniaTable">
+        <thead>
+          <tr>
+            <th>Projeto</th>
+            <th>Daily</th>
+            <th>Planning</th>
+            <th>Review</th>
+            <th>Retro</th>
+          </tr>
+        </thead>
+        <tbody id="cerimoniaBody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem; color:var(--text3); margin-top:0.8rem;">As datas são salvas automaticamente no seu navegador.</p>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: GLOSSARIO ==================== -->
+  <div class="page" id="page-glossario">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Glossário Técnico</div>
+      <div class="section-desc">Termos que aparecem nas reuniões e no DevOps — em linguagem clara.</div>
+    </div>
+    <div class="card" id="glossarioContent"></div>
+  </div>
+  </div>
+
+  <!-- ==================== PÁGINA: PERGUNTAS ==================== -->
+  <div class="page" id="page-perguntas">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Perguntas Prontas</div>
+      <div class="section-desc">Para nunca travar numa reunião ou ao cobrar o time. Organizadas por situação.</div>
+    </div>
+    <div id="perguntasContent"></div>
+  </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
 
 <script>
-/* ── PROJETOS — FONTE DA VERDADE ── */
-const SPRINT_PROJS = [
-  {id:"sempre_nova", name:"Sempre Nova", client:"SEDU-ES"},
-  {id:"sgter",       name:"SGTER",       client:""},
-  {id:"sigest",      name:"SIGEST",      client:""},
-];
-const SUST_PROJS = [
-  {id:"alimentacao", name:"Alimentação",                    client:""},
-  {id:"egestao",     name:"E-Gestão",                       client:""},
-  {id:"questoes",    name:"Questões",                       client:""},
-  {id:"alim_af",     name:"Alimentação – Agric. Familiar",  client:""},
-  {id:"sgf",         name:"SGF",                            client:""},
-];
-const INIC_PROJS = [
-  {id:"sispc", name:"SISPC",    client:""},
-  {id:"pgp",   name:"PGP/SIPD", client:""},
-];
-const PAUS_PROJS = [
-  {id:"pes", name:"PES", client:""},
+// ===== DATA =====
+const hoje = new Date();
+document.getElementById('sidebarDate').textContent = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+document.querySelector('#page-report input[type=date]').value = hoje.toISOString().split('T')[0];
+
+// ===== PROJETOS DATA =====
+const projetos = [
+  {
+    sigla: 'SGTER',
+    nome: 'Sistema de Gestão de Transporte Escolar e Rural',
+    icone: '🚌',
+    cor: '#FEF3C7',
+    iconCor: '#92400E',
+    status: 'sprint',
+    statusLabel: '🟠 Sprint Ativa',
+    resumo: 'Controla e otimiza o transporte escolar e rural da SEDU-ES. Gerencia rotas, veículos, motoristas, alunos e contratos. Transporta cerca de 50 mil alunos por dia em parceria com 70 municípios.',
+    funcionalidades: ['Gestão de Rotas e Mapas (GeoTER)', 'Cadastro de Alunos, Veículos e Motoristas', 'Contratos SEDU e Programa PETE', 'Cálculo de Custo de Rota', 'Gestão de Pagamentos', 'Dashboard e Relatórios'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (dados dos alunos)', 'SEFAZ (preço combustível)', 'DETRAN (dados veiculares)', 'TRANSCOLAR (carga inicial)', 'QGIS (mapas)'],
+    alertas: 'SEGES aparece frequentemente porque os dados dos alunos vêm de lá. Se a integração SEGES travar, afeta diretamente o SGTER.',
+    perguntas: ['Qual a sprint atual e quantos itens estão em Active?', 'Tem algum item Awaiting QA sem testador definido?', 'A integração com DETRAN e SEFAZ está estável?', 'Há algum item Paused? Por quê?', 'Os Test Cases estão criados para os itens desta sprint?']
+  },
+  {
+    sigla: 'SIGEST',
+    nome: 'Sistema de Gestão de Serviços Terceirizados',
+    icone: '🏢',
+    cor: '#EDE9FE',
+    iconCor: '#5B21B6',
+    status: 'sprint',
+    statusLabel: '🟠 Sprint Ativa',
+    resumo: 'Gerencia contratos e serviços terceirizados da SEDU-ES. Controla postos de trabalho, medições diárias e mensais, anomalias, visitas técnicas e relatórios de pagamento. O objetivo principal é consolidar os relatórios de pagamento dos terceirizados.',
+    funcionalidades: ['Gestão de Contratos e Fornecedores', 'Medição Diária e Mensal', 'Controle de Anomalias', 'Visita Técnica', 'Relatórios de Contratos e Pagamentos', 'Auditoria'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (dados das unidades)', 'E-DOCS (documentos)'],
+    alertas: 'Projeto com sprint ativa — fique atenta ao acúmulo de itens em Resolved sem validação.',
+    perguntas: ['Quantos itens estão em Awaiting QA nesta sprint?', 'As medições diárias estão sendo registradas normalmente?', 'Tem alguma anomalia aberta no sistema que impacta o pagamento?', 'O módulo de Visita Técnica está com algum item travado?', 'Há itens Revised sem o dev ter sido notificado?']
+  },
+  {
+    sigla: 'SEMPRE NOVA',
+    nome: 'Sistema de Manutenção de Edificações Escolares',
+    icone: '🏫',
+    cor: '#DCFCE7',
+    iconCor: '#166534',
+    status: 'sprint',
+    statusLabel: '🟠 Sprint Ativa',
+    resumo: 'Apoia o programa de manutenção das edificações escolares da SEDU-ES, sob gestão da GERFE. Permite cadastro das escolas, vistorias técnicas, laudos, planos de manutenção e ordens de serviço. Atende aproximadamente 480 escolas.',
+    funcionalidades: ['Cadastro de Edificações Escolares', 'Diagnóstico e Vistorias Técnicas', 'Laudos e Pareceres', 'Planos de Manutenção', 'Gestão de Contratos (OS)', 'Relatórios Operacionais e Gerenciais'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (importar unidades/escolas)'],
+    alertas: 'A GERFE é responsável pela priorização das funcionalidades. Qualquer mudança de escopo precisa passar por eles.',
+    perguntas: ['O MVP de cadastro de edificações e vistorias está em que status?', 'As vistorias técnicas estão gerando laudos no sistema?', 'Tem itens de relatório de diagnóstico em Awaiting QA?', 'A integração com SEGES para importar escolas está funcionando?', 'Há algum item Paused aguardando decisão da GERFE?']
+  },
+  {
+    sigla: 'SGF',
+    nome: 'Sistema de Gestão do Ambiente de Formação',
+    icone: '📚',
+    cor: '#E0F2FE',
+    iconCor: '#075985',
+    status: 'sustentacao',
+    statusLabel: '🟢 Sustentação',
+    resumo: 'Plataforma da SEDU-ES para inscrições e acesso às formações oferecidas pelo CEFOPE (Centro de Formação dos Profissionais da Educação). Professores e servidores se inscrevem em cursos e formações continuadas.',
+    funcionalidades: ['Inscrições em Formações', 'Ambiente Virtual de Aprendizagem', 'Gestão de Cursistas', 'Certificação pelo CEFOPE/ESESP'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'Ambiente Virtual de Aprendizagem'],
+    alertas: 'Em sustentação — monitore bugs reportados pelos cursistas, especialmente nos períodos de abertura de inscrições.',
+    perguntas: ['Há algum chamado aberto de bug relatado pelo CEFOPE?', 'O sistema está estável na última semana?', 'Tem algum item Paused há mais de 3 dias sem justificativa?', 'Os professores estão conseguindo se inscrever normalmente?']
+  },
+  {
+    sigla: 'E-GESTÃO',
+    nome: 'Sistema de Gestão de Repasses Financeiros às Escolas',
+    icone: '💰',
+    cor: '#FEF9C3',
+    iconCor: '#854D0E',
+    status: 'sustentacao',
+    statusLabel: '🟢 Sustentação',
+    resumo: 'Controla todos os recursos financeiros repassados pelo Estado para as escolas (Conselhos de Escola). Nome antigo: Repasse Financeiro. Herdado de outra fábrica — sem documentação formal no SGR. O SEGES aparece nas reuniões porque os dados de escolas e SREs vêm de lá.',
+    funcionalidades: ['Gestão de Repasses e Orçamentos', 'Controle de Receitas e Despesas', 'Prestação de Contas', 'Conciliação Bancária', 'Dashboards e Relatórios', 'Avisos e Alertas'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (dados de escolas e SREs)', 'E-DOCS (Termo de Recebimento de Serviço)'],
+    alertas: '⚠️ PROJETO SEM DOCUMENTAÇÃO FORMAL no SGR. Qualquer dúvida de negócio depende do time ou do servidor Z:\\Fabrica de Software\\SEDU-ES. Se houver bug complexo, pergunte ao Tech Lead antes de prometer prazo.',
+    perguntas: ['Há alguma escola com problema de acesso ao sistema?', 'Tem alguma prestação de contas com prazo vencendo?', 'O módulo de conciliação bancária está funcionando?', 'O SEGES está integrado e trazendo dados corretos das escolas?', 'Há algum chamado aberto há mais de 3 dias?']
+  },
+  {
+    sigla: 'ALIMENTAÇÃO',
+    nome: 'Sistema de Alimentação Escolar (SAE)',
+    icone: '🥗',
+    cor: '#F0FDF4',
+    iconCor: '#15803D',
+    status: 'sustentacao',
+    statusLabel: '🟢 Sustentação',
+    resumo: 'Controla a alimentação servida nas unidades escolares da rede estadual. Cobre planejamento de cardápios, distribuição, controle nutricional e gestão dos contratos do PNAE. Permite que a comunidade escolar fiscalize o programa.',
+    funcionalidades: ['Controle de Cardápios Mensais', 'Gestão de Alunos e Cartão do Aluno', 'Registro de Incorreções', 'Solicitações de Alimentação', 'Controle de Contratos PNAE', 'App Mobile para escolas'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (dados de alunos e escolas)'],
+    alertas: 'Sistema com app mobile — bugs no app são mais visíveis porque chegam diretamente das escolas.',
+    perguntas: ['Há alguma escola reportando erro no app de alimentação?', 'O cardápio do mês está configurado corretamente?', 'Tem alguma solicitação manual travada no sistema?', 'O controle de alunos está importando corretamente do SEGES?', 'Há alguma inconformidade registrada sem resolução?']
+  },
+  {
+    sigla: 'QUESTÕES',
+    nome: 'Sistema Elaborador de Atividades',
+    icone: '❓',
+    cor: '#FFF7ED',
+    iconCor: '#9A3412',
+    status: 'retomando',
+    statusLabel: '🟡 Retomando',
+    resumo: 'Ferramenta para professores criarem atividades escolares de forma rápida e intuitiva. Usa banco de questões do AMA (Avaliação de Monitoramento da Aprendizagem) com filtros por disciplina, série, descritor e dificuldade. Atende aproximadamente 3.500 turmas e 100.000 alunos.',
+    funcionalidades: ['Módulo do Professor (criar atividades, gerar PDF)', 'Módulo do Aluno (responder atividades online)', 'Módulo Gestor (banco de questões, disciplinas, descritores)', 'Dashboard de desempenho das turmas', 'Integração com SEGES'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (SREs, escolas, turmas, professores, alunos)'],
+    alertas: 'Projeto retomado após pausa da GTI — confirme se o escopo foi revalidado e se o backlog está refinado antes de cobrar entregas.',
+    perguntas: ['O backlog foi refinado após a retomada?', 'Qual é a primeira funcionalidade a ser entregue?', 'A integração com SEGES está funcionando?', 'O planning da sprint foi realizado?', 'Há itens Proposed acumulando sem priorização?']
+  },
+  {
+    sigla: 'SISPC',
+    nome: 'Sistema de Prestação de Contas',
+    icone: '📊',
+    cor: '#EFF6FF',
+    iconCor: '#1D4ED8',
+    status: 'iniciando',
+    statusLabel: '🔵 Iniciando',
+    resumo: 'Plataforma web unificada para centralizar e automatizar a prestação de contas de Prefeituras e Entidades Privadas junto à SEDU-ES. Substitui processos manuais com planilhas e e-Docs. Atende aproximadamente 400 usuários.',
+    funcionalidades: ['Gestão de Processos de Prestação de Contas', 'Upload de Documentos Obrigatórios', 'Geração de Relatórios e Pareceres', 'Registro de Diligência', 'Dashboard de Indicadores (KPIs)', 'Sistema de Notificações'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'E-DOCS (consulta e assinatura de documentos)'],
+    alertas: 'Projeto iniciando — acompanhe se o backlog está sendo refinado e se os primeiros itens já foram priorizados. Acúmulo de Proposed é sinal de alerta.',
+    perguntas: ['O kickoff foi realizado?', 'O primeiro módulo (Acesso Cidadão e cadastro de usuários) está em desenvolvimento?', 'O analista de requisitos mapeou os processos de prestação de contas com o cliente?', 'O ambiente de desenvolvimento está configurado?', 'Há algum impedimento de infraestrutura ou acesso?']
+  },
+  {
+    sigla: 'PGP',
+    nome: 'Plataforma de Gestão da Privacidade (LGPD)',
+    icone: '🔒',
+    cor: '#F5F3FF',
+    iconCor: '#6D28D9',
+    status: 'iniciando',
+    statusLabel: '🔵 Iniciando',
+    resumo: 'Sistema para centralizar e gerenciar os documentos obrigatórios pela LGPD: RAT (Registro de Atividades de Tratamento) e RIPD (Relatório de Impacto). Substitui planilhas manuais geridas pelo Encarregado Interno (DPO). Prioridade: Gestão de RAT → RIPD → Relatórios → Dashboards.',
+    funcionalidades: ['Gestão de RAT e RIPD', 'Controle de Riscos com Matriz de Criticidade', 'Fluxo de Aprovação (aprovar, reprovar, revisar)', 'Versionamento de Documentos', 'Dashboard de Indicadores', 'Notificações e Alertas'],
+    integracoes: ['ACESSO CIDADÃO (login OAuth2)', 'E-DOCS (futuro repositório)'],
+    alertas: 'Projeto iniciando — o primeiro módulo (Gestão de RAT) deve ser a entrega inicial. Confirme se o DPO (Farley) já validou o escopo.',
+    perguntas: ['O módulo de RAT está em desenvolvimento?', 'O DPO validou os campos obrigatórios do formulário?', 'O fluxo de aprovação está mapeado no sistema?', 'O ambiente de homologação foi provisionado pelo cliente?', 'Há alguma dúvida de regra de negócio travando o desenvolvimento?']
+  },
+  {
+    sigla: 'PES',
+    nome: 'Programa de Estágio da SEDU-ES',
+    icone: '🎓',
+    cor: '#FDF2F8',
+    iconCor: '#9D174D',
+    status: 'iniciando',
+    statusLabel: '🔵 Iniciando',
+    resumo: 'Sistema para a equipe do CEFOPE gerenciar todo o processo de estágio dos estudantes de licenciaturas e bacharelado. Automatiza os processos da SEFOPE. Inclui painel do estagiário, painel da IES (Instituição de Ensino) e painel administrativo.',
+    funcionalidades: ['Painel do Estagiário', 'Painel da IES (Instituição de Ensino)', 'Solicitação e Aprovação de Convênio IES', 'Cadastro de Estudantes', 'Acompanhamento de Status', 'Documentos Anexos'],
+    integracoes: ['ACESSO CIDADÃO (login)', 'SEGES (dados dos estudantes)'],
+    alertas: 'Projeto iniciando — o fluxo principal é: IES solicita convênio → SEDU analisa → aprova ou reprova → estudante se cadastra. Confirme se este fluxo foi validado com o CEFOPE.',
+    perguntas: ['O fluxo de convênio da IES foi validado com o CEFOPE?', 'O cadastro de estudantes está sendo desenvolvido?', 'O ambiente está configurado?', 'Quem é o responsável do lado do cliente (CEFOPE) para homologar as entregas?', 'O backlog inicial foi refinado?']
+  }
 ];
 
-/* ── CONSTANTES ── */
-const DAYS = [
-  {key:"seg",label:"Segunda"},
-  {key:"ter",label:"Terça"},
-  {key:"qua",label:"Quarta"},
-  {key:"qui",label:"Quinta"},
-  {key:"sex",label:"Sexta"},
-];
-const CHECKLIST_ITEMS = [
-  {k:"planej_enviado", l:"Planejamento de desenvolvimento enviado ao cliente após a planning"},
-  {k:"planej_cp",      l:"Planejamento registrado no CP"},
-  {k:"req_enviado",    l:"Planejamento de requisitos enviado pelo analista (até 5º dia útil)"},
-  {k:"req_cp",         l:"Planejamento de requisitos inserido no CP"},
-  {k:"daily_ok",       l:"Dailies acontecendo todos os dias"},
-  {k:"email_review",   l:"E-mail de entrega enviado após a review"},
-  {k:"retro_ok",       l:"Retro realizada após a review"},
-  {k:"plano_testes",   l:"Plano de testes executado"},
-];
-const STATUS_OPTS   = [{key:"verde",label:"✅ No prazo"},{key:"amarelo",label:"⚠️ Atenção"},{key:"vermelho",label:"🔴 Em risco"},{key:"cinza",label:"⏸ Pausado"}];
-const STATUS_LABELS = {verde:"No prazo",amarelo:"Atenção",vermelho:"Em risco",cinza:"Pausado","":"—"};
-const TAB_LABELS    = {sprint:"Sprint ativo",sustentacao:"Sustentação",inicial:"Inicial",pausado:"Pausado"};
-const PROJECTS_META = {
-  sprint:      SPRINT_PROJS.map(p=>({...p, fi:[{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"},{k:"riscos",l:"Riscos"},{k:"bloqueios",l:"Bloqueios"},{k:"obs",l:"Obs."},{k:"retro_bem",l:"Retro: o que foi bem"},{k:"retro_melhora",l:"Retro: o que melhorar"},{k:"retro_acoes",l:"Retro: ações definidas"}], fc:[{k:"status",l:"Status"},{k:"proximos",l:"Próximos passos"}], hasChecklist:true})),
-  sustentacao: SUST_PROJS.map(p=>({...p, fi:[{k:"tickets",l:"Tickets"},{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"},{k:"obs",l:"Obs."}], fc:[{k:"andamento",l:"Em andamento"},{k:"proximos",l:"Próximos passos"}], hasChecklist:false})),
-  inicial:     INIC_PROJS.map(p=>({...p, fi:[{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"},{k:"dependencias",l:"Dependências"},{k:"obs",l:"Obs."}], fc:[{k:"etapa",l:"Etapa"},{k:"proximos",l:"Próximos passos"}], hasChecklist:false})),
-  pausado:     PAUS_PROJS.map(p=>({...p, fi:[{k:"motivo",l:"Motivo"},{k:"retomada",l:"Previsão de retomada"},{k:"obs",l:"Obs."}], fc:[{k:"retomada",l:"Previsão de retomada"}], hasChecklist:false})),
+// ===== RENDER PROJECTS =====
+function renderProjects() {
+  const grid = document.getElementById('projectsGrid');
+  grid.innerHTML = projetos.map((p, i) => `
+    <div class="project-card">
+      <div class="project-card-header" onclick="toggleProject(${i})" id="header-${i}">
+        <div class="project-icon" style="background:${p.cor}; color:${p.iconCor}">${p.icone}</div>
+        <div class="project-info">
+          <div class="project-name">${p.sigla}</div>
+          <div class="project-full-name">${p.nome}</div>
+          <div class="project-badges">
+            <span class="badge badge-${p.status}">${p.statusLabel}</span>
+          </div>
+        </div>
+        <div class="project-chevron" id="chev-${i}">▶</div>
+      </div>
+      <div class="project-card-body" id="body-${i}">
+        <div class="proj-grid">
+          <div>
+            <div class="proj-section-title">O que é este projeto</div>
+            <div class="proj-box">
+              <div class="proj-desc">${p.resumo}</div>
+            </div>
+            <div style="margin-top:1rem;">
+              <div class="proj-section-title">Principais funcionalidades</div>
+              <div class="proj-box">
+                <div class="proj-tags">
+                  ${p.funcionalidades.map(f => `<span class="proj-tag">${f}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:1rem;">
+              <div class="proj-section-title">Integrações</div>
+              <div class="proj-box">
+                <div class="proj-tags">
+                  ${p.integracoes.map(f => `<span class="proj-tag">🔗 ${f}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="proj-section-title">Perguntas para fazer ao time</div>
+            <div class="proj-box">
+              <ul class="questions-list">
+                ${p.perguntas.map(q => `<li><span class="q-icon">💬</span>${q}</li>`).join('')}
+              </ul>
+            </div>
+            ${p.alertas ? `
+            <div style="margin-top:1rem;">
+              <div class="proj-section-title">⚠️ Atenção</div>
+              <div class="alerta-box">
+                <div>${p.alertas}</div>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleProject(i) {
+  const body = document.getElementById(`body-${i}`);
+  const chev = document.getElementById(`chev-${i}`);
+  const header = document.getElementById(`header-${i}`);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+// ===== NAVIGATION =====
+const pageTitles = {
+  'projetos': 'Meus Projetos',
+  'checklist': 'Checklist Diário',
+  'report': 'Gerar Report',
+  'devops-status': 'Status do Azure DevOps',
+  'devops-tempo': 'Tempo Ideal por Status',
+  'devops-testes': 'Testes & Pareceres',
+  'cerimonias': 'Calendário de Cerimônias',
+  'glossario': 'Glossário Técnico',
+  'perguntas': 'Perguntas Prontas'
 };
 
-/* ── STORAGE ── */
-const SK="prep_portfolio_v1", HK="prep_portfolio_history";
-function load(){try{return JSON.parse(localStorage.getItem(SK))||{};}catch{return {};}}
-function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch{}}
-function loadHist(){try{return JSON.parse(localStorage.getItem(HK))||[];}catch{return [];}}
-function saveHist(h){try{localStorage.setItem(HK,JSON.stringify(h));}catch{}}
-function saveField(k,v){const d=load();d[k]=v;save(d);}
-
-let activeCat="sprint", reportMode="interno";
-
-/* ── AUTH ── */
-function checkPwd(){
-  if(document.getElementById("pwd-input").value==="crp@2026"){
-    sessionStorage.setItem("auth","ok");
-    document.getElementById("login-screen").style.display="none";
-    document.getElementById("app-content").style.display="";
-    init();
-  } else {
-    document.getElementById("pwd-error").style.display="block";
-  }
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  document.getElementById('topbarTitle').textContent = pageTitles[id] || '';
+  event.currentTarget.classList.add('active');
 }
 
-/* ── ALERTA 5DU ── */
-function check5DU(){
-  const today=new Date();
-  let count=0, d=new Date(today.getFullYear(),today.getMonth(),1);
-  while(d<=today){if(d.getDay()!==0&&d.getDay()!==6)count++;d.setDate(d.getDate()+1);}
-  if(count<=5){
-    document.getElementById("alert-5du").style.display="flex";
-    document.getElementById("alert-5du-text").textContent=`Hoje é o ${count}º dia útil do mês. Verifique se o planejamento de requisitos foi enviado e inserido no CP.`;
-  }
+// ===== TABS =====
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  event.currentTarget.classList.add('active');
 }
 
-/* ── DATAS ── */
-function calcDates(pid){
-  const startEl=document.querySelector(`[data-sprint-start="${pid}"]`);
-  const durEl=document.querySelector(`[data-sprint-dur="${pid}"]`);
-  const reviewEl=document.querySelector(`[data-sprint-review="${pid}"]`);
-  const retroEl=document.querySelector(`[data-sprint-retro="${pid}"]`);
-  const resEl=document.getElementById("dates-"+pid);
-  if(!startEl||!resEl||!startEl.value){if(resEl)resEl.innerHTML="";return;}
-  const start=new Date(startEl.value+"T12:00:00");
-  const dur=parseInt(durEl?durEl.value:"30");
-  const end=dur===30?new Date(start.getFullYear(),start.getMonth()+1,0):(()=>{const e=new Date(start);e.setDate(start.getDate()+14);return e;})();
-  const retro=new Date(end);retro.setDate(end.getDate()+1);
-  if(reviewEl&&!reviewEl.dataset.manual)reviewEl.value=end.toISOString().split("T")[0];
-  if(retroEl&&!retroEl.dataset.manual)retroEl.value=retro.toISOString().split("T")[0];
-  const today=new Date();today.setHours(0,0,0,0);
-  const rv=reviewEl&&reviewEl.value?new Date(reviewEl.value+"T12:00:00"):end;
-  const diff=Math.ceil((rv-today)/86400000);
-  resEl.innerHTML=diff>0?`<span class="days-counter ${diff<=3?"days-warn":"days-ok"}">${diff}d para review</span>`:diff===0?`<span class="days-counter days-warn">Review hoje!</span>`:`<span class="days-counter days-late">Review passou há ${Math.abs(diff)}d</span>`;
-  const dd=load();
-  dd[`sprint_start_${pid}`]=startEl.value;
-  dd[`sprint_dur_${pid}`]=durEl?durEl.value:"30";
-  if(reviewEl)dd[`sprint_review_${pid}`]=reviewEl.value;
-  if(retroEl)dd[`sprint_retro_${pid}`]=retroEl.value;
-  save(dd);
-}
+// ===== DEVOPS STATUS =====
+const statuses = [
+  { name: 'Active', translation: 'Ativo', dot: '#3B82F6', meaning: 'O dev está trabalhando neste item agora. É o status esperado durante o desenvolvimento normal.', action: 'warn', actionText: 'Acima de 3 dias (sprint): pergunte se há impedimento' },
+  { name: 'Awaiting QA', translation: 'Aguardando Teste', dot: '#F59E0B', meaning: 'O dev terminou e o item está esperando ser testado pelo QA. Sem testador definido é um problema.', action: 'danger', actionText: 'Acima de 2 dias (sprint): cobre quem vai testar' },
+  { name: 'Resolved', translation: 'Resolvido', dot: '#F97316', meaning: 'O teste passou. O item aguarda sua validação como líder para ser fechado ou devolvido.', action: 'danger', actionText: 'Acima de 1 dia (sprint): você precisa validar ou delegar' },
+  { name: 'Closed', translation: 'Fechado', dot: '#22C55E', meaning: 'Item concluído e aceito. Nada mais a fazer — apenas monitore se o número está crescendo.', action: 'ok', actionText: 'Nenhuma ação necessária ✓' },
+  { name: 'Revised', translation: 'Devolvido p/ correção', dot: '#EF4444', meaning: 'Foi analisado e precisa de ajuste. O dev precisa ser notificado imediatamente com o feedback.', action: 'danger', actionText: 'Sem movimento no dia: dev não foi avisado — aja agora' },
+  { name: 'Paused', translation: 'Pausado', dot: '#EAB308', meaning: 'Travado por algum impedimento. Em sprint ativa é alarme imediato. Precisa de motivo no Discussion.', action: 'danger', actionText: 'Em sprint: escale imediatamente' },
+  { name: 'Proposed', translation: 'Proposto', dot: '#94A3B8', meaning: 'Existe no backlog mas ainda não foi aprovado para desenvolvimento. Muitos acumulados = falta de priorização.', action: 'warn', actionText: 'Acúmulo: solicite reunião de priorização' },
+  { name: 'Refused', translation: 'Recusado', dot: '#DC2626', meaning: 'Não vai ser feito. O motivo DEVE estar registrado no Discussion e o solicitante precisa ser informado.', action: 'warn', actionText: 'Sem motivo registrado: cobre documentação' }
+];
 
-/* ── STATUS ── */
-function buildStatusRow(el){
-  const pid=el.dataset.status,d=load(),cur=d["status_"+pid]||"";
-  el.innerHTML=STATUS_OPTS.map(o=>`<button class="status-opt${cur===o.key?" sel-"+o.key:""}" onclick="setStatus('${pid}','${o.key}')">${o.label}</button>`).join("");
-}
-function setStatus(pid,val){
-  const d=load();d["status_"+pid]=val;save(d);
-  document.querySelectorAll(`.status-row[data-status="${pid}"]`).forEach(buildStatusRow);
-  const badge=document.getElementById("badge-"+pid);
-  if(badge){badge.className="proj-status-badge badge-"+(val||"cinza");badge.textContent=STATUS_LABELS[val]||"—";}
-}
-
-/* ── CHECKLIST ── */
-function buildChecklist(el){
-  const pid=el.dataset.checklist,d=load();
-  el.innerHTML=`<div class="checklist-title">Controle de fluxo</div>`+
-    CHECKLIST_ITEMS.map(item=>{const checked=d[`chk_${pid}_${item.k}`]===true;return`<label class="check-item${checked?" checked":""}"><input type="checkbox" ${checked?"checked":""} onchange="toggleCheck('${pid}','${item.k}',this)"><span>${item.l}</span></label>`;}).join("");
-}
-function toggleCheck(pid,key,el){const d=load();d[`chk_${pid}_${key}`]=el.checked;save(d);el.closest(".check-item").classList.toggle("checked",el.checked);}
-
-/* ── BUILD CARDS ── */
-function sprintInner(p){
-  const d=load();
-  const startVal=d[`sprint_start_${p.id}`]||"", durVal=d[`sprint_dur_${p.id}`]||"30";
-  const reviewVal=d[`sprint_review_${p.id}`]||"", retroVal=d[`sprint_retro_${p.id}`]||"";
-  const st=d["status_"+p.id]||"cinza";
-  const dayTabsHtml=`<div class="day-tabs"><button class="day-btn geral active" onclick="switchDayTab('${p.id}','geral',this)">Geral</button>${DAYS.map(day=>`<button class="day-btn" onclick="switchDayTab('${p.id}','${day.key}',this)">${day.label}</button>`).join("")}</div>`;
-  const geralPanel=`<div id="daypanel-${p.id}-geral" class="day-panel active">
-    <div style="font-size:11px;color:#aaa;margin-bottom:8px">Responsáveis</div>
-    <div class="resp-row">
-      <input type="text" placeholder="Dev"       value="${d[p.id+"_resp_dev"]||""}"      oninput="saveField('${p.id}_resp_dev',this.value)">
-      <input type="text" placeholder="Arquiteto" value="${d[p.id+"_resp_arq"]||""}"      oninput="saveField('${p.id}_resp_arq',this.value)">
-      <input type="text" placeholder="Analista"  value="${d[p.id+"_resp_analista"]||""}" oninput="saveField('${p.id}_resp_analista',this.value)">
-    </div>
-    <div class="status-row" data-status="${p.id}"></div>
-    <div class="field urgency-field"><label>⚠️ Urgências gerais</label><textarea rows="2" data-id="${p.id}_urgencia" placeholder="Urgências ou pontos críticos">${d[p.id+"_urgencia"]||""}</textarea></div>
-    <div class="section-divider">Datas da sprint</div>
-    <div class="sprint-dates">
-      <div class="sprint-dates-title">📅 Calcular cerimônias</div>
-      <div class="sprint-dates-inputs">
-        <label>Nº da Sprint<input type="text" style="width:90px" placeholder="Ex: Sprint 3" value="${d[p.id+"_sprint_num"]||""}" oninput="saveField('${p.id}_sprint_num',this.value)"></label>
-        <label>Início<input type="date" data-sprint-start="${p.id}" value="${startVal}" oninput="calcDates('${p.id}')"></label>
-        <label>Duração<select data-sprint-dur="${p.id}" onchange="calcDates('${p.id}')"><option value="15"${durVal==="15"?" selected":""}>15 dias</option><option value="30"${durVal!=="15"?" selected":""}>30 dias</option></select></label>
+function renderDevopsStatus() {
+  const grid = document.getElementById('devopsStatusGrid');
+  grid.innerHTML = statuses.map(s => `
+    <div class="status-card">
+      <div class="status-header">
+        <div class="status-dot-big" style="background:${s.dot}"></div>
+        <div class="status-name">${s.name}</div>
+        <div class="status-translation">${s.translation}</div>
       </div>
-      <div class="sprint-dates-inputs">
-        <label>🔍 Review<input type="date" data-sprint-review="${p.id}" value="${reviewVal}" oninput="this.dataset.manual='1';calcDates('${p.id}')"></label>
-        <label>🔄 Retro + Planning<input type="date" data-sprint-retro="${p.id}" value="${retroVal}" oninput="this.dataset.manual='1';calcDates('${p.id}')"></label>
-      </div>
-      <div class="sprint-dates-result" id="dates-${p.id}"></div>
+      <div class="status-meaning">${s.meaning}</div>
+      <span class="status-action sa-${s.action}">${s.actionText}</span>
     </div>
-    <div class="section-divider">Informações da sprint</div>
-    <div class="field"><label>Status da sprint</label><textarea rows="2" data-id="${p.id}_status">${d[p.id+"_status"]||""}</textarea></div>
-    <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="${p.id}_proximos">${d[p.id+"_proximos"]||""}</textarea></div>
-    <div class="field"><label>Riscos</label><textarea rows="2" data-id="${p.id}_riscos">${d[p.id+"_riscos"]||""}</textarea></div>
-    <div class="field"><label>Bloqueios</label><textarea rows="2" data-id="${p.id}_bloqueios">${d[p.id+"_bloqueios"]||""}</textarea></div>
-    <div class="field"><label>Observações</label><textarea rows="2" data-id="${p.id}_obs">${d[p.id+"_obs"]||""}</textarea></div>
-    <div class="section-divider">Resultado da retro</div>
-    <div class="field retro-field"><label>✅ O que foi bem</label><textarea rows="2" data-id="${p.id}_retro_bem">${d[p.id+"_retro_bem"]||""}</textarea></div>
-    <div class="field retro-field"><label>🔧 O que pode melhorar</label><textarea rows="2" data-id="${p.id}_retro_melhora">${d[p.id+"_retro_melhora"]||""}</textarea></div>
-    <div class="field retro-field"><label>📌 Ações definidas</label><textarea rows="2" data-id="${p.id}_retro_acoes">${d[p.id+"_retro_acoes"]||""}</textarea></div>
-    <div class="section-divider">Log de decisões</div>
-    <div class="field log-field"><label>📝 Decisões da semana</label><textarea rows="2" data-id="${p.id}_log">${d[p.id+"_log"]||""}</textarea></div>
-    <div class="section-divider">Controle de fluxo</div>
-    <div class="checklist" data-checklist="${p.id}"></div>
-  </div>`;
-  const dayPanels=DAYS.map(day=>`<div id="daypanel-${p.id}-${day.key}" class="day-panel">
-    <div class="field daily-field"><label>📋 Pontos principais da daily</label><textarea rows="3" data-id="${day.key}_${p.id}_daily" placeholder="O que foi discutido na daily de ${day.label}...">${d[day.key+"_"+p.id+"_daily"]||""}</textarea></div>
-    <div class="field urgency-field"><label>⚠️ Urgências do dia</label><textarea rows="2" data-id="${day.key}_${p.id}_urgencia" placeholder="Alguma urgência surgiu em ${day.label}?">${d[day.key+"_"+p.id+"_urgencia"]||""}</textarea></div>
-    <div class="field log-field"><label>📝 Log / Decisões do dia</label><textarea rows="2" data-id="${day.key}_${p.id}_log" placeholder="Decisões ou pontos de ${day.label}...">${d[day.key+"_"+p.id+"_log"]||""}</textarea></div>
-  </div>`).join("");
-  return`<div class="project-card">
-    <div class="project-header">
-      <div class="project-title">${p.name}${p.client?`<span class="project-client">${p.client}</span>`:""}</div>
-      <span class="proj-status-badge badge-${st}" id="badge-${p.id}">${STATUS_LABELS[st]||"—"}</span>
-    </div>
-    ${dayTabsHtml}${geralPanel}${dayPanels}
-  </div>`;
+  `).join('');
 }
 
-function sustInner(p){
-  const d=load(),st=d["status_"+p.id]||"cinza";
-  return`<div class="project-card">
-    <div class="project-header">
-      <div class="project-title">${p.name}${p.client?`<span class="project-client">${p.client}</span>`:""}</div>
-      <span class="proj-status-badge badge-${st}" id="badge-${p.id}">${STATUS_LABELS[st]||"—"}</span>
-    </div>
-    <div style="font-size:11px;color:#aaa;margin-bottom:8px">Responsáveis</div>
-    <div class="resp-row">
-      <input type="text" placeholder="Dev"      value="${d[p.id+"_resp_dev"]||""}"      oninput="saveField('${p.id}_resp_dev',this.value)">
-      <input type="text" placeholder="Analista" value="${d[p.id+"_resp_analista"]||""}" oninput="saveField('${p.id}_resp_analista',this.value)">
-    </div>
-    <div class="status-row" data-status="${p.id}"></div>
-    <div class="field urgency-field"><label>⚠️ Urgências</label><textarea rows="2" data-id="${p.id}_urgencia">${d[p.id+"_urgencia"]||""}</textarea></div>
-    <div class="section-divider">Sustentação</div>
-    <div class="field"><label>Volume de tickets</label><textarea rows="2" data-id="${p.id}_tickets">${d[p.id+"_tickets"]||""}</textarea></div>
-    <div class="field"><label>Em andamento</label><textarea rows="2" data-id="${p.id}_andamento">${d[p.id+"_andamento"]||""}</textarea></div>
-    <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="${p.id}_proximos">${d[p.id+"_proximos"]||""}</textarea></div>
-    <div class="field"><label>Observações</label><textarea rows="2" data-id="${p.id}_obs">${d[p.id+"_obs"]||""}</textarea></div>
-    <div class="field log-field"><label>📝 Decisões da semana</label><textarea rows="2" data-id="${p.id}_log">${d[p.id+"_log"]||""}</textarea></div>
-  </div>`;
-}
+// ===== CHECKLIST =====
+const checklistItems = {
+  sprint: [
+    { text: 'SGTER — verificar itens Active parados há mais de 3 dias', tag: 'SGTER' },
+    { text: 'SGTER — verificar itens em Awaiting QA sem testador definido', tag: 'SGTER' },
+    { text: 'SIGEST — verificar se há itens Revised sem o dev avisado', tag: 'SIGEST' },
+    { text: 'SIGEST — verificar acúmulo de Resolved aguardando validação', tag: 'SIGEST' },
+    { text: 'SEMPRE NOVA — verificar se há Paused bloqueado', tag: 'SEMPRE NOVA' },
+    { text: 'SEMPRE NOVA — verificar itens em Awaiting QA da sprint atual', tag: 'SEMPRE NOVA' }
+  ],
+  inicio: [
+    { text: 'QUESTÕES — verificar se o backlog está sendo movimentado', tag: 'QUESTÕES' },
+    { text: 'SISPC — verificar se há Proposed acumulando sem priorização', tag: 'SISPC' },
+    { text: 'PGP — verificar progresso do módulo de RAT', tag: 'PGP' },
+    { text: 'PES — verificar se o ambiente está configurado e o time está desbloqueado', tag: 'PES' }
+  ],
+  sustentacao: [
+    { text: 'SGF — verificar se há chamado aberto há mais de 3 dias', tag: 'SGF' },
+    { text: 'E-GESTÃO — verificar se há item Paused sem justificativa', tag: 'E-GESTÃO' },
+    { text: 'ALIMENTAÇÃO — verificar se há bugs reportados pelas escolas', tag: 'ALIMENTAÇÃO' }
+  ]
+};
 
-function inicInner(p){
-  const d=load(),st=d["status_"+p.id]||"cinza";
-  return`<div class="project-card">
-    <div class="project-header">
-      <div class="project-title">${p.name}${p.client?`<span class="project-client">${p.client}</span>`:""}</div>
-      <span class="proj-status-badge badge-${st}" id="badge-${p.id}">${STATUS_LABELS[st]||"—"}</span>
-    </div>
-    <div style="font-size:11px;color:#aaa;margin-bottom:8px">Responsáveis</div>
-    <div class="resp-row">
-      <input type="text" placeholder="Analista" value="${d[p.id+"_resp_analista"]||""}" oninput="saveField('${p.id}_resp_analista',this.value)">
-    </div>
-    <div class="status-row" data-status="${p.id}"></div>
-    <div class="field urgency-field"><label>⚠️ Urgências</label><textarea rows="2" data-id="${p.id}_urgencia">${d[p.id+"_urgencia"]||""}</textarea></div>
-    <div class="section-divider">Andamento</div>
-    <div class="field"><label>Etapa atual</label><textarea rows="2" data-id="${p.id}_etapa">${d[p.id+"_etapa"]||""}</textarea></div>
-    <div class="field"><label>Próximos passos</label><textarea rows="2" data-id="${p.id}_proximos">${d[p.id+"_proximos"]||""}</textarea></div>
-    <div class="field"><label>Dependências</label><textarea rows="2" data-id="${p.id}_dependencias">${d[p.id+"_dependencias"]||""}</textarea></div>
-    <div class="field"><label>Observações</label><textarea rows="2" data-id="${p.id}_obs">${d[p.id+"_obs"]||""}</textarea></div>
-    <div class="field log-field"><label>📝 Decisões da semana</label><textarea rows="2" data-id="${p.id}_log">${d[p.id+"_log"]||""}</textarea></div>
-  </div>`;
-}
-
-function pausInner(p){
-  const d=load(),st=d["status_"+p.id]||"cinza";
-  return`<div class="project-card">
-    <div class="project-header">
-      <div class="project-title">${p.name}${p.client?`<span class="project-client">${p.client}</span>`:""}</div>
-      <span class="proj-status-badge badge-${st}" id="badge-${p.id}">${STATUS_LABELS[st]||"—"}</span>
-    </div>
-    <div class="status-row" data-status="${p.id}"></div>
-    <div class="field urgency-field"><label>⚠️ Urgências</label><textarea rows="2" data-id="${p.id}_urgencia">${d[p.id+"_urgencia"]||""}</textarea></div>
-    <div class="section-divider">Andamento</div>
-    <div class="field"><label>Motivo da pausa</label><textarea rows="2" data-id="${p.id}_motivo">${d[p.id+"_motivo"]||""}</textarea></div>
-    <div class="field"><label>Previsão de retomada</label><textarea rows="2" data-id="${p.id}_retomada">${d[p.id+"_retomada"]||""}</textarea></div>
-    <div class="field"><label>Observações</label><textarea rows="2" data-id="${p.id}_obs">${d[p.id+"_obs"]||""}</textarea></div>
-    <div class="field log-field"><label>📝 Decisões da semana</label><textarea rows="2" data-id="${p.id}_log">${d[p.id+"_log"]||""}</textarea></div>
-  </div>`;
-}
-
-/* ── RENDER ── */
-function buildProjTabs(catKey,projs){
-  const tabsEl=document.getElementById(`proj-tabs-${catKey}`);
-  if(!tabsEl)return;
-  tabsEl.innerHTML=projs.map((p,i)=>`<button class="proj-btn${i===0?" active":""}" onclick="switchProjPanel('${catKey}','${p.id}',this)">${p.name}</button>`).join("");
-  projs.forEach((p,i)=>{
-    const panel=document.getElementById(`projpanel-${catKey}-${p.id}`);
-    if(panel)panel.className=`proj-panel${i===0?" active":""}`;
+function renderChecklist() {
+  ['sprint', 'inicio', 'sustentacao'].forEach(tipo => {
+    const ul = document.getElementById(`checklist${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+    const items = checklistItems[tipo];
+    const saved = JSON.parse(localStorage.getItem(`checklist_${tipo}`) || '[]');
+    ul.innerHTML = items.map((item, i) => `
+      <li class="daily-item ${saved.includes(i) ? 'done' : ''}" onclick="toggleCheck('${tipo}', ${i}, this)">
+        <div class="daily-check">${saved.includes(i) ? '✓' : ''}</div>
+        <div>
+          <div class="daily-text">${item.text}</div>
+          <div class="daily-tag">${item.tag}</div>
+        </div>
+      </li>
+    `).join('');
   });
 }
 
-function switchProjPanel(catKey,pid,btn){
-  document.getElementById(`proj-tabs-${catKey}`).querySelectorAll(".proj-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(`#${catKey}-cards .proj-panel`).forEach(p=>p.classList.remove("active"));
-  document.getElementById(`projpanel-${catKey}-${pid}`).classList.add("active");
+function toggleCheck(tipo, idx, el) {
+  const saved = JSON.parse(localStorage.getItem(`checklist_${tipo}`) || '[]');
+  const pos = saved.indexOf(idx);
+  if (pos === -1) saved.push(idx); else saved.splice(pos, 1);
+  localStorage.setItem(`checklist_${tipo}`, JSON.stringify(saved));
+  el.classList.toggle('done', saved.includes(idx));
+  const check = el.querySelector('.daily-check');
+  check.textContent = saved.includes(idx) ? '✓' : '';
 }
 
-function switchDayTab(pid,day,btn){
-  const card=btn.closest(".project-card");
-  card.querySelectorAll(".day-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  card.querySelectorAll(".day-panel").forEach(p=>p.classList.remove("active"));
-  document.getElementById(`daypanel-${pid}-${day}`).classList.add("active");
+function resetChecklist() {
+  ['sprint', 'inicio', 'sustentacao'].forEach(t => localStorage.removeItem(`checklist_${t}`));
+  renderChecklist();
 }
 
-function renderAllCards(){
-  document.getElementById("sprint-cards").innerHTML      = SPRINT_PROJS.map(p=>`<div id="projpanel-sprint-${p.id}"      class="proj-panel">${sprintInner(p)}</div>`).join("");
-  document.getElementById("sustentacao-cards").innerHTML = SUST_PROJS.map(p=> `<div id="projpanel-sustentacao-${p.id}" class="proj-panel">${sustInner(p)}</div>`).join("");
-  document.getElementById("inicial-cards").innerHTML     = INIC_PROJS.map(p=> `<div id="projpanel-inicial-${p.id}"     class="proj-panel">${inicInner(p)}</div>`).join("");
-  document.getElementById("pausado-cards").innerHTML     = PAUS_PROJS.map(p=> `<div id="projpanel-pausado-${p.id}"     class="proj-panel">${pausInner(p)}</div>`).join("");
-  buildProjTabs("sprint",      SPRINT_PROJS);
-  buildProjTabs("sustentacao", SUST_PROJS);
-  buildProjTabs("inicial",     INIC_PROJS);
-  buildProjTabs("pausado",     PAUS_PROJS);
-  setTimeout(()=>{
-    document.querySelectorAll(".status-row[data-status]").forEach(buildStatusRow);
-    document.querySelectorAll(".checklist[data-checklist]").forEach(buildChecklist);
-    document.querySelectorAll("#page-projetos textarea[data-id]").forEach(el=>{
-      el.addEventListener("input",()=>saveField(el.dataset.id,el.value));
-    });
-    SPRINT_PROJS.forEach(p=>{if(load()[`sprint_start_${p.id}`])calcDates(p.id);});
-  },0);
+// ===== REPORT =====
+function gerarReport() {
+  const data = document.getElementById('reportData').value;
+  const periodo = document.getElementById('reportPeriodo').value;
+  const sprint = document.getElementById('reportSprint').value;
+  const sustentacao = document.getElementById('reportSustentacao').value;
+  const inicio = document.getElementById('reportInicio').value;
+  const riscos = document.getElementById('reportRiscos').value;
+  const proximos = document.getElementById('reportProximos').value;
+
+  const dataFmt = data ? new Date(data+'T12:00:00').toLocaleDateString('pt-BR') : '[data]';
+
+  const texto = `REPORT DE PROJETOS — SEDU-ES
+Data: ${dataFmt}${periodo ? ' | Período: ' + periodo : ''}
+${'─'.repeat(50)}
+
+📌 PROJETOS COM SPRINT ATIVA
+${sprint || '(não informado)'}
+
+${'─'.repeat(50)}
+
+🔧 SUSTENTAÇÃO
+${sustentacao || '(não informado)'}
+
+${'─'.repeat(50)}
+
+🚀 INÍCIO / RETOMADA
+${inicio || '(não informado)'}
+
+${'─'.repeat(50)}
+
+⚠️ IMPEDIMENTOS E RISCOS
+${riscos || 'Nenhum impedimento crítico a reportar.'}
+
+${'─'.repeat(50)}
+
+📅 PRÓXIMOS PASSOS
+${proximos || '(não informado)'}
+`;
+
+  document.getElementById('reportTexto').value = texto;
+  document.getElementById('reportOutput').style.display = 'block';
 }
 
-/* ── NAVEGAÇÃO ── */
-function showPage(page){
-  ["projetos","relatorio","consolidado"].forEach(p=>{document.getElementById("page-"+p).style.display=p===page?"":"none";});
-  document.querySelectorAll(".nav-btn").forEach((b,i)=>b.classList.toggle("active",["projetos","relatorio","consolidado"][i]===page));
-  if(page==="projetos")renderAllCards();
-  if(page==="relatorio")renderReport();
-  if(page==="consolidado")renderHistory();
-}
-
-function switchCat(cat){
-  activeCat=cat;
-  document.querySelectorAll(".cat-panel").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById("cat-"+cat).classList.add("active");
-  document.querySelector(".cat-btn."+cat).classList.add("active");
-}
-
-function clearCat(){
-  const d=load();
-  document.querySelectorAll("#cat-"+activeCat+" textarea[data-id]").forEach(el=>{el.value="";delete d[el.dataset.id];});
-  save(d);
-}
-
-/* ── RELATÓRIO ── */
-function setMode(m){
-  reportMode=m;
-  document.getElementById("modeInterno").classList.toggle("active",m==="interno");
-  document.getElementById("modeCliente").classList.toggle("active",m==="cliente");
-  renderReport();
-}
-
-function renderReport(){
-  const d=load();
-  const today=new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
-  let html=`<p style="font-size:13px;color:#888;margin-bottom:1.5rem">${reportMode==="interno"?"Visão interna":"Visão cliente"} · ${today}</p>`;
-  if(reportMode==="interno"){
-    const allU=[];
-    Object.values(PROJECTS_META).forEach(projs=>projs.forEach(proj=>{
-      const u=(d[proj.id+"_urgencia"]||"").trim();if(u)allU.push({name:proj.name,text:u});
-      DAYS.forEach(day=>{const du=(d[day.key+"_"+proj.id+"_urgencia"]||"").trim();if(du)allU.push({name:`${proj.name} (${day.label})`,text:du});});
-    }));
-    html+=`<div class="urgency-panel"><h3>⚠️ Urgências do portfólio</h3>`;
-    if(allU.length)allU.forEach(u=>{html+=`<div class="urgency-item"><span class="proj-name">${u.name}</span><span>${u.text}</span></div>`;});
-    else html+=`<div class="no-urgency">Nenhuma urgência registrada esta semana.</div>`;
-    html+=`</div>`;
-    html+=`<div class="exec-summary"><h3>📄 Resumo executivo</h3>`;
-    Object.values(PROJECTS_META).forEach(projs=>projs.forEach(proj=>{
-      const st=STATUS_LABELS[d["status_"+proj.id]||""]||"—";
-      const prox=(d[proj.id+"_proximos"]||d[proj.id+"_etapa"]||d[proj.id+"_andamento"]||"").trim();
-      const riscos=(d[proj.id+"_riscos"]||"").trim();
-      let s=`Status: ${st}.`;if(prox)s+=` ${prox}.`;if(riscos)s+=` Riscos: ${riscos}.`;
-      html+=`<div class="exec-proj"><div class="exec-proj-name">${proj.name}${proj.client?` (${proj.client})`:""}</div><div class="exec-proj-text">${s}</div></div>`;
-    }));
-    html+=`</div>`;
-  }
-  for(const[tabKey,projs]of Object.entries(PROJECTS_META)){
-    html+=`<div class="report-section"><h2>${TAB_LABELS[tabKey]}</h2><div class="report-grid">`;
-    projs.forEach(proj=>{
-      const st=d["status_"+proj.id]||"";
-      const fields=reportMode==="interno"?proj.fi:proj.fc;
-      const urgencia=(d[proj.id+"_urgencia"]||"").trim();
-      const logDecisoes=(d[proj.id+"_log"]||"").trim();
-      const resps=[d[proj.id+"_resp_dev"]&&`Dev: ${d[proj.id+"_resp_dev"]}`,d[proj.id+"_resp_arq"]&&`Arq: ${d[proj.id+"_resp_arq"]}`,d[proj.id+"_resp_analista"]&&`Analista: ${d[proj.id+"_resp_analista"]}`].filter(Boolean).join(" · ");
-      html+=`<div class="report-card ${st||"cinza"}"><div class="rc-name">${proj.name}</div>${proj.client?`<div class="rc-client">${proj.client}</div>`:""}${resps&&reportMode==="interno"?`<div class="rc-resp">${resps}</div>`:""}<span class="rc-badge badge-${st||"cinza"}">${STATUS_LABELS[st]||"—"}</span>`;
-      if(urgencia&&reportMode==="interno")html+=`<div class="rc-urgency"><div class="rc-label">⚠️ Urgências</div><div class="rc-value">${urgencia.replace(/\n/g,"<br>")}</div></div>`;
-      if(logDecisoes&&reportMode==="interno")html+=`<div class="rc-log"><div class="rc-label">📝 Decisões</div><div class="rc-value">${logDecisoes.replace(/\n/g,"<br>")}</div></div>`;
-      if(reportMode==="interno"&&proj.hasChecklist){
-        const rows=DAYS.map(day=>{
-          const daily=(d[day.key+"_"+proj.id+"_daily"]||"").trim();
-          const urg=(d[day.key+"_"+proj.id+"_urgencia"]||"").trim();
-          const log=(d[day.key+"_"+proj.id+"_log"]||"").trim();
-          if(!daily&&!urg&&!log)return"";
-          let txt=`<div class="rc-daily-day"><strong>${day.label}</strong>`;
-          if(daily)txt+=`<span>${daily}</span>`;if(urg)txt+=`<span>⚠️ ${urg}</span>`;if(log)txt+=`<span>📝 ${log}</span>`;
-          return txt+`</div>`;
-        }).filter(Boolean).join("");
-        if(rows)html+=`<div class="rc-daily-week"><div class="rc-label">📋 Dailies da semana</div>${rows}</div>`;
-      }
-      let hasContent=false;
-      fields.forEach(f=>{const val=(d[proj.id+"_"+f.k]||"").trim();if(val){hasContent=true;html+=`<div class="rc-row"><div class="rc-label">${f.l}</div><div class="rc-value">${val.replace(/\n/g,"<br>")}</div></div>`;}});
-      if(proj.hasChecklist&&reportMode==="interno"){
-        const done=CHECKLIST_ITEMS.filter(i=>d[`chk_${proj.id}_${i.k}`]===true).length;
-        html+=`<div class="rc-checklist"><div class="rc-label">Controle de fluxo — ${done}/${CHECKLIST_ITEMS.length}</div>`;
-        CHECKLIST_ITEMS.forEach(item=>{const ok=d[`chk_${proj.id}_${item.k}`]===true;html+=`<div class="rc-check-row ${ok?"rc-check-ok":"rc-check-nok"}">${ok?"✅":"❌"} ${item.l}</div>`;});
-        html+=`</div>`;hasContent=true;
-      }
-      if(!hasContent)html+=`<div class="rc-empty">Nenhuma informação preenchida</div>`;
-      html+=`</div>`;
-    });
-    html+=`</div></div>`;
-  }
-  document.getElementById("report-content").innerHTML=html;
-}
-
-/* ── CONSOLIDADO ── */
-function saveSnapshot(){
-  const h=loadHist();
-  const today=new Date();
-  const label=today.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
-  const existing=h.findIndex(x=>x.label===label);
-  const snap={label,ts:today.toISOString(),data:load()};
-  if(existing>=0){if(!confirm(`Já existe um consolidado de ${label}. Substituir?`))return;h[existing]=snap;}
-  else h.unshift(snap);
-  saveHist(h);alert(`Consolidado de ${label} salvo!`);
-}
-
-function renderHistory(){
-  const h=loadHist();
-  const el=document.getElementById("history-list-el");
-  if(!h.length){el.innerHTML=`<div class="empty-state">Nenhum consolidado salvo ainda.</div>`;return;}
-  el.innerHTML=`<div class="history-list-wrap">`+h.map((snap,i)=>`
-    <div class="history-item">
-      <div><div class="hist-date">📅 ${snap.label}</div><div class="hist-meta">Salvo em ${new Date(snap.ts).toLocaleString("pt-BR")}</div></div>
-      <div class="hist-actions"><button class="hist-btn" onclick="viewSnapshot(${i})">Visualizar</button><button class="hist-btn danger" onclick="deleteSnapshot(${i})">Excluir</button></div>
-    </div>`).join("")+`</div>`;
-}
-
-function viewSnapshot(i){
-  const snap=loadHist()[i];if(!snap)return;
-  const win=window.open("","_blank");
-  const d=snap.data;
-  let html=`<html><head><meta charset="UTF-8"><title>Portfólio ${snap.label}</title><style>body{font-family:sans-serif;padding:2rem;max-width:860px;margin:0 auto}h1{margin-bottom:1rem}h2{color:#888;font-size:13px;text-transform:uppercase;margin:1.5rem 0 .5rem}h3{font-size:15px;margin:.75rem 0 .25rem}p{font-size:13px;margin:.2rem 0;color:#444}.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500;margin-bottom:6px}.verde{background:#E1F5EE;color:#0F6E56}.amarelo{background:#FAEEDA;color:#854F0B}.vermelho{background:#FDE8E8;color:#9B1C1C}.cinza{background:#F1EFE8;color:#5F5E5A}</style></head><body><h1>Portfólio — ${snap.label}</h1>`;
-  for(const[tabKey,projs]of Object.entries(PROJECTS_META)){
-    html+=`<h2>${TAB_LABELS[tabKey]}</h2>`;
-    projs.forEach(proj=>{
-      const st=d["status_"+proj.id]||"cinza";
-      html+=`<h3>${proj.name}${proj.client?` (${proj.client})`:""}</h3><span class="badge ${st}">${STATUS_LABELS[st]||"—"}</span>`;
-      proj.fi.forEach(f=>{const val=(d[proj.id+"_"+f.k]||"").trim();if(val)html+=`<p><strong>${f.l}:</strong> ${val}</p>`;});
-    });
-  }
-  html+=`</body></html>`;
-  win.document.write(html);win.document.close();
-}
-
-function deleteSnapshot(i){
-  if(!confirm("Excluir este consolidado?"))return;
-  const h=loadHist();h.splice(i,1);saveHist(h);renderHistory();
-}
-
-/* ── COPY ── */
-function copyMarkdown(){
-  const d=load(),today=new Date().toLocaleDateString("pt-BR");
-  let md=`# Meu Controle de Projetos — ${today}\n\n`;
-  for(const[tabKey,projs]of Object.entries(PROJECTS_META)){
-    md+=`## ${TAB_LABELS[tabKey]}\n\n`;
-    projs.forEach(proj=>{
-      md+=`### ${proj.name}${proj.client?` (${proj.client})`:""}\n`;
-      proj.fi.forEach(f=>{const v=(d[proj.id+"_"+f.k]||"").trim();if(v)md+=`**${f.l}:** ${v}\n`;});
-      md+="\n";
-    });
-  }
-  navigator.clipboard.writeText(md).then(()=>{
-    const btn=document.getElementById("btnCopy");
-    btn.textContent="Copiado!";btn.classList.add("success");
-    setTimeout(()=>{btn.textContent="Copiar para Notion";btn.classList.remove("success");},2500);
+function limparReport() {
+  ['reportSprint','reportSustentacao','reportInicio','reportRiscos','reportProximos'].forEach(id => {
+    document.getElementById(id).value = '';
   });
+  document.getElementById('reportOutput').style.display = 'none';
 }
 
-function copyReport(){
-  const d=load(),today=new Date().toLocaleDateString("pt-BR");
-  let md=`# Relatório de Portfólio — ${today} (${reportMode==="interno"?"Interno":"Cliente"})\n\n`;
-  if(reportMode==="interno"){
-    md+=`## ⚠️ Urgências\n`;
-    let anyU=false;
-    Object.values(PROJECTS_META).forEach(projs=>projs.forEach(proj=>{const u=(d[proj.id+"_urgencia"]||"").trim();if(u){md+=`**${proj.name}:** ${u}\n`;anyU=true;}}));
-    if(!anyU)md+=`Nenhuma urgência registrada.\n`;
-    md+="\n";
+function copiarReport() {
+  const el = document.getElementById('reportTexto');
+  el.select();
+  document.execCommand('copy');
+  alert('Texto copiado!');
+}
+
+// ===== CERIMONIAS =====
+const cerProjs = ['SGTER','SIGEST','SEMPRE NOVA','SGF','E-GESTÃO','ALIMENTAÇÃO','QUESTÕES','SISPC','PGP','PES'];
+const cerTypes = ['daily','planning','review','retro'];
+
+function renderCerimonias() {
+  const tbody = document.getElementById('cerimoniaBody');
+  tbody.innerHTML = cerProjs.map(proj => `
+    <tr>
+      <td><strong>${proj}</strong></td>
+      ${cerTypes.map(type => `
+        <td>
+          <input class="cer-input" type="text" placeholder="dd/mm" 
+            value="${localStorage.getItem(`cer_${proj}_${type}`) || ''}"
+            onchange="saveCer('${proj}','${type}',this.value)"
+            title="Ex: Toda segunda 09h ou 05/05">
+        </td>
+      `).join('')}
+    </tr>
+  `).join('');
+}
+
+function saveCer(proj, type, val) {
+  localStorage.setItem(`cer_${proj}_${type}`, val);
+}
+
+// ===== GLOSSARIO =====
+const glossario = [
+  { term: 'Sprint', def: 'Período fixo de desenvolvimento (geralmente 2 semanas) onde o time entrega um conjunto de funcionalidades. Projetos com sprint ativa: SGTER, SIGEST e SEMPRE NOVA.' },
+  { term: 'Backlog', def: 'Lista de todas as funcionalidades e tarefas do projeto que ainda precisam ser desenvolvidas, ordenadas por prioridade.' },
+  { term: 'Planning (Planejamento)', def: 'Cerimônia no início da sprint onde o time decide quais itens do backlog serão desenvolvidos naquele período.' },
+  { term: 'Review (Revisão)', def: 'Cerimônia no final da sprint onde o time apresenta o que foi desenvolvido. Você e/ou o cliente homologam as entregas.' },
+  { term: 'Retrospectiva', def: 'Cerimônia no final da sprint onde o time discute o que funcionou bem e o que pode melhorar no processo.' },
+  { term: 'Daily (Standup)', def: 'Reunião curta diária (10-15 min) onde cada membro do time reporta o que fez, o que vai fazer e se há impedimentos.' },
+  { term: 'QA (Quality Assurance)', def: 'Profissional responsável pelos testes. Valida se o que foi desenvolvido funciona conforme o esperado.' },
+  { term: 'Test Case', def: 'Roteiro de teste documentado no DevOps descrevendo o que deve ser testado e o resultado esperado.' },
+  { term: 'Homologação', def: 'Ambiente separado de produção onde o cliente valida as funcionalidades antes de ir ao ar.' },
+  { term: 'Discussion', def: 'Aba dentro de cada item no Azure DevOps onde o time registra comentários, pareceres, erros encontrados e decisões.' },
+  { term: 'Work Item', def: 'Qualquer tarefa, história de usuário ou bug registrado no Azure DevOps.' },
+  { term: 'MVP (Mínimo Produto Viável)', def: 'A versão mais simples do sistema que entrega valor ao usuário. É a primeira entrega priorizada nos projetos que estão iniciando.' },
+  { term: 'SEGES', def: 'Sistema Estadual de Gestão Escolar — o sistema central da SEDU-ES com dados de alunos, escolas, professores e turmas. Muitos projetos integram com ele.' },
+  { term: 'ACESSO CIDADÃO', def: 'Sistema de autenticação único do Governo do ES. Todos os projetos da SEDU-ES usam para login (protocolo OAuth 2.0).' },
+  { term: 'E-DOCS', def: 'Sistema de documentos eletrônicos do ES. Usado no E-GESTÃO (Termo de Recebimento) e no SISPC (assinatura digital).' },
+  { term: 'SRE', def: 'Superintendência Regional de Educação — as regionais que fazem a gestão das escolas em cada região do Espírito Santo.' },
+  { term: 'GTI', def: 'Gerência de Tecnologia da Informação da SEDU-ES — a área interna responsável pela tecnologia, que orienta e valida os projetos.' },
+  { term: 'CRP Tecnologia', def: 'A fábrica de software responsável pelo desenvolvimento dos projetos da SEDU-ES.' },
+  { term: 'Tech Lead', def: 'Desenvolvedor sênior responsável por liderar tecnicamente o time, tomar decisões de arquitetura e resolver problemas complexos.' },
+  { term: 'Sustentação', def: 'Fase do projeto onde não há mais desenvolvimento de novas funcionalidades, apenas correção de bugs e manutenção do sistema existente.' }
+];
+
+function renderGlossario() {
+  document.getElementById('glossarioContent').innerHTML = glossario.map(g => `
+    <div class="gloss-item">
+      <div class="gloss-term">${g.term}</div>
+      <div class="gloss-def">${g.def}</div>
+    </div>
+  `).join('');
+}
+
+// ===== PERGUNTAS POR SITUAÇÃO =====
+const situacoes = [
+  {
+    titulo: '🔵 Item parado no mesmo status há dias',
+    perguntas: [
+      'Vi que o item [X] está em [status] desde [data]. Qual é o status real e há algum impedimento?',
+      'Esse item está sem movimentação há [N] dias — tem algo travando? Posso ajudar a destravar?',
+      'Notei que o item [X] não teve atualização no Discussion. Tem alguma dificuldade que eu não estou vendo?'
+    ]
+  },
+  {
+    titulo: '🟡 Falta de teste / Awaiting QA parado',
+    perguntas: [
+      'Esse item está em Awaiting QA desde [data] e não vejo Test Case criado. Pode criar o caso de teste?',
+      'Quem vai testar o item [X] e qual a previsão?',
+      'O teste foi executado em homologação ou só em desenvolvimento local?'
+    ]
+  },
+  {
+    titulo: '🟠 Falta de parecer / Discussion vazio',
+    perguntas: [
+      'Por favor, registre o motivo diretamente no item do DevOps, na aba Discussion. Assim eu consigo acompanhar sem precisar perguntar.',
+      'O item foi de Resolved para Revised mas o Discussion está vazio. O QA pode registrar o que encontrou?',
+      'O item está Paused — pode registrar o motivo no Discussion com previsão de retomada?'
+    ]
+  },
+  {
+    titulo: '🔴 Acúmulo de Resolved sem validação',
+    perguntas: [
+      'Vou fazer uma rodada de validação hoje às [hora]. Quem pode participar?',
+      'Tem [N] itens em Resolved desde [data]. Posso fechar os que já foram validados?',
+      'Quais desses itens Resolved precisam de validação do cliente antes de fechar?'
+    ]
+  },
+  {
+    titulo: '⛔ Item Paused em sprint',
+    perguntas: [
+      'Esse item está Paused em sprint ativa — o que está impedindo? Preciso saber para resolver ou escalar.',
+      'O item [X] está Paused. A decisão para desbloqueá-lo está comigo, com o cliente ou com a GTI?',
+      'Qual o impacto desse Paused na entrega da sprint? Preciso replanear?'
+    ]
+  },
+  {
+    titulo: '📊 Preparando report para a chefe',
+    perguntas: [
+      'Qual o percentual de itens concluídos desta sprint até agora?',
+      'Tem algum risco que impacta a entrega que eu ainda não sei?',
+      'Qual foi a principal entrega desta semana que posso destacar no report?',
+      'Há alguma decisão pendente do cliente que está impedindo o avanço?'
+    ]
   }
-  for(const[tabKey,projs]of Object.entries(PROJECTS_META)){
-    md+=`## ${TAB_LABELS[tabKey]}\n\n`;
-    projs.forEach(proj=>{
-      const st=d["status_"+proj.id]||"";
-      const fields=reportMode==="interno"?proj.fi:proj.fc;
-      md+=`### ${proj.name}${proj.client?` (${proj.client})`:""}\n**Status:** ${STATUS_LABELS[st]||"—"}\n`;
-      const urg=(d[proj.id+"_urgencia"]||"").trim();if(urg&&reportMode==="interno")md+=`**⚠️ Urgências:** ${urg}\n`;
-      const log=(d[proj.id+"_log"]||"").trim();if(log&&reportMode==="interno")md+=`**📝 Decisões:** ${log}\n`;
-      if(reportMode==="interno"&&proj.hasChecklist)DAYS.forEach(day=>{const daily=(d[day.key+"_"+proj.id+"_daily"]||"").trim();if(daily)md+=`**Daily ${day.label}:** ${daily}\n`;});
-      fields.forEach(f=>{const v=(d[proj.id+"_"+f.k]||"").trim();if(v)md+=`**${f.l}:** ${v}\n`;});
-      if(proj.hasChecklist&&reportMode==="interno"){md+=`\n**Controle de fluxo:**\n`;CHECKLIST_ITEMS.forEach(item=>{const ok=d[`chk_${proj.id}_${item.k}`]===true;md+=`- [${ok?"x":" "}] ${item.l}\n`;});}
-      md+="\n";
-    });
-  }
-  navigator.clipboard.writeText(md).then(()=>{
-    const btn=document.getElementById("btnCopyReport");
-    btn.textContent="Copiado!";btn.classList.add("success");
-    setTimeout(()=>{btn.textContent="Copiar relatório";btn.classList.remove("success");},2500);
-  });
+];
+
+function renderPerguntas() {
+  document.getElementById('perguntasContent').innerHTML = situacoes.map(s => `
+    <div class="card" style="margin-bottom:1.2rem;">
+      <div class="proj-section-title" style="font-size:0.85rem; margin-bottom:1rem;">${s.titulo}</div>
+      <ul class="questions-list">
+        ${s.perguntas.map(q => `
+          <li>
+            <span class="q-icon">💬</span>
+            <span><em>"${q}"</em></span>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `).join('');
 }
 
-/* ── INIT ── */
-function init(){
-  renderAllCards();
-  check5DU();
-}
-
-if(sessionStorage.getItem("auth")==="ok"){
-  document.getElementById("login-screen").style.display="none";
-  document.getElementById("app-content").style.display="";
-  init();
-}
+// ===== INIT =====
+renderProjects();
+renderDevopsStatus();
+renderChecklist();
+renderCerimonias();
+renderGlossario();
+renderPerguntas();
 </script>
 </body>
 </html>
