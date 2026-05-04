@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel da Líder — SEDU-ES</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F5F2EC;--surface:#FFFFFF;--surface2:#F0EDE6;--border:#D8D2C6;--border-strong:#B8B0A0;
+  --bg:#F5F2EC;--surface:#FFF;--surface2:#F0EDE6;--border:#D8D2C6;--border-strong:#B8B0A0;
   --text:#1A1714;--text2:#4A4540;--text3:#7A7268;
   --accent:#1B4F8C;--accent-light:#E8EEF7;
   --green:#2D6A3F;--green-light:#E8F2EB;
@@ -24,235 +24,299 @@
 html{scroll-behavior:smooth;font-size:18px}
 body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
 
-/* ── NOTION BUTTON ── */
-.notion-btn{
-  position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
-  background:#000;color:#fff;border:none;border-radius:50px;
-  padding:0.75rem 1.4rem;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;
-  display:flex;align-items:center;gap:8px;cursor:pointer;
-  box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.2s;
-  text-decoration:none;
-}
-.notion-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35)}
-.notion-btn svg{width:18px;height:18px;fill:#fff;flex-shrink:0}
+/* NOTION BTN */
+.notion-btn{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;background:#000;color:#fff;border:none;border-radius:50px;padding:.7rem 1.3rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:7px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);transition:all .2s;text-decoration:none}
+.notion-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.35)}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  width:var(--sidebar);flex-shrink:0;background:var(--text);color:#fff;
-  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;
-  display:flex;flex-direction:column;transition:transform 0.3s ease;
-}
-.sidebar-header{padding:1.8rem 1.5rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.1)}
-.sidebar-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-0.02em;color:#fff;line-height:1.2}
-.sidebar-logo span{display:block;font-size:0.65rem;font-weight:400;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px}
-.sidebar-date{font-size:0.7rem;color:rgba(255,255,255,0.35);margin-top:6px;font-family:'Syne',sans-serif}
-.sidebar-nav{padding:1.2rem 0;flex:1}
-.nav-section-label{font-family:'Syne',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 1.5rem;margin-bottom:4px;margin-top:1.2rem}
-.nav-section-label:first-child{margin-top:0}
-.nav-item{display:flex;align-items:center;gap:10px;padding:0.6rem 1.5rem;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent}
-.nav-item:hover{color:#fff;background:rgba(255,255,255,0.06)}
-.nav-item.active{color:#fff;background:rgba(255,255,255,0.1);border-left-color:#fff}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--text);color:#fff;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:transform .3s ease}
+.sidebar-header{padding:1.6rem 1.4rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#fff;line-height:1.2}
+.sidebar-logo span{display:block;font-size:.62rem;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.sidebar-date{font-size:.68rem;color:rgba(255,255,255,.3);margin-top:5px;font-family:'Syne',sans-serif}
+.sidebar-nav{padding:1rem 0;flex:1}
+.nav-section-label{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:0 1.4rem;margin-bottom:3px;margin-top:1.1rem}
+.nav-item{display:flex;align-items:center;gap:9px;padding:.58rem 1.4rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:500;color:rgba(255,255,255,.58);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-item.active{color:#fff;background:rgba(255,255,255,.1);border-left-color:#fff}
 .nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-/* ── HAMBURGER ── */
-.hamburger{display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--text);border:none;border-radius:8px;padding:0.5rem;cursor:pointer;flex-direction:column;gap:5px}
-.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all 0.2s}
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--text);border:none;border-radius:8px;padding:.5rem;cursor:pointer;flex-direction:column;gap:5px}
+.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .2s}
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger.open span:nth-child(2){opacity:0}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{margin-left:var(--sidebar);flex:1;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text)}
-.topbar-subtitle{font-size:0.75rem;color:var(--text3);margin-top:1px}
-.page{display:none}
-.page.active{display:block}
-.content{padding:2rem 2.5rem;max-width:1100px}
-.section-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-0.02em;line-height:1.2}
-.section-desc{font-size:0.9rem;color:var(--text3);margin-top:5px;max-width:580px}
-.section-header{margin-bottom:1.8rem}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2.2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;color:var(--text)}
+.topbar-subtitle{font-size:.72rem;color:var(--text3);margin-top:1px}
+.page{display:none}.page.active{display:block}
+.content{padding:1.8rem 2.2rem;max-width:1100px}
+.section-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.2}
+.section-desc{font-size:.88rem;color:var(--text3);margin-top:4px;max-width:560px}
+.section-header{margin-bottom:1.6rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.7rem;box-shadow:var(--shadow)}
 
-/* ── CARDS ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.8rem;box-shadow:var(--shadow)}
-
-/* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;gap:5px;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:'Syne',sans-serif;font-size:.66rem;font-weight:600;padding:3px 9px;border-radius:20px}
 .badge-sprint{background:var(--orange-light);color:var(--orange)}
 .badge-sustentacao{background:var(--green-light);color:var(--green)}
 .badge-iniciando{background:var(--blue-light);color:var(--blue)}
 .badge-retomando{background:var(--yellow-light);color:var(--yellow)}
 
-/* ── PROJECTS ── */
-.projects-grid{display:flex;flex-direction:column;gap:1rem}
-.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow 0.2s}
-.project-card:hover{box-shadow:var(--shadow-lg)}
-.project-card-header{padding:1.3rem 1.8rem;display:flex;align-items:flex-start;gap:1rem;cursor:pointer;border-bottom:1px solid transparent;transition:border-color 0.2s}
-.project-card-header.open{border-bottom-color:var(--border)}
-.project-icon{width:44px;height:44px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
-.project-info{flex:1;min-width:0}
-.project-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text)}
-.project-full-name{font-size:0.78rem;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.project-badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
-.project-chevron{font-size:0.75rem;color:var(--text3);transition:transform 0.2s;padding-top:3px;flex-shrink:0}
-.project-chevron.open{transform:rotate(90deg)}
-.project-card-body{display:none;padding:1.6rem 1.8rem;background:var(--surface2)}
-.project-card-body.open{display:block}
-.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
-.proj-section-title{font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.7rem}
-.proj-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1.1rem 1.3rem}
-.proj-desc{font-size:0.88rem;color:var(--text2);line-height:1.7}
-.proj-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.proj-tag{font-family:'Syne',sans-serif;font-size:0.67rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:3px 9px;border-radius:20px}
-.questions-list{list-style:none}
-.questions-list li{padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.87rem;color:var(--text2);display:flex;align-items:flex-start;gap:0.5rem;line-height:1.6}
-.questions-list li:last-child{border-bottom:none}
-.alerta-box{background:var(--red-light);border:1px solid #FCA5A5;border-radius:var(--rsm);padding:0.9rem 1.1rem;font-size:0.85rem;color:var(--red);line-height:1.6;margin-top:0.8rem}
+/* BUTTONS */
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;padding:.7rem 1.5rem;border-radius:var(--rsm);border:none;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#153d70}
+.btn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-danger{background:var(--red-light);color:var(--red);border:1px solid #FCA5A5}.btn-danger:hover{background:#FCA5A5}
+.btn-success{background:var(--green-light);color:var(--green);border:1px solid #86EFAC}.btn-success:hover{background:#86EFAC}
 
-/* ── DEVOPS ── */
-.devops-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
-.status-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1.1rem 1.3rem}
-.status-header{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.status-dot-big{width:13px;height:13px;border-radius:50%;flex-shrink:0}
-.status-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem}
-.status-translation{font-size:0.75rem;color:var(--text3);margin-left:auto;font-style:italic}
-.status-meaning{font-size:0.85rem;color:var(--text2);line-height:1.6;margin-bottom:5px}
-.status-action{font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-block}
+/* TABS */
+.tabs{display:flex;gap:3px;border-bottom:2px solid var(--border);margin-bottom:1.2rem;flex-wrap:wrap}
+.tab-btn{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;padding:.52rem 1rem;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* HIGHLIGHT */
+.highlight{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:0 var(--rsm) var(--rsm) 0;padding:.85rem 1.2rem;margin:.7rem 0;font-size:.86rem;color:var(--text2);line-height:1.7}
+.highlight strong{color:var(--accent);font-family:'Syne',sans-serif}
+
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-family:'Syne',sans-serif;font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);text-align:left;padding:.62rem .88rem;border-bottom:2px solid var(--border)}
+.data-table td{padding:.78rem .88rem;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);vertical-align:top;line-height:1.6}
+.data-table tr:last-child td{border-bottom:none}
+
+/* ======= HOME / ALERTAS ======= */
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+.urgencias-box{grid-column:1/-1;background:var(--surface);border:2px solid var(--orange);border-radius:var(--r);padding:1.4rem 1.7rem}
+.urgencias-title{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:6px}
+.urgencia-item{display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.urgencia-item:last-child{border-bottom:none}
+.urgencia-num{width:24px;height:24px;border-radius:50%;background:var(--orange);color:#fff;font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.urgencia-input{border:none;background:none;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);width:100%;outline:none}
+.urgencia-input::placeholder{color:var(--text3)}
+
+.semaforo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.8rem}
+.semaforo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.1rem;cursor:pointer;transition:all .15s}
+.semaforo-card:hover{box-shadow:var(--shadow)}
+.semaforo-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+.semaforo-sigla{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:var(--text)}
+.semaforo-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;cursor:pointer}
+.semaforo-status{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:600;margin-top:2px}
+.semaforo-nota{font-size:.75rem;color:var(--text3);margin-top:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.semaforo-controls{display:flex;gap:4px;margin-top:.5rem}
+.sem-btn{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:border-color .15s}
+.sem-btn:hover{border-color:var(--border-strong)}
+.sem-btn.active{border-color:var(--text)}
+
+/* ANOTAÇÕES */
+.nota-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.nota-modal.open{display:flex}
+.nota-box{background:var(--surface);border-radius:var(--r);padding:1.8rem;width:100%;max-width:560px;box-shadow:var(--shadow-lg)}
+.nota-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:1rem}
+.nota-textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.85rem 1rem;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);resize:vertical;min-height:140px;line-height:1.6;transition:border-color .15s;background:var(--surface2)}
+.nota-textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.nota-hist{max-height:180px;overflow-y:auto;margin-top:.8rem;border:1px solid var(--border);border-radius:var(--rsm)}
+.nota-hist-item{padding:.6rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--text2);line-height:1.5}
+.nota-hist-item:last-child{border-bottom:none}
+.nota-hist-date{font-family:'Syne',sans-serif;font-size:.62rem;color:var(--text3);margin-bottom:2px}
+
+/* ======= LINHA DO TEMPO SPRINT ======= */
+.timeline-wrap{overflow-x:auto;padding-bottom:1rem}
+.timeline{display:flex;align-items:flex-start;gap:0;min-width:900px;padding:1rem 0}
+.tl-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.tl-step::after{content:'';position:absolute;top:28px;left:50%;width:100%;height:3px;z-index:0}
+.tl-step:last-child::after{display:none}
+.tl-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:3px solid var(--border);background:var(--surface);position:relative;z-index:1;transition:all .2s;flex-shrink:0}
+.tl-step.done .tl-icon{border-color:var(--green);background:var(--green-light)}
+.tl-step.active-step .tl-icon{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 4px var(--accent-light)}
+.tl-step.done::after{background:var(--green)}
+.tl-step.active-step::after{background:var(--border)}
+.tl-step:not(.done):not(.active-step)::after{background:var(--border)}
+.tl-label{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;color:var(--text);margin-top:.5rem;text-align:center;max-width:80px;line-height:1.3}
+.tl-sublabel{font-size:.62rem;color:var(--text3);text-align:center;max-width:80px;margin-top:2px;line-height:1.3}
+.tl-resp{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:600;padding:2px 6px;border-radius:10px;margin-top:3px;text-align:center}
+.resp-analista{background:#FDE68A;color:#92400E}
+.resp-cliente{background:#BFDBFE;color:#1E40AF}
+.resp-dev{background:#D1FAE5;color:#065F46}
+.resp-qa{background:#EDE9FE;color:#5B21B6}
+.resp-lider{background:#FCE7F3;color:#9D174D}
+.resp-todos{background:var(--surface2);color:var(--text2)}
+
+.tl-proj-selector{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.tl-proj-btn{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;padding:.35rem .9rem;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s}
+.tl-proj-btn:hover{border-color:var(--border-strong)}
+.tl-proj-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+.tl-step-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.5rem;margin-top:1.5rem}
+.tl-detail-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:.5rem}
+.tl-detail-list{list-style:none}
+.tl-detail-list li{padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);display:flex;gap:.5rem;line-height:1.5}
+.tl-detail-list li:last-child{border-bottom:none}
+
+/* ======= QUIZ ======= */
+.quiz-wrap{max-width:680px}
+.quiz-progress{display:flex;gap:4px;margin-bottom:1.2rem}
+.quiz-prog-dot{height:6px;flex:1;border-radius:3px;background:var(--border);transition:background .3s}
+.quiz-prog-dot.done{background:var(--green)}
+.quiz-prog-dot.current{background:var(--accent)}
+.quiz-question{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:1.2rem;line-height:1.4}
+.quiz-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem}
+.quiz-option{background:var(--surface);border:2px solid var(--border);border-radius:var(--rsm);padding:.9rem 1.2rem;font-size:.9rem;color:var(--text2);cursor:pointer;transition:all .15s;text-align:left;font-family:'Source Serif 4',serif;line-height:1.5}
+.quiz-option:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.quiz-option.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.quiz-option.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.quiz-option:disabled{cursor:not-allowed}
+.quiz-feedback{padding:.9rem 1.2rem;border-radius:var(--rsm);font-size:.88rem;margin-bottom:.8rem;line-height:1.6;display:none}
+.quiz-feedback.correct{background:var(--green-light);color:var(--green);border:1px solid #86EFAC;display:block}
+.quiz-feedback.wrong{background:var(--red-light);color:var(--red);border:1px solid #FCA5A5;display:block}
+.quiz-score{font-family:'Syne',sans-serif;font-size:.8rem;color:var(--text3);margin-bottom:1rem}
+.quiz-result{text-align:center;padding:2rem}
+.quiz-result-score{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent)}
+.quiz-result-msg{font-size:1rem;color:var(--text2);margin-top:.5rem}
+.quiz-category-select{margin-bottom:1.2rem}
+
+/* ======= PROJETOS ======= */
+.projects-grid{display:flex;flex-direction:column;gap:.9rem}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s}
+.project-card:hover{box-shadow:var(--shadow-lg)}
+.project-card-header{padding:1.2rem 1.6rem;display:flex;align-items:flex-start;gap:.9rem;cursor:pointer;border-bottom:1px solid transparent;transition:border-color .2s}
+.project-card-header.open{border-bottom-color:var(--border)}
+.project-icon{width:42px;height:42px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.project-info{flex:1;min-width:0}
+.project-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
+.project-full-name{font-size:.75rem;color:var(--text3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-badges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.project-chevron{font-size:.72rem;color:var(--text3);transition:transform .2s;padding-top:3px;flex-shrink:0}
+.project-chevron.open{transform:rotate(90deg)}
+.project-card-body{display:none;padding:1.5rem 1.6rem;background:var(--surface2)}
+.project-card-body.open{display:block}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.proj-section-title{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.proj-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.2rem}
+.proj-desc{font-size:.86rem;color:var(--text2);line-height:1.7}
+.proj-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.proj-tag{font-family:'Syne',sans-serif;font-size:.64rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:20px}
+.questions-list{list-style:none}
+.questions-list li{padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);display:flex;align-items:flex-start;gap:.5rem;line-height:1.6}
+.questions-list li:last-child{border-bottom:none}
+.alerta-box{background:var(--red-light);border:1px solid #FCA5A5;border-radius:var(--rsm);padding:.85rem 1rem;font-size:.83rem;color:var(--red);line-height:1.6;margin-top:.7rem}
+
+/* NOTA INLINE */
+.proj-nota-wrap{margin-top:.8rem}
+.proj-nota-input{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.7rem .9rem;font-family:'Source Serif 4',serif;font-size:.85rem;color:var(--text);resize:vertical;min-height:60px;background:var(--surface);transition:border-color .15s}
+.proj-nota-input:focus{outline:none;border-color:var(--accent)}
+
+/* ======= CERIMÔNIAS ======= */
+.cer-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.2rem}
+.cer-form-group{display:flex;flex-direction:column;gap:4px}
+.cer-form-label{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.cer-input{border:1.5px solid var(--border);border-radius:var(--rsm);padding:.58rem .88rem;font-family:'Source Serif 4',serif;font-size:.88rem;color:var(--text);background:var(--surface);transition:border-color .15s;width:100%}
+.cer-input:focus{outline:none;border-color:var(--accent)}
+.cer-results{display:flex;flex-direction:column;gap:.7rem}
+.cer-proj-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.cer-proj-header{background:var(--text);color:#fff;padding:.65rem 1.1rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:7px}
+.cer-dates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1px;background:var(--border)}
+.cer-date-cell{background:var(--surface);padding:.75rem .95rem}
+.cer-date-label{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
+.cer-date-val{font-size:.86rem;font-weight:600;color:var(--text)}
+.cer-date-day{font-size:.7rem;color:var(--text3)}
+
+/* ======= CALENDÁRIO ======= */
+.cal-header{display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem;flex-wrap:wrap}
+.cal-nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:.45rem .85rem;font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:background .15s}
+.cal-nav-btn:hover{background:var(--border)}
+.cal-month-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)}
+.cal-grid-wrap{overflow-x:auto}
+.cal-grid{display:grid;grid-template-columns:40px repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;min-width:560px}
+.cal-week-label{background:var(--text);color:#fff;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;padding:.4rem .2rem;text-align:center;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;letter-spacing:.05em}
+.cal-day-header{background:var(--surface2);font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);padding:.45rem;text-align:center}
+.cal-cell{background:var(--surface);padding:.35rem;min-height:65px;vertical-align:top;position:relative}
+.cal-cell.empty{background:var(--surface2)}
+.cal-cell.today{background:var(--accent-light)}
+.cal-day-num{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--text3);margin-bottom:2px}
+.cal-cell.today .cal-day-num{color:var(--accent);font-weight:800}
+.cal-event{font-size:.58rem;font-family:'Syne',sans-serif;font-weight:600;padding:1px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+
+/* DEVOPS STATUS */
+.devops-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem;margin-top:.9rem}
+.status-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.2rem}
+.status-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.status-dot-big{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.status-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem}
+.status-translation{font-size:.72rem;color:var(--text3);margin-left:auto;font-style:italic}
+.status-meaning{font-size:.83rem;color:var(--text2);line-height:1.6;margin-bottom:4px}
+.status-action{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:20px;display:inline-block}
 .sa-ok{background:var(--green-light);color:var(--green)}
 .sa-warn{background:var(--orange-light);color:var(--orange)}
 .sa-danger{background:var(--red-light);color:var(--red)}
 
-/* ── TABLES ── */
-.data-table{width:100%;border-collapse:collapse}
-.data-table th{font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);text-align:left;padding:0.65rem 0.9rem;border-bottom:2px solid var(--border)}
-.data-table td{padding:0.8rem 0.9rem;border-bottom:1px solid var(--border);font-size:0.87rem;color:var(--text2);vertical-align:top;line-height:1.6}
-.data-table tr:last-child td{border-bottom:none}
-
-/* ── REPORT ── */
-.report-label{font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
-.report-field{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:0.85rem 1.1rem;font-family:'Source Serif 4',serif;font-size:0.92rem;color:var(--text);background:var(--surface2);resize:vertical;min-height:75px;line-height:1.6;transition:border-color 0.15s}
-.report-field:focus{outline:none;border-color:var(--accent);background:var(--surface)}
-.report-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.8rem;margin-bottom:1.2rem}
-.report-mini{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-
-/* ── BUTTONS ── */
-.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;padding:0.75rem 1.6rem;border-radius:var(--rsm);border:none;cursor:pointer;transition:all 0.15s;letter-spacing:0.02em}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:#153d70}
-.btn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
-.btn-secondary:hover{background:var(--border)}
-
-/* ── CHECKLIST ── */
-.daily-item{display:flex;align-items:flex-start;gap:0.9rem;padding:0.9rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;border-radius:6px}
-.daily-item:hover{background:var(--surface2)}
-.daily-item:last-child{border-bottom:none}
-.daily-check{width:22px;height:22px;border:2px solid var(--border-strong);border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:var(--surface);font-size:0.8rem}
+/* CHECKLIST */
+.daily-item{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-radius:6px}
+.daily-item:hover{background:var(--surface2)}.daily-item:last-child{border-bottom:none}
+.daily-check{width:22px;height:22px;border:2px solid var(--border-strong);border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--surface);font-size:.78rem}
 .daily-item.done .daily-check{background:var(--green);border-color:var(--green);color:#fff}
-.daily-text{font-size:0.9rem;color:var(--text2);line-height:1.6}
-.daily-item.done .daily-text{text-decoration:line-through;color:var(--text3)}
-.daily-tag{font-family:'Syne',sans-serif;font-size:0.67rem;color:var(--text3);margin-top:1px}
+.daily-text{font-size:.88rem;color:var(--text2);line-height:1.6}.daily-item.done .daily-text{text-decoration:line-through;color:var(--text3)}
+.daily-tag{font-family:'Syne',sans-serif;font-size:.65rem;color:var(--text3);margin-top:1px}
 
-/* ── TABS ── */
-.tabs{display:flex;gap:3px;border-bottom:2px solid var(--border);margin-bottom:1.3rem;flex-wrap:wrap}
-.tab-btn{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:600;padding:0.55rem 1.1rem;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+/* REPORT */
+.report-label{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.report-field{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.82rem 1.05rem;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);background:var(--surface2);resize:vertical;min-height:72px;line-height:1.6;transition:border-color .15s}
+.report-field:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.report-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem 1.6rem;margin-bottom:1.1rem}
+.report-mini{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
 
-/* ── HIGHLIGHT ── */
-.highlight{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:0 var(--rsm) var(--rsm) 0;padding:0.9rem 1.3rem;margin:0.8rem 0;font-size:0.88rem;color:var(--text2);line-height:1.7}
-.highlight strong{color:var(--accent);font-family:'Syne',sans-serif}
+/* GLOSSÁRIO */
+.gloss-item{padding:1rem 0;border-bottom:1px solid var(--border)}.gloss-item:last-child{border-bottom:none}
+.gloss-term{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:2px}
+.gloss-def{font-size:.86rem;color:var(--text2);line-height:1.7}
 
-/* ── GLOSSARIO ── */
-.gloss-item{padding:1.1rem 0;border-bottom:1px solid var(--border)}
-.gloss-item:last-child{border-bottom:none}
-.gloss-term{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--text);margin-bottom:3px}
-.gloss-def{font-size:0.88rem;color:var(--text2);line-height:1.7}
-
-/* ── CALENDÁRIO ── */
-.cal-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.cal-nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:0.5rem 0.9rem;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;transition:background 0.15s}
-.cal-nav-btn:hover{background:var(--border)}
-.cal-month-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text)}
-.cal-grid{display:grid;grid-template-columns:auto repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.cal-week-label{background:var(--text);color:#fff;font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;padding:0.5rem 0.4rem;text-align:center;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:0.05em}
-.cal-day-header{background:var(--surface2);font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);padding:0.5rem;text-align:center}
-.cal-cell{background:var(--surface);padding:0.4rem;min-height:70px;vertical-align:top;position:relative}
-.cal-cell.empty{background:var(--surface2)}
-.cal-cell.today{background:var(--accent-light)}
-.cal-day-num{font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;color:var(--text3);margin-bottom:3px}
-.cal-cell.today .cal-day-num{color:var(--accent);font-weight:800}
-.cal-event{font-size:0.6rem;font-family:'Syne',sans-serif;font-weight:600;padding:1px 4px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-
-/* ── CERIMÔNIAS AUTOMÁTICAS ── */
-.cer-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
-.cer-form-group{display:flex;flex-direction:column;gap:4px}
-.cer-form-label{font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3)}
-.cer-input{border:1.5px solid var(--border);border-radius:var(--rsm);padding:0.6rem 0.9rem;font-family:'Source Serif 4',serif;font-size:0.9rem;color:var(--text);background:var(--surface);transition:border-color 0.15s;width:100%}
-.cer-input:focus{outline:none;border-color:var(--accent)}
-select.cer-input{cursor:pointer}
-.cer-results{display:flex;flex-direction:column;gap:0.8rem;margin-top:0.5rem}
-.cer-proj-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.cer-proj-header{background:var(--text);color:#fff;padding:0.7rem 1.2rem;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;display:flex;align-items:center;gap:8px}
-.cer-dates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border)}
-.cer-date-cell{background:var(--surface);padding:0.8rem 1rem}
-.cer-date-label{font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
-.cer-date-val{font-size:0.88rem;font-weight:600;color:var(--text)}
-.cer-date-day{font-size:0.72rem;color:var(--text3)}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
 
-/* ── RESPONSIVE ── */
+/* RESPONSIVE */
 @media(max-width:768px){
   :root{--sidebar:0px}
-  html{font-size:17px}
+  html{font-size:16px}
   .hamburger{display:flex}
   .sidebar{transform:translateX(-100%);width:280px}
   .sidebar.open{transform:translateX(0)}
   .sidebar-overlay.open{display:block}
   .main{margin-left:0}
-  .topbar{padding:1rem 1.2rem 1rem 4rem}
-  .content{padding:1.4rem 1.2rem}
+  .topbar{padding:.9rem 1rem .9rem 4rem}
+  .content{padding:1.2rem 1rem}
   .proj-grid{grid-template-columns:1fr}
   .report-mini{grid-template-columns:1fr}
-  .cer-form{grid-template-columns:1fr 1fr}
-  .cal-grid{grid-template-columns:auto repeat(7,1fr)}
-  .cal-cell{min-height:50px}
-  .cal-event{display:none}
-  .cal-cell.has-event::after{content:'•';position:absolute;bottom:3px;right:4px;color:var(--accent);font-size:0.8rem}
+  .home-grid{grid-template-columns:1fr}
+  .urgencias-box{grid-column:1}
+  .semaforo-grid{grid-template-columns:repeat(2,1fr)}
   .devops-status-grid{grid-template-columns:1fr}
-  .notion-btn{bottom:1rem;right:1rem;padding:0.65rem 1.1rem;font-size:0.78rem}
-  .section-title{font-size:1.3rem}
+  .notion-btn{bottom:.8rem;right:.8rem;padding:.6rem 1rem;font-size:.76rem}
 }
 @media(max-width:480px){
-  html{font-size:16px}
+  html{font-size:15px}
+  .semaforo-grid{grid-template-columns:1fr 1fr}
   .project-full-name{display:none}
-  .cal-week-label{font-size:0.55rem;padding:0.3rem}
-  .cal-day-header{font-size:0.55rem;padding:0.3rem}
   .cer-form{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- NOTION BUTTON -->
 <a class="notion-btn" href="https://www.notion.so/322d70f44d5480f2a305fce0bcba0326?v=342d70f44d548061bf82000cf461a96b" target="_blank">
-  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6.7 6.7C10 3.4 14.7 2 20.7 2h58.6c6 0 10.7 1.4 14 4.7 3.3 3.3 4.7 8 4.7 14v58.6c0 6-1.4 10.7-4.7 14-3.3 3.3-8 4.7-14 4.7H20.7c-6 0-10.7-1.4-14-4.7C3.4 90 2 85.3 2 79.3V20.7C2 14.7 3.4 10 6.7 6.7z"/><path d="M29 72V28h42l-4 6H35v32l36-1-4 7H29z" fill="#000"/><path d="M62 34l4-6 7 9v35l-7-1V34z" fill="#000"/></svg>
   📝 Transcrição ao vivo
 </a>
 
-<!-- HAMBURGER -->
-<button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
-  <span></span><span></span><span></span>
-</button>
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-logo">Painel da Líder<span>SEDU-ES · GTI · CRP</span></div>
@@ -260,42 +324,71 @@ select.cer-input{cursor:pointer}
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-label">Principal</div>
-    <button class="nav-item active" onclick="nav('projetos',this)"><div class="nav-dot" style="background:#F59E0B"></div>Meus Projetos</button>
-    <button class="nav-item" onclick="nav('checklist',this)"><div class="nav-dot" style="background:#10B981"></div>Checklist Diário</button>
-    <button class="nav-item" onclick="nav('report',this)"><div class="nav-dot" style="background:#6366F1"></div>Gerar Report</button>
-    <div class="nav-section-label">Cerimônias</div>
-    <button class="nav-item" onclick="nav('cerimonias',this)"><div class="nav-dot" style="background:#14B8A6"></div>Datas Automáticas</button>
-    <button class="nav-item" onclick="nav('calendario',this)"><div class="nav-dot" style="background:#F97316"></div>Calendário</button>
-    <div class="nav-section-label">Azure DevOps</div>
-    <button class="nav-item" onclick="nav('devops-status',this)"><div class="nav-dot" style="background:#3B82F6"></div>Status & Fluxo</button>
-    <button class="nav-item" onclick="nav('devops-tempo',this)"><div class="nav-dot" style="background:#8B5CF6"></div>Tempo Ideal</button>
-    <button class="nav-item" onclick="nav('devops-testes',this)"><div class="nav-dot" style="background:#EC4899"></div>Testes & Pareceres</button>
-    <div class="nav-section-label">Referência</div>
-    <button class="nav-item" onclick="nav('glossario',this)"><div class="nav-dot" style="background:#EF4444"></div>Glossário</button>
-    <button class="nav-item" onclick="nav('perguntas',this)"><div class="nav-dot" style="background:#0EA5E9"></div>Perguntas Prontas</button>
+    <button class="nav-item active" onclick="nav('home',this)"><div class="nav-dot" style="background:#EF4444"></div>🏠 Início & Alertas</button>
+    <button class="nav-item" onclick="nav('projetos',this)"><div class="nav-dot" style="background:#F59E0B"></div>📁 Meus Projetos</button>
+    <button class="nav-item" onclick="nav('checklist',this)"><div class="nav-dot" style="background:#10B981"></div>✅ Checklist Diário</button>
+    <button class="nav-item" onclick="nav('report',this)"><div class="nav-dot" style="background:#6366F1"></div>📋 Gerar Report</button>
+    <div class="nav-section-label">Sprint & Cerimônias</div>
+    <button class="nav-item" onclick="nav('timeline',this)"><div class="nav-dot" style="background:#F97316"></div>🚂 Ciclo da Sprint</button>
+    <button class="nav-item" onclick="nav('cerimonias',this)"><div class="nav-dot" style="background:#14B8A6"></div>📅 Datas Automáticas</button>
+    <button class="nav-item" onclick="nav('calendario',this)"><div class="nav-dot" style="background:#8B5CF6"></div>🗓️ Calendário</button>
+    <div class="nav-section-label">DevOps</div>
+    <button class="nav-item" onclick="nav('devops-status',this)"><div class="nav-dot" style="background:#3B82F6"></div>🔵 Status & Fluxo</button>
+    <button class="nav-item" onclick="nav('devops-tempo',this)"><div class="nav-dot" style="background:#0EA5E9"></div>⏱ Tempo Ideal</button>
+    <button class="nav-item" onclick="nav('devops-testes',this)"><div class="nav-dot" style="background:#EC4899"></div>🧪 Testes & Pareceres</button>
+    <div class="nav-section-label">Aprender</div>
+    <button class="nav-item" onclick="nav('quiz',this)"><div class="nav-dot" style="background:#A855F7"></div>🎯 Quiz de Fixação</button>
+    <button class="nav-item" onclick="nav('glossario',this)"><div class="nav-dot" style="background:#EF4444"></div>📖 Glossário</button>
+    <button class="nav-item" onclick="nav('perguntas',this)"><div class="nav-dot" style="background:#22C55E"></div>💬 Perguntas Prontas</button>
   </nav>
 </aside>
 
 <div class="main">
   <div class="topbar">
     <div>
-      <div class="topbar-title" id="topbarTitle">Meus Projetos</div>
-      <div class="topbar-subtitle" id="topbarSub">Visão geral dos 10 projetos da SEDU-ES</div>
+      <div class="topbar-title" id="topbarTitle">Início & Alertas</div>
+      <div class="topbar-subtitle" id="topbarSub">Suas urgências e o status rápido dos projetos</div>
     </div>
-    <button class="btn btn-secondary" onclick="window.print()" style="font-size:0.78rem;padding:0.5rem 1rem">🖨️ Imprimir</button>
+    <button class="btn btn-secondary" onclick="window.print()" style="font-size:.76rem;padding:.45rem .9rem">🖨️ Imprimir</button>
   </div>
 
-  <!-- ======= PROJETOS ======= -->
-  <div class="page active" id="page-projetos">
+  <!-- ========== HOME ========== -->
+  <div class="page active" id="page-home">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">Bom dia, Líder! 👋</div>
+      <div class="section-desc">Registre suas urgências do dia e veja rapidamente a saúde de cada projeto.</div>
+    </div>
+
+    <div class="urgencias-box" style="margin-bottom:1.2rem">
+      <div class="urgencias-title">🔴 Urgências de hoje</div>
+      <div class="urgencia-item"><div class="urgencia-num">1</div><input class="urgencia-input" id="urg1" placeholder="Escreva a urgência mais importante do dia..." oninput="saveUrg()"></div>
+      <div class="urgencia-item"><div class="urgencia-num">2</div><input class="urgencia-input" id="urg2" placeholder="Segunda urgência..." oninput="saveUrg()"></div>
+      <div class="urgencia-item"><div class="urgencia-num">3</div><input class="urgencia-input" id="urg3" placeholder="Terceira urgência..." oninput="saveUrg()"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.2rem">
+      <div class="proj-section-title" style="margin-bottom:.9rem">🚦 Semáforo dos projetos — clique nos círculos para mudar o status</div>
+      <div class="semaforo-grid" id="semaforoGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="proj-section-title" style="margin-bottom:.7rem">📝 Nota rápida do dia</div>
+      <textarea class="proj-nota-input" id="notaDia" placeholder="Anote aqui qualquer coisa importante que aconteceu hoje..." style="min-height:90px;width:100%" oninput="saveNotaDia()"></textarea>
+    </div>
+  </div></div>
+
+  <!-- ========== PROJETOS ========== -->
+  <div class="page" id="page-projetos">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Meus 10 Projetos</div>
-      <div class="section-desc">Toque em cada projeto para ver resumo, funcionalidades e perguntas para fazer ao time.</div>
+      <div class="section-desc">Toque para expandir. Cada projeto tem resumo, funcionalidades e perguntas prontas.</div>
     </div>
     <div class="projects-grid" id="projectsGrid"></div>
   </div></div>
 
-  <!-- ======= CHECKLIST ======= -->
+  <!-- ========== CHECKLIST ========== -->
   <div class="page" id="page-checklist">
   <div class="content">
     <div class="section-header">
@@ -303,19 +396,19 @@ select.cer-input{cursor:pointer}
       <div class="section-desc">Sua rotina de 15 minutos. Marque cada item conforme analisa o DevOps.</div>
     </div>
     <div class="card"><div class="proj-section-title">🔴 Sprint Ativa — SGTER, SIGEST, SEMPRE NOVA</div><ul id="cl-sprint"></ul></div>
-    <div class="card" style="margin-top:1rem"><div class="proj-section-title">🟡 Iniciando / Retomando — QUESTÕES, SISPC, PGP, PES</div><ul id="cl-inicio"></ul></div>
-    <div class="card" style="margin-top:1rem"><div class="proj-section-title">🟢 Sustentação — SGF, E-GESTÃO, ALIMENTAÇÃO</div><ul id="cl-sustentacao"></ul></div>
-    <div style="margin-top:1rem;display:flex;gap:0.8rem;flex-wrap:wrap">
+    <div class="card" style="margin-top:.9rem"><div class="proj-section-title">🟡 Iniciando / Retomando — QUESTÕES, SISPC, PGP, PES</div><ul id="cl-inicio"></ul></div>
+    <div class="card" style="margin-top:.9rem"><div class="proj-section-title">🟢 Sustentação — SGF, E-GESTÃO, ALIMENTAÇÃO</div><ul id="cl-sustentacao"></ul></div>
+    <div style="margin-top:1rem;display:flex;gap:.8rem;flex-wrap:wrap">
       <button class="btn btn-secondary" onclick="resetChecklist()">🔄 Reiniciar checklist</button>
     </div>
   </div></div>
 
-  <!-- ======= REPORT ======= -->
+  <!-- ========== REPORT ========== -->
   <div class="page" id="page-report">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Gerar Report</div>
-      <div class="section-desc">Preencha e copie o texto para enviar à sua chefe.</div>
+      <div class="section-desc">Preencha e copie o texto formatado para sua chefe.</div>
     </div>
     <div class="report-block">
       <div class="report-mini">
@@ -324,47 +417,69 @@ select.cer-input{cursor:pointer}
       </div>
     </div>
     <div class="report-block"><div class="report-label">Sprint Ativa — o que está em andamento?</div><textarea class="report-field" id="rSprint" placeholder="SGTER, SIGEST, SEMPRE NOVA..."></textarea></div>
-    <div class="report-block"><div class="report-label">Sustentação — incidentes ou chamados relevantes?</div><textarea class="report-field" id="rSustentacao" placeholder="SGF, E-GESTÃO, ALIMENTAÇÃO..."></textarea></div>
+    <div class="report-block"><div class="report-label">Sustentação — incidentes relevantes?</div><textarea class="report-field" id="rSustentacao" placeholder="SGF, E-GESTÃO, ALIMENTAÇÃO..."></textarea></div>
     <div class="report-block"><div class="report-label">Início / Retomada — progresso?</div><textarea class="report-field" id="rInicio" placeholder="SISPC, PGP, QUESTÕES, PES..."></textarea></div>
     <div class="report-block"><div class="report-label">Impedimentos e riscos</div><textarea class="report-field" id="rRiscos" placeholder="O que precisa de atenção da gestão..."></textarea></div>
     <div class="report-block"><div class="report-label">Próximos passos</div><textarea class="report-field" id="rProximos" placeholder="Plannings, reviews, entregas previstas..."></textarea></div>
-    <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="gerarReport()">📋 Gerar texto</button>
       <button class="btn btn-secondary" onclick="limparReport()">🗑️ Limpar</button>
     </div>
-    <div id="reportOutput" style="display:none;margin-top:1.3rem">
+    <div id="reportOutput" style="display:none;margin-top:1.2rem">
       <div class="report-label">Texto gerado — copie e cole</div>
-      <textarea class="report-field" id="reportTexto" style="min-height:350px;font-family:monospace;font-size:0.82rem" readonly></textarea>
-      <button class="btn btn-secondary" style="margin-top:0.6rem" onclick="copiarReport()">📋 Copiar</button>
+      <textarea class="report-field" id="reportTexto" style="min-height:320px;font-family:monospace;font-size:.8rem" readonly></textarea>
+      <button class="btn btn-secondary" style="margin-top:.5rem" onclick="copiarReport()">📋 Copiar</button>
     </div>
   </div></div>
 
-  <!-- ======= CERIMÔNIAS AUTOMÁTICAS ======= -->
+  <!-- ========== TIMELINE DA SPRINT ========== -->
+  <div class="page" id="page-timeline">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">🚂 Ciclo da Sprint</div>
+      <div class="section-desc">O fluxo completo do seu time — do levantamento de requisitos até a nova planning.</div>
+    </div>
+
+    <div class="tl-proj-selector" id="tlProjSelector"></div>
+
+    <div class="card" style="overflow:visible">
+      <div class="timeline-wrap">
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </div>
+
+    <div class="tl-step-detail" id="tlDetail" style="display:none">
+      <div class="tl-detail-title" id="tlDetailTitle"></div>
+      <ul class="tl-detail-list" id="tlDetailList"></ul>
+    </div>
+  </div></div>
+
+  <!-- ========== CERIMÔNIAS ========== -->
   <div class="page" id="page-cerimonias">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Datas Automáticas</div>
-      <div class="section-desc">Digite a data da Planning e a duração da sprint — o sistema calcula todas as cerimônias automaticamente.</div>
+      <div class="section-desc">Digite a data da Review e a duração — o sistema calcula todas as cerimônias.</div>
     </div>
-    <div class="card" style="margin-bottom:1.3rem">
+    <div class="card" style="margin-bottom:1.2rem">
       <div class="proj-section-title">Configure a Sprint</div>
       <div class="cer-form">
         <div class="cer-form-group">
-          <label class="cer-form-label">Data da Planning</label>
-          <input type="date" class="cer-input" id="planningDate" onchange="calcCerimonias()">
+          <label class="cer-form-label">Data da Review</label>
+          <input type="date" class="cer-input" id="reviewDate" onchange="calcCerimonias()">
         </div>
         <div class="cer-form-group">
           <label class="cer-form-label">Duração da Sprint</label>
-          <select class="cer-input" id="sprintDuracao" onchange="calcCerimonias()">
+          <select class="cer-input" id="sprintDur" onchange="calcCerimonias()">
             <option value="">Selecione...</option>
             <option value="14">15 dias (2 semanas)</option>
             <option value="29">30 dias (4 semanas)</option>
           </select>
         </div>
         <div class="cer-form-group">
-          <label class="cer-form-label">Projetos com sprint</label>
-          <select class="cer-input" id="cerProjSelect" onchange="calcCerimonias()">
-            <option value="all">Todos (sprint ativa)</option>
+          <label class="cer-form-label">Projetos</label>
+          <select class="cer-input" id="cerProj" onchange="calcCerimonias()">
+            <option value="all">Sprint ativa (todos)</option>
             <option value="SGTER">SGTER</option>
             <option value="SIGEST">SIGEST</option>
             <option value="SEMPRE NOVA">SEMPRE NOVA</option>
@@ -375,12 +490,12 @@ select.cer-input{cursor:pointer}
     <div id="cerResults" class="cer-results"></div>
   </div></div>
 
-  <!-- ======= CALENDÁRIO ======= -->
+  <!-- ========== CALENDÁRIO ========== -->
   <div class="page" id="page-calendario">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Calendário</div>
-      <div class="section-desc">Visualize o mês com semanas numeradas e cerimônias marcadas.</div>
+      <div class="section-desc">Visualize o mês com semanas numeradas e cerimônias marcadas automaticamente.</div>
     </div>
     <div class="cal-header">
       <button class="cal-nav-btn" onclick="changeMonth(-1)">← Anterior</button>
@@ -388,24 +503,22 @@ select.cer-input{cursor:pointer}
       <button class="cal-nav-btn" onclick="changeMonth(1)">Próximo →</button>
       <button class="cal-nav-btn" onclick="goToday()">Hoje</button>
     </div>
-    <div class="card" style="padding:0;overflow:hidden">
-      <div class="cal-grid" id="calGrid"></div>
-    </div>
-    <p style="font-size:0.75rem;color:var(--text3);margin-top:0.6rem">As cerimônias aparecem automaticamente quando configuradas na aba "Datas Automáticas".</p>
+    <div class="cal-grid-wrap"><div class="cal-grid" id="calGrid"></div></div>
+    <p style="font-size:.72rem;color:var(--text3);margin-top:.6rem">Cerimônias aparecem quando configuradas em "Datas Automáticas".</p>
   </div></div>
 
-  <!-- ======= DEVOPS STATUS ======= -->
+  <!-- ========== DEVOPS STATUS ========== -->
   <div class="page" id="page-devops-status">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Status do Azure DevOps</div>
       <div class="section-desc">O que cada status significa e o que fazer ao ver cada um.</div>
     </div>
-    <div class="highlight"><strong>Fluxo normal:</strong> Proposed → Active → Awaiting QA → Resolved → Closed.<br>Se der errado: <strong>Revised</strong> (volta corrigir) ou <strong>Refused</strong> (descartado). <strong>Paused</strong> = travado, ação imediata.</div>
+    <div class="highlight"><strong>Fluxo normal:</strong> Proposed → Active → Awaiting QA → Resolved → Closed.<br>Problemas: <strong>Revised</strong> (volta corrigir) · <strong>Refused</strong> (descartado) · <strong>Paused</strong> (travado, ação imediata).</div>
     <div class="devops-status-grid" id="devopsStatusGrid"></div>
   </div></div>
 
-  <!-- ======= DEVOPS TEMPO ======= -->
+  <!-- ========== DEVOPS TEMPO ========== -->
   <div class="page" id="page-devops-tempo">
   <div class="content">
     <div class="section-header">
@@ -419,49 +532,42 @@ select.cer-input{cursor:pointer}
     </div>
     <div class="tab-panel active" id="tab-t-sprint">
       <div class="highlight"><strong>SGTER, SIGEST, SEMPRE NOVA</strong> — ritmo acelerado, cada dia conta.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:0.8rem">
-        <table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-          <tr><td><strong>Active</strong></td><td>até 3 dias</td><td>acima de 3 dias sem atualização</td><td>Pergunte se há impedimento</td></tr>
-          <tr><td><strong>Awaiting QA</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Cobre quem vai testar e quando</td></tr>
-          <tr><td><strong>Resolved</strong></td><td>até 1 dia</td><td>acima de 1 dia</td><td>Você precisa validar ou delegar</td></tr>
-          <tr><td><strong>Revised</strong></td><td>horas</td><td>sem movimento no mesmo dia</td><td>Dev não foi avisado — aja agora</td></tr>
-          <tr><td><strong>Paused</strong></td><td>0 — ação imediata</td><td>qualquer Paused</td><td>Escale imediatamente</td></tr>
-        </tbody></table>
-      </div>
+      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
+        <tr><td><strong>Active</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Pergunte se há impedimento</td></tr>
+        <tr><td><strong>Awaiting QA</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Cobre quem vai testar</td></tr>
+        <tr><td><strong>Resolved</strong></td><td>até 1 dia</td><td>acima de 1 dia</td><td>Dev ou PO precisam validar</td></tr>
+        <tr><td><strong>Revised</strong></td><td>horas</td><td>sem movimento no mesmo dia</td><td>Dev não foi avisado — aja agora</td></tr>
+        <tr><td><strong>Paused</strong></td><td>0 — ação imediata</td><td>qualquer Paused</td><td>Escale imediatamente</td></tr>
+      </tbody></table></div>
     </div>
     <div class="tab-panel" id="tab-t-sust">
       <div class="highlight"><strong>SGF, E-GESTÃO, ALIMENTAÇÃO</strong> — ritmo mais tranquilo.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:0.8rem">
-        <table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-          <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Verifique se o escopo não mudou</td></tr>
-          <tr><td><strong>Awaiting QA</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Cobre agenda de teste</td></tr>
-          <tr><td><strong>Resolved</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Inclua na validação semanal</td></tr>
-          <tr><td><strong>Paused</strong></td><td>até 3 dias c/ justificativa</td><td>sem motivo registrado</td><td>Exija comentário no Discussion</td></tr>
-        </tbody></table>
-      </div>
+      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
+        <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Verifique se o escopo não mudou</td></tr>
+        <tr><td><strong>Awaiting QA</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Cobre agenda de teste</td></tr>
+        <tr><td><strong>Resolved</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Inclua na validação semanal</td></tr>
+        <tr><td><strong>Paused</strong></td><td>até 3 dias c/ justificativa</td><td>sem motivo registrado</td><td>Exija comentário no Discussion</td></tr>
+      </tbody></table></div>
     </div>
     <div class="tab-panel" id="tab-t-ini">
       <div class="highlight"><strong>QUESTÕES, SISPC, PGP, PES</strong> — não podem travar no início.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:0.8rem">
-        <table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-          <tr><td><strong>Proposed (acúmulo)</strong></td><td>sinal de alerta</td><td>muitos itens parados</td><td>Solicite reunião de priorização</td></tr>
-          <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Pergunte o que está travando</td></tr>
-          <tr><td><strong>Paused</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Risco de perder embalo — resolva já</td></tr>
-        </tbody></table>
-      </div>
+      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
+        <tr><td><strong>Proposed (acúmulo)</strong></td><td>sinal de alerta</td><td>muitos itens parados</td><td>Solicite reunião de priorização</td></tr>
+        <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Pergunte o que está travando</td></tr>
+        <tr><td><strong>Paused</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Risco de perder embalo — resolva já</td></tr>
+      </tbody></table></div>
     </div>
   </div></div>
 
-  <!-- ======= TESTES ======= -->
+  <!-- ========== TESTES ========== -->
   <div class="page" id="page-devops-testes">
   <div class="content">
     <div class="section-header">
       <div class="section-title">Testes & Pareceres</div>
-      <div class="section-desc">Como saber se os testes estão sendo feitos e como cobrar registros.</div>
+      <div class="section-desc">Como verificar se os testes estão sendo feitos e como cobrar registros.</div>
     </div>
-    <div class="card">
-      <div class="proj-section-title">Status de Teste</div>
-      <table class="data-table" style="margin-top:0.4rem"><thead><tr><th>Status</th><th>Tradução</th><th>O que significa</th></tr></thead><tbody>
+    <div class="card"><div class="proj-section-title">Status de Teste — o que cada um significa</div>
+      <table class="data-table" style="margin-top:.4rem"><thead><tr><th>Status</th><th>Tradução</th><th>O que significa</th></tr></thead><tbody>
         <tr><td>✅ <strong>Passed</strong></td><td>Aprovado</td><td>Testou e funcionou — pronto para Resolved</td></tr>
         <tr><td>❌ <strong>Failed</strong></td><td>Reprovado</td><td>Testou e encontrou erro — deve ir para Revised</td></tr>
         <tr><td>🚫 <strong>Blocked</strong></td><td>Bloqueado</td><td>Não conseguiu nem testar — há impedimento</td></tr>
@@ -469,20 +575,20 @@ select.cer-input{cursor:pointer}
         <tr><td>🔵 <strong>Active</strong></td><td>Ativo</td><td>Criado, aguardando execução</td></tr>
       </tbody></table>
     </div>
-    <div class="card" style="margin-top:1rem">
-      <div class="alerta-box" style="margin-top:0"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;margin-bottom:4px">⚠️ Armadilha mais comum</div>Item Resolved ≠ item testado. Sempre cruze: item Resolved → tem Test Case com status Passed? Se não, não foi testado formalmente.</div>
+    <div class="card" style="margin-top:.9rem">
+      <div class="alerta-box" style="margin-top:0"><strong>⚠️ Armadilha:</strong> Item Resolved ≠ item testado. Sempre cruze: item Resolved → tem Test Case com status Passed?</div>
     </div>
-    <div class="card" style="margin-top:1rem">
+    <div class="card" style="margin-top:.9rem">
       <div class="proj-section-title">Como verificar os testes</div>
       <ul class="questions-list">
         <li><span>1️⃣</span> Vá em <strong>Test Plans</strong> no DevOps</li>
         <li><span>2️⃣</span> Verifique se o item em Awaiting QA tem Test Case criado</li>
         <li><span>3️⃣</span> Veja se o Test Case foi executado (Passed, Failed ou Blocked)</li>
         <li><span>4️⃣</span> Test Case em "Not Run" há mais de 2 dias = teste não aconteceu</li>
-        <li><span>5️⃣</span> Sempre pergunte: os testes foram em ambiente de homologação?</li>
+        <li><span>5️⃣</span> Sempre pergunte: os testes foram em homologação?</li>
       </ul>
     </div>
-    <div class="card" style="margin-top:1rem">
+    <div class="card" style="margin-top:.9rem">
       <div class="proj-section-title">Quando cobrar um Parecer</div>
       <ul class="questions-list">
         <li><span>📝</span> Resolved → Revised: QA deve ter registrado o motivo no Discussion</li>
@@ -490,11 +596,21 @@ select.cer-input{cursor:pointer}
         <li><span>📝</span> Item Refused: motivo da recusa documentado</li>
         <li><span>📝</span> Teste Failed: descrição do erro no item</li>
       </ul>
-      <div class="highlight" style="margin-top:0.8rem"><strong>Frase assertiva:</strong> "Por favor, registre o motivo diretamente no item do DevOps, na aba Discussion."</div>
+      <div class="highlight" style="margin-top:.8rem"><strong>Frase assertiva:</strong> "Por favor, registre o motivo diretamente no item do DevOps, aba Discussion."</div>
     </div>
   </div></div>
 
-  <!-- ======= GLOSSÁRIO ======= -->
+  <!-- ========== QUIZ ========== -->
+  <div class="page" id="page-quiz">
+  <div class="content">
+    <div class="section-header">
+      <div class="section-title">🎯 Quiz de Fixação</div>
+      <div class="section-desc">Teste o que você sabe sobre os projetos e o DevOps. 5 perguntas aleatórias por rodada.</div>
+    </div>
+    <div class="quiz-wrap" id="quizWrap"></div>
+  </div></div>
+
+  <!-- ========== GLOSSÁRIO ========== -->
   <div class="page" id="page-glossario">
   <div class="content">
     <div class="section-header">
@@ -504,26 +620,40 @@ select.cer-input{cursor:pointer}
     <div class="card" id="glossarioContent"></div>
   </div></div>
 
-  <!-- ======= PERGUNTAS ======= -->
+  <!-- ========== PERGUNTAS ========== -->
   <div class="page" id="page-perguntas">
   <div class="content">
     <div class="section-header">
-      <div class="section-title">Perguntas Prontas</div>
+      <div class="section-title">💬 Perguntas Prontas</div>
       <div class="section-desc">Para nunca travar numa reunião. Organizadas por situação.</div>
     </div>
     <div id="perguntasContent"></div>
   </div></div>
 
-</div><!-- /main -->
+</div>
+
+<div class="nota-modal" id="notaModal">
+  <div class="nota-box">
+    <div class="nota-title" id="notaModalTitle">Anotações</div>
+    <textarea class="nota-textarea" id="notaModalText" placeholder="Anote o que está acontecendo neste projeto agora..."></textarea>
+    <div class="nota-hist" id="notaHist" style="display:none"></div>
+    <div style="display:flex;gap:.7rem;margin-top:.9rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="saveNota()">💾 Salvar</button>
+      <button class="btn btn-secondary" onclick="closeNota()">Fechar</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── DATE ──
 const hoje = new Date();
+const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 document.getElementById('sidebarDate').textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
 document.getElementById('rData').value = hoje.toISOString().split('T')[0];
 
-// ── NAVIGATION ──
-const titles = {projetos:['Meus Projetos','Visão geral dos 10 projetos'],checklist:['Checklist Diário','Sua rotina de 15 minutos'],report:['Gerar Report','Texto pronto para sua chefe'],cerimonias:['Datas Automáticas','Cerimônias calculadas automaticamente'],calendario:['Calendário','Semanas e datas do mês'],'devops-status':['Status do DevOps','O que cada status significa'],'devops-tempo':['Tempo Ideal','Quando é hora de agir'],'devops-testes':['Testes & Pareceres','Como verificar e cobrar'],glossario:['Glossário Técnico','Termos em linguagem clara'],perguntas:['Perguntas Prontas','Para nunca travar']};
+// ── NAV ──
+const titles={home:['Início & Alertas','Suas urgências e o status dos projetos'],projetos:['Meus Projetos','Visão geral dos 10 projetos'],checklist:['Checklist Diário','Sua rotina de 15 minutos'],report:['Gerar Report','Texto pronto para sua chefe'],timeline:['Ciclo da Sprint','Fluxo completo do seu time'],cerimonias:['Datas Automáticas','Cerimônias calculadas a partir da Review'],calendario:['Calendário','Semanas e datas do mês'],'devops-status':['Status do DevOps','O que cada status significa'],'devops-tempo':['Tempo Ideal','Quando é hora de agir'],'devops-testes':['Testes & Pareceres','Como verificar e cobrar'],quiz:['Quiz de Fixação','Teste seus conhecimentos'],glossario:['Glossário Técnico','Termos em linguagem clara'],perguntas:['Perguntas Prontas','Para nunca travar']};
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -532,7 +662,7 @@ function nav(id,el){
   const t=titles[id]||[id,''];
   document.getElementById('topbarTitle').textContent=t[0];
   document.getElementById('topbarSub').textContent=t[1];
-  if(window.innerWidth<=768) closeSidebar();
+  if(window.innerWidth<=768)closeSidebar();
 }
 function toggleSidebar(){
   const s=document.getElementById('sidebar'),h=document.getElementById('hamburger'),o=document.getElementById('overlay');
@@ -544,22 +674,32 @@ function closeSidebar(){
   document.getElementById('overlay').classList.remove('open');
 }
 
-// ── PROJECTS DATA ──
+// ── TABS ──
+function showTab(id,el){
+  const panel=document.getElementById('tab-'+id);
+  if(!panel)return;
+  panel.closest('.content').querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  panel.closest('.content').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  panel.classList.add('active');el.classList.add('active');
+}
+
+// ── PROJETOS DATA ──
 const projetos=[
-  {sigla:'SGTER',nome:'Sistema de Gestão de Transporte Escolar e Rural',icone:'🚌',cor:'#FEF3C7',iconCor:'#92400E',status:'sprint',resumo:'Controla o transporte escolar da SEDU-ES: rotas, veículos, motoristas, alunos e contratos. Transporta ~50 mil alunos por dia em parceria com 70 municípios.',funcionalidades:['Gestão de Rotas e Mapas (GeoTER)','Cadastro de Alunos, Veículos, Motoristas','Contratos SEDU e Programa PETE','Cálculo de Custo de Rota','Gestão de Pagamentos','Dashboard e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos alunos)','SEFAZ (preço combustível)','DETRAN (dados veiculares)','TRANSCOLAR (carga inicial)','QGIS (mapas)'],alertas:'SEGES fornece os dados dos alunos. Se a integração SEGES travar, afeta diretamente o SGTER.',perguntas:['Qual a sprint atual e quantos itens estão em Active?','Tem item Awaiting QA sem testador definido?','A integração com DETRAN e SEFAZ está estável?','Há item Paused? Por quê?','Os Test Cases estão criados para esta sprint?']},
-  {sigla:'SIGEST',nome:'Sistema de Gestão de Serviços Terceirizados',icone:'🏢',cor:'#EDE9FE',iconCor:'#5B21B6',status:'sprint',resumo:'Gerencia contratos e serviços terceirizados da SEDU-ES. Controla postos de trabalho, medições diárias e mensais, anomalias e relatórios de pagamento.',funcionalidades:['Gestão de Contratos e Fornecedores','Medição Diária e Mensal','Controle de Anomalias','Visita Técnica','Relatórios de Pagamentos','Auditoria'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados das unidades)','E-DOCS (documentos)'],alertas:'Fique atenta ao acúmulo de itens em Resolved sem validação.',perguntas:['Quantos itens estão em Awaiting QA nesta sprint?','As medições diárias estão sendo registradas normalmente?','Tem anomalia aberta que impacta o pagamento?','Há itens Revised sem o dev notificado?']},
-  {sigla:'SEMPRE NOVA',nome:'Sistema de Manutenção de Edificações Escolares',icone:'🏫',cor:'#DCFCE7',iconCor:'#166534',status:'sprint',resumo:'Apoia a manutenção das edificações escolares sob gestão da GERFE. Vistorias técnicas, laudos, planos de manutenção e ordens de serviço. Atende ~480 escolas.',funcionalidades:['Cadastro de Edificações','Diagnóstico e Vistorias Técnicas','Laudos e Pareceres','Planos de Manutenção','Gestão de OS','Relatórios Gerenciais'],integracoes:['ACESSO CIDADÃO (login)','SEGES (importar escolas)'],alertas:'A GERFE é quem prioriza funcionalidades. Mudança de escopo passa por eles.',perguntas:['O MVP de vistorias está em que status?','As vistorias estão gerando laudos no sistema?','Tem itens de relatório em Awaiting QA?','Há item Paused aguardando decisão da GERFE?']},
-  {sigla:'SGF',nome:'Sistema de Gestão do Ambiente de Formação',icone:'📚',cor:'#E0F2FE',iconCor:'#075985',status:'sustentacao',resumo:'Plataforma para inscrições nas formações do CEFOPE (Centro de Formação dos Profissionais da Educação). Professores e servidores se inscrevem em cursos e formações continuadas.',funcionalidades:['Inscrições em Formações','Ambiente Virtual de Aprendizagem','Gestão de Cursistas','Certificação CEFOPE/ESESP'],integracoes:['ACESSO CIDADÃO (login)','Ambiente Virtual de Aprendizagem'],alertas:'Monitore bugs nos períodos de abertura de inscrições — volume alto de acessos simultâneos.',perguntas:['Há chamado aberto de bug do CEFOPE?','O sistema está estável na última semana?','Tem item Paused há mais de 3 dias?','Os professores estão conseguindo se inscrever?']},
-  {sigla:'E-GESTÃO',nome:'Sistema de Gestão de Repasses Financeiros às Escolas',icone:'💰',cor:'#FEF9C3',iconCor:'#854D0E',status:'sustentacao',resumo:'Controla os recursos financeiros repassados pelo Estado para as escolas (Conselhos de Escola). Nome antigo: Repasse Financeiro. Herdado de outra fábrica — sem documentação formal no SGR.',funcionalidades:['Gestão de Repasses e Orçamentos','Controle de Receitas e Despesas','Prestação de Contas','Conciliação Bancária','Dashboards e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados de escolas e SREs)','E-DOCS (Termo de Recebimento)'],alertas:'⚠️ SEM DOCUMENTAÇÃO FORMAL no SGR. Qualquer dúvida de negócio depende do time ou do servidor Z:\\Fabrica de Software\\SEDU-ES. Não prometa prazo sem consultar o Tech Lead.',perguntas:['Há escola com problema de acesso?','Tem prestação de contas com prazo vencendo?','O módulo de conciliação bancária está funcionando?','O SEGES está trazendo dados corretos das escolas?','Há chamado aberto há mais de 3 dias?']},
-  {sigla:'ALIMENTAÇÃO',nome:'Sistema de Alimentação Escolar (SAE)',icone:'🥗',cor:'#F0FDF4',iconCor:'#15803D',status:'sustentacao',resumo:'Controla a alimentação servida nas escolas da rede estadual. Cardápios, distribuição, controle nutricional e contratos do PNAE.',funcionalidades:['Controle de Cardápios','Gestão de Alunos e Cartão','Registro de Incorreções','Solicitações de Alimentação','Controle de Contratos PNAE'],integracoes:['ACESSO CIDADÃO (login)','SEGES (alunos e escolas)'],alertas:'Sistema com app mobile — bugs chegam diretamente das escolas e são muito visíveis.',perguntas:['Há escola reportando erro no app?','O cardápio do mês está configurado?','O controle de alunos importa corretamente do SEGES?','Há inconformidade sem resolução?']},
-  {sigla:'QUESTÕES',nome:'Sistema Elaborador de Atividades',icone:'❓',cor:'#FFF7ED',iconCor:'#9A3412',status:'retomando',resumo:'Ferramenta para professores criarem atividades com banco de questões do AMA. Filtros por disciplina, série, descritor e dificuldade. Atende ~3.500 turmas e 100.000 alunos.',funcionalidades:['Módulo do Professor (criar atividades, PDF)','Módulo do Aluno (responder online)','Módulo Gestor (banco de questões)','Dashboard de desempenho'],integracoes:['ACESSO CIDADÃO (login)','SEGES (escolas, turmas, professores, alunos)'],alertas:'Retomado após pausa da GTI — confirme se o escopo foi revalidado antes de cobrar entregas.',perguntas:['O backlog foi refinado após a retomada?','Qual a primeira funcionalidade a ser entregue?','A integração com SEGES está funcionando?','O planning foi realizado?','Há itens Proposed acumulando?']},
-  {sigla:'SISPC',nome:'Sistema de Prestação de Contas',icone:'📊',cor:'#EFF6FF',iconCor:'#1D4ED8',status:'iniciando',resumo:'Plataforma web para centralizar a prestação de contas de Prefeituras e Entidades Privadas junto à SEDU-ES. Substitui planilhas manuais. Atende ~400 usuários.',funcionalidades:['Gestão de Processos de Prestação de Contas','Upload de Documentos Obrigatórios','Geração de Relatórios e Pareceres','Dashboard de Indicadores (KPIs)','Sistema de Notificações'],integracoes:['ACESSO CIDADÃO (login)','E-DOCS (documentos e assinatura)'],alertas:'Iniciando — acúmulo de Proposed é sinal de que o backlog não está refinado.',perguntas:['O kickoff foi realizado?','O primeiro módulo está em desenvolvimento?','O analista mapeou os processos com o cliente?','O ambiente está configurado?','Há impedimento de infraestrutura ou acesso?']},
-  {sigla:'PGP',nome:'Plataforma de Gestão da Privacidade (LGPD)',icone:'🔒',cor:'#F5F3FF',iconCor:'#6D28D9',status:'iniciando',resumo:'Sistema para gerenciar documentos obrigatórios pela LGPD: RAT e RIPD. Substitui planilhas manuais do DPO. Prioridade: RAT → RIPD → Relatórios → Dashboards.',funcionalidades:['Gestão de RAT e RIPD','Controle de Riscos com Matriz de Criticidade','Fluxo de Aprovação','Versionamento de Documentos','Dashboard de Indicadores'],integracoes:['ACESSO CIDADÃO (login OAuth2)','E-DOCS (futuro repositório)'],alertas:'Iniciando — o módulo de RAT é a primeira entrega. Confirme se o DPO (Farley) validou o escopo.',perguntas:['O módulo de RAT está em desenvolvimento?','O DPO validou os campos obrigatórios?','O fluxo de aprovação está mapeado?','O ambiente de homologação foi provisionado?','Há dúvida de regra de negócio travando?']},
-  {sigla:'PES',nome:'Programa de Estágio da SEDU-ES',icone:'🎓',cor:'#FDF2F8',iconCor:'#9D174D',status:'iniciando',resumo:'Sistema para o CEFOPE gerenciar estágios de estudantes de licenciaturas e bacharelado. Inclui painel do estagiário, painel da IES e painel administrativo.',funcionalidades:['Painel do Estagiário','Painel da IES (Instituição de Ensino)','Solicitação e Aprovação de Convênio','Cadastro de Estudantes','Acompanhamento de Status'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos estudantes)'],alertas:'Fluxo principal: IES solicita convênio → SEDU analisa → aprova/reprova → estudante se cadastra. Confirme se este fluxo foi validado com o CEFOPE.',perguntas:['O fluxo de convênio da IES foi validado com o CEFOPE?','O cadastro de estudantes está em desenvolvimento?','Quem é o responsável do cliente para homologar entregas?','O backlog inicial foi refinado?']}
+  {sigla:'SGTER',nome:'Sistema de Gestão de Transporte Escolar e Rural',icone:'🚌',cor:'#FEF3C7',iconCor:'#92400E',status:'sprint',resumo:'Controla o transporte escolar da SEDU-ES: rotas, veículos, motoristas, alunos e contratos. ~50 mil alunos por dia em parceria com 70 municípios.',funcionalidades:['Gestão de Rotas e Mapas (GeoTER)','Cadastro de Alunos, Veículos, Motoristas','Contratos SEDU e Programa PETE','Cálculo de Custo de Rota','Gestão de Pagamentos','Dashboard e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos alunos)','SEFAZ (combustível)','DETRAN (veículos)','TRANSCOLAR (carga inicial)','QGIS (mapas)'],alertas:'SEGES fornece os dados dos alunos. Se a integração SEGES travar, afeta diretamente o SGTER.',perguntas:['Qual sprint atual e quantos itens estão em Active?','Tem item Awaiting QA sem testador definido?','A integração DETRAN e SEFAZ está estável?','Há item Paused? Por quê?','Os Test Cases estão criados para esta sprint?']},
+  {sigla:'SIGEST',nome:'Sistema de Gestão de Serviços Terceirizados',icone:'🏢',cor:'#EDE9FE',iconCor:'#5B21B6',status:'sprint',resumo:'Gerencia contratos e serviços terceirizados da SEDU-ES. Medições diárias e mensais, anomalias e relatórios de pagamento dos terceirizados.',funcionalidades:['Gestão de Contratos e Fornecedores','Medição Diária e Mensal','Controle de Anomalias','Visita Técnica','Relatórios de Pagamentos','Auditoria'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados das unidades)','E-DOCS (documentos)'],alertas:'Fique atenta ao acúmulo de itens em Resolved sem validação.',perguntas:['Quantos itens estão em Awaiting QA nesta sprint?','As medições diárias estão registradas normalmente?','Tem anomalia aberta que impacta o pagamento?','Há itens Revised sem o dev notificado?']},
+  {sigla:'SEMPRE NOVA',nome:'Sistema de Manutenção de Edificações Escolares',icone:'🏫',cor:'#DCFCE7',iconCor:'#166534',status:'sprint',resumo:'Apoia manutenção das edificações escolares sob gestão da GERFE. Vistorias técnicas, laudos, planos de manutenção e ordens de serviço. Atende ~480 escolas.',funcionalidades:['Cadastro de Edificações','Diagnóstico e Vistorias','Laudos e Pareceres','Planos de Manutenção','Gestão de OS','Relatórios Gerenciais'],integracoes:['ACESSO CIDADÃO (login)','SEGES (importar escolas)'],alertas:'A GERFE é quem prioriza as funcionalidades. Mudança de escopo passa por eles.',perguntas:['O MVP de vistorias está em que status?','As vistorias estão gerando laudos?','Tem itens de relatório em Awaiting QA?','Há item Paused aguardando decisão da GERFE?']},
+  {sigla:'SGF',nome:'Sistema de Gestão do Ambiente de Formação',icone:'📚',cor:'#E0F2FE',iconCor:'#075985',status:'sustentacao',resumo:'Plataforma para inscrições nas formações do CEFOPE. Professores e servidores se inscrevem em cursos e formações continuadas.',funcionalidades:['Inscrições em Formações','Ambiente Virtual de Aprendizagem','Gestão de Cursistas','Certificação CEFOPE/ESESP'],integracoes:['ACESSO CIDADÃO (login)','Ambiente Virtual de Aprendizagem'],alertas:'Monitore bugs nos períodos de abertura de inscrições — volume alto de acessos simultâneos.',perguntas:['Há chamado aberto de bug do CEFOPE?','O sistema está estável na última semana?','Tem item Paused há mais de 3 dias?','Os professores conseguem se inscrever normalmente?']},
+  {sigla:'E-GESTÃO',nome:'Sistema de Gestão de Repasses Financeiros às Escolas',icone:'💰',cor:'#FEF9C3',iconCor:'#854D0E',status:'sustentacao',resumo:'Controla recursos financeiros repassados às escolas (Conselhos de Escola). Nome antigo: Repasse Financeiro. Herdado de outra fábrica — sem documentação formal no SGR.',funcionalidades:['Gestão de Repasses e Orçamentos','Controle de Receitas e Despesas','Prestação de Contas','Conciliação Bancária','Dashboards e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados de escolas e SREs)','E-DOCS (Termo de Recebimento)'],alertas:'⚠️ SEM DOCUMENTAÇÃO FORMAL no SGR. Qualquer dúvida de negócio depende do time ou do servidor Z:\\Fabrica de Software\\SEDU-ES. Não prometa prazo sem consultar o Tech Lead.',perguntas:['Há escola com problema de acesso?','Tem prestação de contas com prazo vencendo?','O módulo de conciliação bancária está funcionando?','O SEGES está trazendo dados corretos das escolas?']},
+  {sigla:'ALIMENTAÇÃO',nome:'Sistema de Alimentação Escolar (SAE)',icone:'🥗',cor:'#F0FDF4',iconCor:'#15803D',status:'sustentacao',resumo:'Controla a alimentação nas escolas da rede estadual. Cardápios, distribuição, controle nutricional e contratos do PNAE.',funcionalidades:['Controle de Cardápios','Gestão de Alunos e Cartão','Registro de Incorreções','Solicitações de Alimentação','Controle de Contratos PNAE'],integracoes:['ACESSO CIDADÃO (login)','SEGES (alunos e escolas)'],alertas:'Sistema com app mobile — bugs chegam diretamente das escolas e são muito visíveis.',perguntas:['Há escola reportando erro no app?','O cardápio do mês está configurado?','O controle de alunos importa corretamente do SEGES?','Há inconformidade sem resolução?']},
+  {sigla:'QUESTÕES',nome:'Sistema Elaborador de Atividades',icone:'❓',cor:'#FFF7ED',iconCor:'#9A3412',status:'retomando',resumo:'Ferramenta para professores criarem atividades com banco de questões AMA. Filtros por disciplina, série, descritor e dificuldade. Atende ~3.500 turmas e 100.000 alunos.',funcionalidades:['Módulo do Professor (atividades, PDF)','Módulo do Aluno (responder online)','Módulo Gestor (banco de questões)','Dashboard de desempenho'],integracoes:['ACESSO CIDADÃO (login)','SEGES (escolas, turmas, professores, alunos)'],alertas:'Retomado após pausa da GTI — confirme se o escopo foi revalidado antes de cobrar entregas.',perguntas:['O backlog foi refinado após a retomada?','Qual a primeira funcionalidade a ser entregue?','A integração SEGES está funcionando?','O planning foi realizado?']},
+  {sigla:'SISPC',nome:'Sistema de Prestação de Contas',icone:'📊',cor:'#EFF6FF',iconCor:'#1D4ED8',status:'iniciando',resumo:'Plataforma web para centralizar a prestação de contas de Prefeituras e Entidades Privadas junto à SEDU-ES. Substitui planilhas manuais. Atende ~400 usuários.',funcionalidades:['Gestão de Processos de Prestação de Contas','Upload de Documentos Obrigatórios','Geração de Relatórios e Pareceres','Dashboard de KPIs','Sistema de Notificações'],integracoes:['ACESSO CIDADÃO (login)','E-DOCS (documentos e assinatura)'],alertas:'Iniciando — acúmulo de Proposed é sinal de que o backlog não está refinado.',perguntas:['O kickoff foi realizado?','O primeiro módulo está em desenvolvimento?','O analista mapeou os processos com o cliente?','Há impedimento de infraestrutura?']},
+  {sigla:'PGP',nome:'Plataforma de Gestão da Privacidade (LGPD)',icone:'🔒',cor:'#F5F3FF',iconCor:'#6D28D9',status:'iniciando',resumo:'Sistema para gerenciar documentos obrigatórios pela LGPD: RAT e RIPD. Substitui planilhas do DPO. Prioridade: RAT → RIPD → Relatórios → Dashboards.',funcionalidades:['Gestão de RAT e RIPD','Controle de Riscos com Matriz de Criticidade','Fluxo de Aprovação','Versionamento de Documentos','Dashboard de Indicadores'],integracoes:['ACESSO CIDADÃO (login OAuth2)','E-DOCS (futuro repositório)'],alertas:'Iniciando — o módulo de RAT é a primeira entrega. Confirme se o DPO (Farley) validou o escopo.',perguntas:['O módulo de RAT está em desenvolvimento?','O DPO validou os campos obrigatórios?','O fluxo de aprovação está mapeado?','Há dúvida de regra de negócio travando?']},
+  {sigla:'PES',nome:'Programa de Estágio da SEDU-ES',icone:'🎓',cor:'#FDF2F8',iconCor:'#9D174D',status:'iniciando',resumo:'Sistema para o CEFOPE gerenciar estágios de estudantes de licenciaturas e bacharelado. Painel do estagiário, painel da IES e painel administrativo.',funcionalidades:['Painel do Estagiário','Painel da IES','Solicitação e Aprovação de Convênio','Cadastro de Estudantes','Acompanhamento de Status'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos estudantes)'],alertas:'Fluxo: IES solicita convênio → SEDU analisa → aprova/reprova → estudante se cadastra. Valide este fluxo com o CEFOPE.',perguntas:['O fluxo de convênio foi validado com o CEFOPE?','O cadastro de estudantes está em desenvolvimento?','Quem homologa as entregas no cliente?','O backlog inicial foi refinado?']}
 ];
 
 function renderProjects(){
   const g=document.getElementById('projectsGrid');
+  const statusMap={sprint:'🟠 Sprint Ativa',sustentacao:'🟢 Sustentação',iniciando:'🔵 Iniciando',retomando:'🟡 Retomando'};
   g.innerHTML=projetos.map((p,i)=>`
     <div class="project-card">
       <div class="project-card-header" onclick="toggleProj(${i})" id="ph${i}">
@@ -567,22 +707,26 @@ function renderProjects(){
         <div class="project-info">
           <div class="project-name">${p.sigla}</div>
           <div class="project-full-name">${p.nome}</div>
-          <div class="project-badges"><span class="badge badge-${p.status}">${{sprint:'🟠 Sprint Ativa',sustentacao:'🟢 Sustentação',iniciando:'🔵 Iniciando',retomando:'🟡 Retomando'}[p.status]}</span></div>
+          <div class="project-badges"><span class="badge badge-${p.status}">${statusMap[p.status]}</span></div>
         </div>
         <div class="project-chevron" id="pc${i}">▶</div>
       </div>
       <div class="project-card-body" id="pb${i}">
         <div class="proj-grid">
           <div>
-            <div class="proj-section-title">O que é este projeto</div>
+            <div class="proj-section-title">O que é</div>
             <div class="proj-box"><div class="proj-desc">${p.resumo}</div></div>
-            <div style="margin-top:0.9rem"><div class="proj-section-title">Funcionalidades</div><div class="proj-box"><div class="proj-tags">${p.funcionalidades.map(f=>`<span class="proj-tag">${f}</span>`).join('')}</div></div></div>
-            <div style="margin-top:0.9rem"><div class="proj-section-title">Integrações</div><div class="proj-box"><div class="proj-tags">${p.integracoes.map(f=>`<span class="proj-tag">🔗 ${f}</span>`).join('')}</div></div></div>
+            <div style="margin-top:.8rem"><div class="proj-section-title">Funcionalidades</div><div class="proj-box"><div class="proj-tags">${p.funcionalidades.map(f=>`<span class="proj-tag">${f}</span>`).join('')}</div></div></div>
+            <div style="margin-top:.8rem"><div class="proj-section-title">Integrações</div><div class="proj-box"><div class="proj-tags">${p.integracoes.map(f=>`<span class="proj-tag">🔗 ${f}</span>`).join('')}</div></div></div>
+            <div class="proj-nota-wrap">
+              <div class="proj-section-title">📝 Minha anotação</div>
+              <textarea class="proj-nota-input" id="nota-${p.sigla}" placeholder="Anote o que está acontecendo neste projeto agora..." oninput="saveNotaProj('${p.sigla}',this.value)">${localStorage.getItem('nota_'+p.sigla)||''}</textarea>
+            </div>
           </div>
           <div>
             <div class="proj-section-title">Perguntas para o time</div>
             <div class="proj-box"><ul class="questions-list">${p.perguntas.map(q=>`<li><span>💬</span>${q}</li>`).join('')}</ul></div>
-            ${p.alertas?`<div style="margin-top:0.9rem"><div class="proj-section-title">⚠️ Atenção</div><div class="alerta-box">${p.alertas}</div></div>`:''}
+            ${p.alertas?`<div style="margin-top:.8rem"><div class="proj-section-title">⚠️ Atenção</div><div class="alerta-box">${p.alertas}</div></div>`:''}
           </div>
         </div>
       </div>
@@ -593,19 +737,239 @@ function toggleProj(i){
   const o=b.classList.contains('open');
   b.classList.toggle('open',!o);c.classList.toggle('open',!o);h.classList.toggle('open',!o);
 }
+function saveNotaProj(sigla,val){localStorage.setItem('nota_'+sigla,val);}
+
+// ── SEMÁFORO ──
+const semColors={ok:{dot:'#22C55E',label:'OK',css:'color:var(--green)'},atencao:{dot:'#F59E0B',label:'Atenção',css:'color:var(--orange)'},critico:{dot:'#EF4444',label:'Crítico',css:'color:var(--red)'}};
+function renderSemaforo(){
+  const grid=document.getElementById('semaforoGrid');
+  grid.innerHTML=projetos.map(p=>{
+    const saved=localStorage.getItem('sem_'+p.sigla)||'ok';
+    const sc=semColors[saved];
+    const nota=localStorage.getItem('nota_'+p.sigla)||'';
+    return `<div class="semaforo-card" onclick="openNota('${p.sigla}')">
+      <div class="semaforo-top">
+        <div class="semaforo-sigla">${p.sigla}</div>
+        <div class="semaforo-dot" style="background:${sc.dot}" id="semdot-${p.sigla}" onclick="event.stopPropagation();cycleSem('${p.sigla}')"></div>
+      </div>
+      <div class="semaforo-status" style="${sc.css}" id="semlabel-${p.sigla}">${sc.label}</div>
+      <div class="semaforo-nota" id="semnota-${p.sigla}">${nota||'Sem anotação'}</div>
+    </div>`;
+  }).join('');
+}
+function cycleSem(sigla){
+  const order=['ok','atencao','critico'];
+  const cur=localStorage.getItem('sem_'+sigla)||'ok';
+  const next=order[(order.indexOf(cur)+1)%3];
+  localStorage.setItem('sem_'+sigla,next);
+  const sc=semColors[next];
+  document.getElementById('semdot-'+sigla).style.background=sc.dot;
+  document.getElementById('semlabel-'+sigla).textContent=sc.label;
+  document.getElementById('semlabel-'+sigla).style.cssText=sc.css+';font-family:Syne,sans-serif;font-size:.62rem;font-weight:600;margin-top:2px';
+}
+
+// ── NOTA MODAL ──
+let currentNotaSigla='';
+function openNota(sigla){
+  currentNotaSigla=sigla;
+  document.getElementById('notaModalTitle').textContent='📝 '+sigla+' — Anotações';
+  document.getElementById('notaModalText').value=localStorage.getItem('nota_'+sigla)||'';
+  const hist=JSON.parse(localStorage.getItem('nota_hist_'+sigla)||'[]');
+  const hEl=document.getElementById('notaHist');
+  if(hist.length){
+    hEl.style.display='block';
+    hEl.innerHTML='<div style="padding:.5rem .9rem;font-family:Syne,sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">Histórico</div>'+hist.slice(-5).reverse().map(h=>`<div class="nota-hist-item"><div class="nota-hist-date">${h.date}</div>${h.text}</div>`).join('');
+  }else{hEl.style.display='none';}
+  document.getElementById('notaModal').classList.add('open');
+}
+function closeNota(){document.getElementById('notaModal').classList.remove('open');}
+function saveNota(){
+  const val=document.getElementById('notaModalText').value;
+  const sigla=currentNotaSigla;
+  localStorage.setItem('nota_'+sigla,val);
+  // histórico
+  const hist=JSON.parse(localStorage.getItem('nota_hist_'+sigla)||'[]');
+  if(val.trim()){
+    hist.push({date:new Date().toLocaleString('pt-BR'),text:val.trim()});
+    if(hist.length>20)hist.shift();
+    localStorage.setItem('nota_hist_'+sigla,JSON.stringify(hist));
+  }
+  // atualiza semáforo nota
+  const notaEl=document.getElementById('semnota-'+sigla);
+  if(notaEl)notaEl.textContent=val||'Sem anotação';
+  // atualiza textarea inline
+  const inlineEl=document.getElementById('nota-'+sigla);
+  if(inlineEl)inlineEl.value=val;
+  closeNota();
+}
+
+// ── URGÊNCIAS ──
+function saveUrg(){
+  [1,2,3].forEach(n=>localStorage.setItem('urg'+n,document.getElementById('urg'+n).value));
+}
+function loadUrg(){
+  [1,2,3].forEach(n=>{const el=document.getElementById('urg'+n);if(el)el.value=localStorage.getItem('urg'+n)||'';});
+}
+function saveNotaDia(){localStorage.setItem('notaDia',document.getElementById('notaDia').value);}
+function loadNotaDia(){const el=document.getElementById('notaDia');if(el)el.value=localStorage.getItem('notaDia')||'';}
+
+// ── TIMELINE ──
+const tlSteps=[
+  {id:'requisitos',icon:'📋',label:'Levantamento de Requisitos',sub:'Pré-sprint',resp:'analista',respLabel:'Analista de Req.',detail:'O que acontece aqui:',items:['Analista de requisitos levanta ou refina as histórias de usuário','Detalha critérios de aceitação de cada item','Prepara o backlog com itens prontos para planning','Documenta no DevOps (Proposed)']},
+  {id:'aprovacao',icon:'✅',label:'Aprovação do Cliente / GTI',sub:'Pré-sprint',resp:'cliente',respLabel:'Cliente / GTI',detail:'O que acontece aqui:',items:['Cliente ou GTI revisa os requisitos levantados','Valida se os itens refletem a necessidade real','Pode pedir ajustes antes da planning','Dá o aceite formal para entrar na sprint']},
+  {id:'planning',icon:'🗓️',label:'Planning',sub:'Início da sprint',resp:'todos',respLabel:'Time completo',detail:'O que acontece aqui:',items:['Time define quais itens do backlog entram na sprint','Devs estimam o esforço de cada item','Itens mudam de Proposed para Active','Você como líder garante que a sprint está viável']},
+  {id:'dev',icon:'💻',label:'Desenvolvimento',sub:'Durante a sprint',resp:'dev',respLabel:'Desenvolvedores',detail:'O que acontece aqui:',items:['Devs trabalham nos itens com status Active','Daily acontece todo dia útil (standup rápido)','Devs fazem Code Review entre si','Itens prontos mudam para Awaiting QA']},
+  {id:'qa',icon:'🧪',label:'QA Testa',sub:'Durante a sprint',resp:'qa',respLabel:'QA',detail:'O que acontece aqui:',items:['QA executa os Test Cases criados para cada item','Se passou: status vai para Resolved','Se falhou: status vai para Revised (volta pro dev)','QA registra o resultado no Discussion do item']},
+  {id:'homologacao',icon:'🖥️',label:'Deploy / Homologação',sub:'Fim da sprint',resp:'dev',respLabel:'Dev + GTI',detail:'O que acontece aqui:',items:['Dev faz o deploy em ambiente de homologação','GTI / infraestrutura valida o ambiente','Time informa a entrega por e-mail e no DevOps','Cliente recebe acesso para validar antes da Review']},
+  {id:'review',icon:'🎯',label:'Review',sub:'Fim da sprint',resp:'todos',respLabel:'Time + Cliente',detail:'O que acontece aqui:',items:['Time apresenta as funcionalidades entregues ao cliente','Cliente valida e dá feedback','Itens aprovados são fechados (Closed) no DevOps','Eventuais ajustes são registrados como novos itens'],isKey:true},
+  {id:'retro',icon:'🔄',label:'Retrospectiva',sub:'Fim da sprint',resp:'lider',respLabel:'Time + Líder',detail:'O que acontece aqui:',items:['Time discute o que funcionou bem na sprint','Identificam pontos de melhoria no processo','Ações de melhoria são definidas','Líder facilita e registra as decisões']},
+  {id:'nextplanning',icon:'📋',label:'Nova Planning',sub:'Início da próxima sprint',resp:'todos',respLabel:'Time completo',detail:'O que acontece aqui:',items:['Ciclo recomeça com o backlog refinado','Itens não concluídos são reavaliados','Nova sprint começa com escopo claro','Líder confirma disponibilidade do time']}
+];
+let tlActiveStep=null;
+const tlProjColors={SGTER:'#F59E0B',SIGEST:'#7C3AED','SEMPRE NOVA':'#059669'};
+let tlActiveProj='SGTER';
+
+function renderTimeline(){
+  // project selector
+  const sel=document.getElementById('tlProjSelector');
+  sel.innerHTML=['SGTER','SIGEST','SEMPRE NOVA'].map(p=>`
+    <button class="tl-proj-btn${p===tlActiveProj?' active':''}" onclick="setTlProj('${p}',this)">${p}</button>`).join('');
+  // timeline
+  const tl=document.getElementById('timeline');
+  const color=tlProjColors[tlActiveProj]||'var(--accent)';
+  tl.innerHTML=tlSteps.map((s,i)=>`
+    <div class="tl-step${tlActiveStep===i?' active-step':''}" id="tls${i}" onclick="selectTlStep(${i})">
+      <div class="tl-icon" style="${tlActiveStep===i?'border-color:'+color+';background:'+color+'22':''}">
+        ${s.icon}
+      </div>
+      <div class="tl-label">${s.label}</div>
+      <div class="tl-sublabel">${s.sub}</div>
+      <div class="tl-resp resp-${s.resp}">${s.respLabel}</div>
+    </div>`).join('');
+  // connector lines color
+  tl.querySelectorAll('.tl-step').forEach((el,i)=>{
+    el.style.setProperty('--line-color',i<tlSteps.length-1?(tlActiveStep!==null&&i<tlActiveStep?color:'var(--border)'):'transparent');
+  });
+  if(tlActiveStep!==null)renderTlDetail(tlActiveStep);
+}
+function setTlProj(p,btn){
+  tlActiveProj=p;
+  document.querySelectorAll('.tl-proj-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTimeline();
+}
+function selectTlStep(i){
+  tlActiveStep=i;
+  renderTimeline();
+}
+function renderTlDetail(i){
+  const s=tlSteps[i];
+  const det=document.getElementById('tlDetail');
+  det.style.display='block';
+  document.getElementById('tlDetailTitle').textContent=s.icon+' '+s.label+' — '+s.detail;
+  document.getElementById('tlDetailList').innerHTML=s.items.map(it=>`<li><span>→</span>${it}</li>`).join('');
+}
+
+// ── CERIMÔNIAS ──
+function addDias(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
+function fmtDate(d){return d.toLocaleDateString('pt-BR');}
+function fmtDia(d){return DIAS[d.getDay()];}
+
+function calcCerimonias(){
+  const reviewStr=document.getElementById('reviewDate').value;
+  const dur=parseInt(document.getElementById('sprintDur').value);
+  const projSel=document.getElementById('cerProj').value;
+  const cont=document.getElementById('cerResults');
+  if(!reviewStr||!dur){
+    cont.innerHTML='<div class="card" style="color:var(--text3);font-size:.88rem;text-align:center;padding:1.8rem">Preencha a data da Review e a duração da sprint para calcular.</div>';
+    return;
+  }
+  const review=new Date(reviewStr+'T12:00:00');
+  const planning=addDias(review,-(dur-1));
+  const retro=addDias(review,1);
+  const nextPlanning=addDias(review,2);
+  // skip weekend for retro and nextPlanning
+  const skipWknd=(d)=>{const nd=new Date(d);while(nd.getDay()===0||nd.getDay()===6)nd.setDate(nd.getDate()+1);return nd;};
+  const retroAdj=skipWknd(retro);
+  const nextPlanningAdj=skipWknd(nextPlanning.getDay()===0||nextPlanning.getDay()===6?skipWknd(nextPlanning):nextPlanning);
+  const dailyDays=[];
+  for(let i=1;i<dur-1;i++){
+    const d=addDias(planning,i);
+    if(d.getDay()!==0&&d.getDay()!==6)dailyDays.push(d);
+  }
+  const projs=projSel==='all'?['SGTER','SIGEST','SEMPRE NOVA']:[projSel];
+  const colors=tlProjColors;
+  cont.innerHTML=projs.map(proj=>`
+    <div class="cer-proj-result">
+      <div class="cer-proj-header"><span style="color:${colors[proj]||'#fff'}">●</span>${proj} — Sprint de ${dur+1} dias</div>
+      <div class="cer-dates-grid">
+        <div class="cer-date-cell"><div class="cer-date-label">📋 Planning</div><div class="cer-date-val">${fmtDate(planning)}</div><div class="cer-date-day">${fmtDia(planning)}</div></div>
+        <div class="cer-date-cell"><div class="cer-date-label">📅 Dailys</div><div class="cer-date-val">${dailyDays.length} dias úteis</div><div class="cer-date-day">${dailyDays.length?fmtDate(dailyDays[0])+' a ':''} ${dailyDays.length?fmtDate(dailyDays[dailyDays.length-1]):''}</div></div>
+        <div class="cer-date-cell"><div class="cer-date-label">🎯 Review</div><div class="cer-date-val">${fmtDate(review)}</div><div class="cer-date-day">${fmtDia(review)}</div></div>
+        <div class="cer-date-cell"><div class="cer-date-label">🔄 Retrospectiva</div><div class="cer-date-val">${fmtDate(retroAdj)}</div><div class="cer-date-day">${fmtDia(retroAdj)}</div></div>
+        <div class="cer-date-cell"><div class="cer-date-label">📋 Próx. Planning</div><div class="cer-date-val">${fmtDate(nextPlanningAdj)}</div><div class="cer-date-day">${fmtDia(nextPlanningAdj)}</div></div>
+      </div>
+    </div>`).join('');
+  // save for calendar
+  localStorage.setItem('cerData',JSON.stringify({planning:planning.toISOString().split('T')[0],review:reviewStr,retro:retroAdj.toISOString().split('T')[0],nextPlanning:nextPlanningAdj.toISOString().split('T')[0],projs,dailyDays:dailyDays.map(d=>d.toISOString().split('T')[0])}));
+  renderCalendar();
+}
+
+// ── CALENDÁRIO ──
+let calYear=hoje.getFullYear(),calMonth=hoje.getMonth();
+function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}else if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function goToday(){calYear=hoje.getFullYear();calMonth=hoje.getMonth();renderCalendar();}
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent=`${MESES[calMonth]} ${calYear}`;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const cerData=JSON.parse(localStorage.getItem('cerData')||'null');
+  const events={};
+  function addEv(ds,label,color){if(!events[ds])events[ds]=[];events[ds].push({label,color});}
+  if(cerData){
+    cerData.projs.forEach(p=>{
+      const c=tlProjColors[p]||'#3B82F6';
+      addEv(cerData.planning,p+' Planning',c);
+      addEv(cerData.review,p+' Review',c);
+      addEv(cerData.retro,p+' Retro',c);
+      addEv(cerData.nextPlanning,p+' Planning',c);
+      (cerData.dailyDays||[]).forEach(ds=>addEv(ds,p+' Daily',c));
+    });
+  }
+  const dayNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html='<div class="cal-day-header" style="background:var(--text)"></div>'+dayNames.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+  let dayCount=0,week=1;
+  html+=`<div class="cal-week-label">S${week}</div>`;
+  for(let i=0;i<firstDay;i++){html+='<div class="cal-cell empty"></div>';dayCount++;}
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=d===hoje.getDate()&&calMonth===hoje.getMonth()&&calYear===hoje.getFullYear();
+    const dayEvents=events[ds]||[];
+    html+=`<div class="cal-cell${isToday?' today':''}">`;
+    html+=`<div class="cal-day-num">${d}</div>`;
+    dayEvents.forEach(ev=>{html+=`<div class="cal-event" style="background:${ev.color}22;color:${ev.color}">${ev.label}</div>`;});
+    html+='</div>';
+    dayCount++;
+    if(dayCount%7===0&&d<daysInMonth){week++;html+=`<div class="cal-week-label">S${week}</div>`;}
+  }
+  const rem=7-(dayCount%7);
+  if(rem<7)for(let i=0;i<rem;i++)html+='<div class="cal-cell empty"></div>';
+  document.getElementById('calGrid').innerHTML=html;
+}
 
 // ── CHECKLIST ──
 const clItems={sprint:[
-  {t:'SGTER — itens Active parados há mais de 3 dias',tag:'SGTER'},
-  {t:'SGTER — itens Awaiting QA sem testador definido',tag:'SGTER'},
-  {t:'SIGEST — itens Revised sem o dev avisado',tag:'SIGEST'},
-  {t:'SIGEST — acúmulo de Resolved aguardando validação',tag:'SIGEST'},
-  {t:'SEMPRE NOVA — itens Paused bloqueados',tag:'SEMPRE NOVA'},
-  {t:'SEMPRE NOVA — itens Awaiting QA da sprint atual',tag:'SEMPRE NOVA'}
+  {t:'SGTER — itens Active parados há mais de 3 dias?',tag:'SGTER'},
+  {t:'SGTER — itens Awaiting QA sem testador definido?',tag:'SGTER'},
+  {t:'SIGEST — itens Revised sem o dev avisado?',tag:'SIGEST'},
+  {t:'SIGEST — acúmulo de Resolved aguardando validação?',tag:'SIGEST'},
+  {t:'SEMPRE NOVA — itens Paused bloqueados?',tag:'SEMPRE NOVA'},
+  {t:'SEMPRE NOVA — itens Awaiting QA da sprint atual?',tag:'SEMPRE NOVA'}
 ],inicio:[
   {t:'QUESTÕES — backlog está sendo movimentado?',tag:'QUESTÕES'},
   {t:'SISPC — Proposed acumulando sem priorização?',tag:'SISPC'},
-  {t:'PGP — progresso do módulo de RAT',tag:'PGP'},
+  {t:'PGP — progresso do módulo de RAT?',tag:'PGP'},
   {t:'PES — ambiente configurado e time desbloqueado?',tag:'PES'}
 ],sustentacao:[
   {t:'SGF — chamado aberto há mais de 3 dias?',tag:'SGF'},
@@ -636,117 +1000,6 @@ function resetChecklist(){
   renderChecklist();
 }
 
-// ── CERIMÔNIAS AUTOMÁTICAS ──
-const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-function addDias(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
-function fmtDate(d){return d.toLocaleDateString('pt-BR');}
-function fmtDiaSemana(d){return DIAS[d.getDay()];}
-function proxDiaUtil(d){const nd=new Date(d);while(nd.getDay()===0||nd.getDay()===6)nd.setDate(nd.getDate()+1);return nd;}
-
-function calcCerimonias(){
-  const planningStr=document.getElementById('planningDate').value;
-  const dur=parseInt(document.getElementById('sprintDuracao').value);
-  const projSel=document.getElementById('cerProjSelect').value;
-  const cont=document.getElementById('cerResults');
-  if(!planningStr||!dur){cont.innerHTML='<div class="card" style="color:var(--text3);font-size:0.9rem;text-align:center;padding:2rem">Preencha a data da Planning e a duração para calcular.</div>';return;}
-  const planning=new Date(planningStr+'T12:00:00');
-  const review=addDias(planning,dur-1);
-  const retro=addDias(planning,dur);
-  const nextPlanning=addDias(planning,dur+1);
-  const dailyDays=[];
-  for(let i=1;i<dur;i++){const d=addDias(planning,i);if(d.getDay()!==0&&d.getDay()!==6&&d.getTime()!==review.getTime())dailyDays.push(d);}
-  const projs=projSel==='all'?['SGTER','SIGEST','SEMPRE NOVA']:[projSel];
-  const colors={'SGTER':'#F59E0B','SIGEST':'#7C3AED','SEMPRE NOVA':'#059669'};
-  cont.innerHTML=projs.map(proj=>`
-    <div class="cer-proj-result">
-      <div class="cer-proj-header"><span style="color:${colors[proj]||'#fff'}">●</span>${proj}</div>
-      <div class="cer-dates-grid">
-        <div class="cer-date-cell"><div class="cer-date-label">📋 Planning</div><div class="cer-date-val">${fmtDate(planning)}</div><div class="cer-date-day">${fmtDiaSemana(planning)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">📅 1ª Daily</div><div class="cer-date-val">${dailyDays.length?fmtDate(dailyDays[0]):'—'}</div><div class="cer-date-day">${dailyDays.length?fmtDiaSemana(dailyDays[0]):''} (diária)</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">🔍 Review</div><div class="cer-date-val">${fmtDate(review)}</div><div class="cer-date-day">${fmtDiaSemana(review)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">🔄 Retrospectiva</div><div class="cer-date-val">${fmtDate(retro)}</div><div class="cer-date-day">${fmtDiaSemana(retro)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">📋 Próx. Planning</div><div class="cer-date-val">${fmtDate(nextPlanning)}</div><div class="cer-date-day">${fmtDiaSemana(nextPlanning)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">📆 Total Dailys</div><div class="cer-date-val">${dailyDays.length} dias úteis</div><div class="cer-date-day">entre Planning e Review</div></div>
-      </div>
-    </div>`).join('');
-  // Salvar para o calendário
-  localStorage.setItem('cerData',JSON.stringify({planning:planningStr,dur,projs,review:review.toISOString().split('T')[0],retro:retro.toISOString().split('T')[0],nextPlanning:nextPlanning.toISOString().split('T')[0]}));
-  renderCalendar();
-}
-
-// ── CALENDÁRIO ──
-let calYear=hoje.getFullYear(),calMonth=hoje.getMonth();
-function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}else if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
-function goToday(){calYear=hoje.getFullYear();calMonth=hoje.getMonth();renderCalendar();}
-
-function getWeekNum(d){
-  const firstDay=new Date(d.getFullYear(),d.getMonth(),1).getDay();
-  return Math.ceil((d.getDate()+firstDay)/7);
-}
-
-function renderCalendar(){
-  document.getElementById('calTitle').textContent=`${MESES[calMonth]} ${calYear}`;
-  const firstDay=new Date(calYear,calMonth,1).getDay();
-  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
-  const cerData=JSON.parse(localStorage.getItem('cerData')||'null');
-  const events={};
-  if(cerData){
-    const addEvent=(dateStr,label,color)=>{
-      if(!events[dateStr])events[dateStr]=[];
-      events[dateStr].push({label,color});
-    };
-    const planning=new Date(cerData.planning+'T12:00:00');
-    const review=new Date(cerData.review+'T12:00:00');
-    const retro=new Date(cerData.retro+'T12:00:00');
-    const nextP=new Date(cerData.nextPlanning+'T12:00:00');
-    cerData.projs.forEach(p=>{
-      const c={SGTER:'#F59E0B',SIGEST:'#7C3AED','SEMPRE NOVA':'#059669'}[p]||'#3B82F6';
-      addEvent(cerData.planning,`${p} Planning`,c);
-      addEvent(cerData.review,`${p} Review`,c);
-      addEvent(cerData.retro,`${p} Retro`,c);
-      addEvent(cerData.nextPlanning,`${p} Planning`,c);
-      // dailys
-      const dur=cerData.dur;
-      for(let i=1;i<dur;i++){
-        const d=addDias(planning,i);
-        if(d.getDay()!==0&&d.getDay()!==6&&d.getTime()!==review.getTime()){
-          const ds=d.toISOString().split('T')[0];
-          addEvent(ds,`${p} Daily`,c);
-        }
-      }
-    });
-  }
-  // Build grid
-  const dayNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  let html='<div class="cal-day-header"></div>'+dayNames.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
-  let week=1;
-  let dayCount=0;
-  let row=[];
-  // header week label for week 1
-  html+=`<div class="cal-week-label">Sem ${week}</div>`;
-  // empty cells before first day
-  for(let i=0;i<firstDay;i++){html+='<div class="cal-cell empty"></div>';dayCount++;}
-  for(let d=1;d<=daysInMonth;d++){
-    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=d===hoje.getDate()&&calMonth===hoje.getMonth()&&calYear===hoje.getFullYear();
-    const dayEvents=events[dateStr]||[];
-    const hasEvent=dayEvents.length>0;
-    const thisDay=new Date(calYear,calMonth,d);
-    const dow=thisDay.getDay();
-    html+=`<div class="cal-cell${isToday?' today':''}${hasEvent?' has-event':''}">`;
-    html+=`<div class="cal-day-num">${d}</div>`;
-    dayEvents.forEach(ev=>{html+=`<div class="cal-event" style="background:${ev.color}22;color:${ev.color}">${ev.label}</div>`;});
-    html+='</div>';
-    dayCount++;
-    if(dayCount%7===0&&d<daysInMonth){week++;html+=`<div class="cal-week-label">Sem ${week}</div>`;}
-  }
-  // fill remaining
-  const rem=7-(dayCount%7);
-  if(rem<7)for(let i=0;i<rem;i++)html+='<div class="cal-cell empty"></div>';
-  document.getElementById('calGrid').innerHTML=html;
-}
-
 // ── REPORT ──
 function gerarReport(){
   const data=document.getElementById('rData').value;
@@ -770,23 +1023,77 @@ function copiarReport(){
   const btn=event.currentTarget;btn.textContent='✅ Copiado!';setTimeout(()=>btn.textContent='📋 Copiar',2000);
 }
 
-// ── TABS ──
-function showTab(id,el){
-  const panel=document.getElementById('tab-'+id);
-  if(!panel)return;
-  panel.closest('.content').querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  panel.closest('.content').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  panel.classList.add('active');
-  el.classList.add('active');
+// ── QUIZ ──
+const allQuestions=[
+  {q:'O que significa o status "Awaiting QA" no DevOps?',opts:['Item foi aprovado pelo cliente','Item está aguardando ser testado pelo QA','Item está em desenvolvimento','Item foi recusado'],ans:1,exp:'Awaiting QA significa que o dev terminou e o item está na fila para ser testado. Sem testador definido é um problema!'},
+  {q:'Qual projeto gerencia os repasses financeiros às escolas?',opts:['SGTER','SGF','E-GESTÃO','SISPC'],ans:2,exp:'O E-GESTÃO (antigo Repasse Financeiro) controla todos os recursos financeiros repassados pelo Estado para as escolas (Conselhos de Escola).'},
+  {q:'O que é o SEGES?',opts:['Sistema de Gestão de Serviços','Sistema Estadual de Gestão Escolar','Sistema de Gestão de Edificações Escolares','Software de Gestão de Eventos'],ans:1,exp:'SEGES é o Sistema Estadual de Gestão Escolar — o sistema central da SEDU-ES com dados de alunos, escolas, professores e turmas. Muitos projetos integram com ele.'},
+  {q:'Em sprint ativa, quanto tempo é aceitável um item ficar em "Active" sem atualização?',opts:['1 dia','3 dias','5 dias','1 semana'],ans:1,exp:'Em sprint ativa, acima de 3 dias sem movimentação é sinal de alerta. Pergunte se há impedimento.'},
+  {q:'Qual o fluxo correto após a Review no seu time?',opts:['Review → Planning → Retro','Review → Retro → Nova Planning','Review → Deploy → Retro','Deploy → Review → Planning'],ans:1,exp:'No seu time o fluxo é: Deploy/Homologação → Entrega informada por e-mail + DevOps → Review com cliente → Retrospectiva → Nova Planning.'},
+  {q:'O que significa "Revised" no DevOps?',opts:['Item foi aprovado na revisão','Item foi devolvido para correção','Item está em revisão de código','Item foi revisado e fechado'],ans:1,exp:'Revised significa que o item foi analisado e precisa de ajuste — voltou para o dev corrigir. O dev precisa ser notificado imediatamente com o feedback no Discussion.'},
+  {q:'Qual projeto está sendo retomado após pausa da GTI?',opts:['SISPC','PGP','QUESTÕES','PES'],ans:2,exp:'O projeto QUESTÕES (Sistema Elaborador de Atividades) estava pausado por decisão da GTI e está sendo retomado.'},
+  {q:'O que é o ACESSO CIDADÃO nos projetos da SEDU-ES?',opts:['Sistema de cadastro de alunos','Sistema de autenticação único do Governo do ES','Plataforma de e-learning','Sistema de gestão de contratos'],ans:1,exp:'ACESSO CIDADÃO é o sistema de autenticação único (SSO) do Governo do ES. Todos os projetos da SEDU-ES usam para login via protocolo OAuth 2.0.'},
+  {q:'Qual é a prioridade de implementação do PGP?',opts:['RIPD → RAT → Relatórios → Dashboards','RAT → RIPD → Relatórios → Dashboards','Dashboards → RAT → RIPD → Relatórios','Relatórios → RAT → RIPD → Dashboards'],ans:1,exp:'O PGP segue a sequência: RAT (Registro de Atividades de Tratamento) → RIPD → Relatórios consolidados → Dashboards de indicadores.'},
+  {q:'O que é o E-DOCS nos projetos da SEDU-ES?',opts:['Sistema de controle de educação','Sistema de documentos eletrônicos do ES','Software de gestão de estágio','Plataforma de formação docente'],ans:1,exp:'E-DOCS é o sistema de documentos eletrônicos do Governo do ES. Usado no E-GESTÃO (Termo de Recebimento de Serviço) e no SISPC (assinatura digital).'},
+  {q:'Qual status indica que um item foi testado e aprovado?',opts:['Resolved','Closed','Passed','Active'],ans:2,exp:'Passed é o status do Test Case que indica que o teste foi executado e funcionou corretamente. Não confunda com Resolved (que é o status do work item após o teste passar).'},
+  {q:'Quantos alunos o SGTER transporta aproximadamente por dia?',opts:['10 mil','30 mil','50 mil','100 mil'],ans:2,exp:'O SGTER gerencia o transporte de aproximadamente 50 mil alunos por dia, em parceria com 70 municípios do Espírito Santo.'},
+  {q:'O que deve acontecer quando um item vai de Resolved para Revised?',opts:['Fechar o item automaticamente','O QA deve registrar o motivo no Discussion','Reabrir a sprint','Notificar o cliente'],ans:1,exp:'Quando um item vai para Revised, o QA DEVE registrar no Discussion o que encontrou de errado. Sem esse registro, o dev não sabe o que corrigir.'},
+  {q:'Qual cerimônia acontece imediatamente após a Review no seu time?',opts:['Planning','Daily','Retrospectiva','Refinamento'],ans:2,exp:'No seu time o fluxo de fim de sprint é: Review → Retrospectiva → Nova Planning.'},
+  {q:'O SEMPRE NOVA atende aproximadamente quantas escolas?',opts:['100','280','480','750'],ans:2,exp:'O SEMPRE NOVA (Sistema de Manutenção de Edificações Escolares) está preparado para atender aproximadamente 480 escolas sob gestão da GERFE.'}
+];
+
+let quizQuestions=[],quizIndex=0,quizScore=0,quizAnswered=false;
+function startQuiz(){
+  quizQuestions=[...allQuestions].sort(()=>Math.random()-.5).slice(0,5);
+  quizIndex=0;quizScore=0;renderQuiz();
 }
+function renderQuiz(){
+  const wrap=document.getElementById('quizWrap');
+  if(quizIndex>=quizQuestions.length){
+    const pct=Math.round((quizScore/quizQuestions.length)*100);
+    const msgs=[[0,49,'Continue estudando! Revise o glossário e os cartões dos projetos. 💪'],[50,74,'Bom progresso! Você está pegando o jeito. Mais um quiz! 📈'],[75,89,'Muito bem! Você está dominando o conteúdo. 🌟'],[90,100,'Excelente! Você está pronta para qualquer reunião! 🏆']];
+    const msg=msgs.find(m=>pct>=m[0]&&pct<=m[1])||msgs[3];
+    wrap.innerHTML=`<div class="quiz-result">
+      <div class="quiz-result-score">${quizScore}/${quizQuestions.length}</div>
+      <div style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-top:.3rem">${pct}% de acerto</div>
+      <div class="quiz-result-msg">${msg[2]}</div>
+      <div style="display:flex;gap:.8rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="startQuiz()">🔄 Novo Quiz</button>
+        <button class="btn btn-secondary" onclick="nav('glossario',document.querySelector('.nav-item:nth-child(14))'))">📖 Revisar Glossário</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const q=quizQuestions[quizIndex];
+  wrap.innerHTML=`
+    <div class="quiz-progress">${quizQuestions.map((_,i)=>`<div class="quiz-prog-dot${i<quizIndex?' done':i===quizIndex?' current':''}"></div>`).join('')}</div>
+    <div class="quiz-score">Questão ${quizIndex+1} de ${quizQuestions.length} · Pontos: ${quizScore}</div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i)=>`<button class="quiz-option" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qfeedback"></div>
+    <button class="btn btn-primary" id="qnextbtn" style="display:none" onclick="nextQuestion()">Próxima →</button>`;
+}
+function answerQuiz(i){
+  const q=quizQuestions[quizIndex];
+  const opts=document.querySelectorAll('.quiz-option');
+  const fb=document.getElementById('qfeedback');
+  opts.forEach(o=>o.disabled=true);
+  opts[q.ans].classList.add('correct');
+  if(i===q.ans){quizScore++;fb.textContent='✅ Correto! '+q.exp;fb.className='quiz-feedback correct';}
+  else{opts[i].classList.add('wrong');fb.textContent='❌ Incorreto. '+q.exp;fb.className='quiz-feedback wrong';}
+  document.getElementById('qnextbtn').style.display='block';
+}
+function nextQuestion(){quizIndex++;renderQuiz();}
 
 // ── DEVOPS STATUS ──
 const statuses=[
   {name:'Active',tr:'Ativo',dot:'#3B82F6',meaning:'O dev está trabalhando neste item agora.',action:'warn',at:'Acima de 3 dias sem atualização (sprint): pergunte se há impedimento'},
-  {name:'Awaiting QA',tr:'Aguardando Teste',dot:'#F59E0B',meaning:'Dev terminou — aguardando teste do QA. Sem testador definido é um problema.',action:'danger',at:'Acima de 2 dias (sprint): cobre quem vai testar'},
-  {name:'Resolved',tr:'Resolvido',dot:'#F97316',meaning:'Teste passou. Aguarda sua validação para fechar ou devolver.',action:'danger',at:'Acima de 1 dia (sprint): você precisa validar'},
+  {name:'Awaiting QA',tr:'Aguardando Teste',dot:'#F59E0B',meaning:'Dev terminou — aguardando teste do QA.',action:'danger',at:'Acima de 2 dias (sprint): cobre quem vai testar e quando'},
+  {name:'Resolved',tr:'Resolvido',dot:'#F97316',meaning:'Teste passou. Aguarda validação para fechar ou devolver.',action:'danger',at:'Acima de 1 dia (sprint): dev ou PO precisam fechar'},
   {name:'Closed',tr:'Fechado',dot:'#22C55E',meaning:'Concluído e aceito. Nenhuma ação necessária.',action:'ok',at:'Nenhuma ação necessária ✓'},
-  {name:'Revised',tr:'Devolvido p/ correção',dot:'#EF4444',meaning:'Precisa de ajuste. Dev deve ser notificado com feedback imediatamente.',action:'danger',at:'Sem movimento no dia: dev não foi avisado — aja agora'},
+  {name:'Revised',tr:'Devolvido p/ correção',dot:'#EF4444',meaning:'Precisa de ajuste. Dev deve ser notificado imediatamente.',action:'danger',at:'Sem movimento no dia: dev não foi avisado — aja agora'},
   {name:'Paused',tr:'Pausado',dot:'#EAB308',meaning:'Travado por impedimento. Em sprint ativa é alarme imediato.',action:'danger',at:'Em sprint: escale imediatamente'},
   {name:'Proposed',tr:'Proposto',dot:'#94A3B8',meaning:'No backlog mas não aprovado para desenvolvimento.',action:'warn',at:'Acúmulo: solicite reunião de priorização'},
   {name:'Refused',tr:'Recusado',dot:'#DC2626',meaning:'Não vai ser feito. Motivo DEVE estar no Discussion.',action:'warn',at:'Sem motivo registrado: cobre documentação'}
@@ -804,24 +1111,29 @@ function renderDevopsStatus(){
 const glossario=[
   {t:'Sprint',d:'Período fixo de desenvolvimento (2 a 4 semanas) onde o time entrega um conjunto de funcionalidades. Projetos com sprint ativa: SGTER, SIGEST e SEMPRE NOVA.'},
   {t:'Backlog',d:'Lista de todas as funcionalidades e tarefas do projeto que ainda precisam ser desenvolvidas, ordenadas por prioridade.'},
-  {t:'Planning',d:'Cerimônia no início da sprint onde o time decide quais itens do backlog serão desenvolvidos naquele período.'},
-  {t:'Review',d:'Cerimônia no final da sprint onde o time apresenta o que foi desenvolvido. Você e/ou o cliente homologam as entregas.'},
-  {t:'Retrospectiva',d:'Cerimônia no final da sprint onde o time discute o que funcionou bem e o que pode melhorar.'},
-  {t:'Daily',d:'Reunião curta diária (10-15 min): o que fiz, o que vou fazer, há impedimentos?'},
-  {t:'QA',d:'Profissional responsável pelos testes. Valida se o que foi desenvolvido funciona conforme esperado.'},
+  {t:'Planning',d:'Cerimônia no início da sprint onde o time decide quais itens entram na sprint e os devs estimam o esforço.'},
+  {t:'Review',d:'Cerimônia no final da sprint onde o time apresenta ao cliente o que foi desenvolvido e entregue.'},
+  {t:'Retrospectiva',d:'Cerimônia no final da sprint onde o time discute o que funcionou bem e o que pode melhorar no processo.'},
+  {t:'Daily (Standup)',d:'Reunião curta diária (10-15 min): o que fiz, o que vou fazer, há impedimentos?'},
+  {t:'QA (Quality Assurance)',d:'Profissional responsável pelos testes. Valida se o que foi desenvolvido funciona conforme o esperado.'},
   {t:'Test Case',d:'Roteiro de teste documentado no DevOps descrevendo o que testar e o resultado esperado.'},
   {t:'Homologação',d:'Ambiente separado de produção onde o cliente valida as funcionalidades antes de ir ao ar.'},
-  {t:'Discussion',d:'Aba dentro de cada item no DevOps onde o time registra comentários, pareceres e erros.'},
-  {t:'MVP',d:'Mínimo Produto Viável — a versão mais simples do sistema que entrega valor. É a primeira entrega dos projetos iniciando.'},
+  {t:'Discussion',d:'Aba dentro de cada item no DevOps onde o time registra comentários, pareceres, erros e decisões.'},
+  {t:'Work Item',d:'Qualquer tarefa, história de usuário ou bug registrado no Azure DevOps.'},
+  {t:'MVP (Mínimo Produto Viável)',d:'A versão mais simples do sistema que entrega valor ao usuário. É a primeira entrega dos projetos que estão iniciando.'},
   {t:'SEGES',d:'Sistema Estadual de Gestão Escolar — sistema central com dados de alunos, escolas, professores e turmas. Muitos projetos integram com ele.'},
-  {t:'ACESSO CIDADÃO',d:'Sistema de autenticação único do Governo do ES. Todos os projetos usam para login (OAuth 2.0).'},
-  {t:'E-DOCS',d:'Sistema de documentos eletrônicos do ES. Usado no E-GESTÃO e no SISPC.'},
+  {t:'ACESSO CIDADÃO',d:'Sistema de autenticação único (SSO) do Governo do ES. Todos os projetos usam para login via protocolo OAuth 2.0.'},
+  {t:'E-DOCS',d:'Sistema de documentos eletrônicos do ES. Usado no E-GESTÃO (Termo de Recebimento) e no SISPC (assinatura digital).'},
   {t:'SRE',d:'Superintendência Regional de Educação — as regionais que gerenciam as escolas em cada região do ES.'},
-  {t:'GTI',d:'Gerência de Tecnologia da Informação da SEDU-ES — a área interna responsável por orientar e validar os projetos.'},
+  {t:'GTI',d:'Gerência de Tecnologia da Informação da SEDU-ES — área interna responsável por orientar e validar os projetos.'},
   {t:'Tech Lead',d:'Desenvolvedor sênior que lidera tecnicamente o time, toma decisões de arquitetura e resolve problemas complexos.'},
-  {t:'Sustentação',d:'Fase onde não há desenvolvimento de novas funcionalidades — apenas correção de bugs e manutenção.'},
   {t:'SGR',d:'Sistema de Gestão de Requisitos — onde ficam documentados os requisitos dos projetos da CRP.'},
-  {t:'CRP Tecnologia',d:'A fábrica de software responsável pelo desenvolvimento dos projetos da SEDU-ES.'}
+  {t:'Code Review',d:'Revisão do código feita por outro desenvolvedor antes de o item ir para o QA. Garante qualidade e padrão técnico.'},
+  {t:'Deploy',d:'Processo de publicar o código desenvolvido em um ambiente (homologação ou produção).'},
+  {t:'Sustentação',d:'Fase onde não há desenvolvimento de novas funcionalidades — apenas correção de bugs e manutenção do que existe.'},
+  {t:'CRP Tecnologia',d:'A fábrica de software responsável pelo desenvolvimento dos projetos da SEDU-ES.'},
+  {t:'CEFOPE',d:'Centro de Formação dos Profissionais da Educação — área da SEDU-ES responsável pelos projetos SGF e PES.'},
+  {t:'GERFE',d:'Gerência de Recursos Físicos Escolares — área da SEDU-ES responsável pelo projeto SEMPRE NOVA.'}
 ];
 function renderGlossario(){
   document.getElementById('glossarioContent').innerHTML=glossario.map(g=>`<div class="gloss-item"><div class="gloss-term">${g.t}</div><div class="gloss-def">${g.d}</div></div>`).join('');
@@ -829,29 +1141,33 @@ function renderGlossario(){
 
 // ── PERGUNTAS ──
 const situacoes=[
-  {titulo:'🔵 Item parado no mesmo status há dias',perguntas:['Vi que o item [X] está em [status] desde [data]. Qual o status real e há impedimento?','Esse item está sem movimentação há [N] dias — tem algo travando? Posso ajudar?','Notei que o Discussion está vazio. Tem alguma dificuldade que eu não estou vendo?']},
+  {titulo:'🔵 Item parado no mesmo status há dias',perguntas:['Vi que o item [X] está em [status] desde [data]. Qual o status real e há impedimento?','Esse item está sem movimentação há [N] dias — tem algo travando? Posso ajudar?','Notei que o Discussion está vazio. Tem alguma dificuldade que não estou vendo?']},
   {titulo:'🟡 Awaiting QA parado / falta de teste',perguntas:['Esse item está em Awaiting QA desde [data] e não vejo Test Case criado. Pode criar?','Quem vai testar o item [X] e qual a previsão?','O teste foi executado em homologação ou só em desenvolvimento local?']},
   {titulo:'🟠 Falta de parecer / Discussion vazio',perguntas:['Por favor, registre o motivo no item do DevOps, aba Discussion.','O item foi de Resolved para Revised mas o Discussion está vazio. O QA pode registrar o que encontrou?','O item está Paused — pode registrar o motivo com previsão de retomada?']},
   {titulo:'🔴 Acúmulo de Resolved sem validação',perguntas:['Vou fazer uma rodada de validação hoje às [hora]. Quem pode participar?','Tem [N] itens em Resolved desde [data]. Posso fechar os já validados?','Quais desses Resolved precisam de validação do cliente antes de fechar?']},
   {titulo:'⛔ Item Paused em sprint',perguntas:['Esse item está Paused em sprint ativa — o que está impedindo?','A decisão para desbloqueá-lo está comigo, com o cliente ou com a GTI?','Qual o impacto desse Paused na entrega da sprint?']},
-  {titulo:'📊 Preparando report para a chefe',perguntas:['Qual o percentual de itens concluídos desta sprint até agora?','Tem algum risco que impacta a entrega que eu ainda não sei?','Qual foi a principal entrega desta semana que posso destacar?','Há decisão pendente do cliente impedindo o avanço?']}
+  {titulo:'📊 Preparando report para a chefe',perguntas:['Qual o percentual de itens concluídos desta sprint até agora?','Tem algum risco que impacta a entrega que eu ainda não sei?','Qual foi a principal entrega desta semana para destacar no report?','Há decisão pendente do cliente impedindo o avanço?']}
 ];
 function renderPerguntas(){
   document.getElementById('perguntasContent').innerHTML=situacoes.map(s=>`
-    <div class="card" style="margin-bottom:1rem">
-      <div class="proj-section-title" style="font-size:0.82rem;margin-bottom:0.8rem">${s.titulo}</div>
+    <div class="card" style="margin-bottom:.9rem">
+      <div class="proj-section-title" style="font-size:.8rem;margin-bottom:.7rem">${s.titulo}</div>
       <ul class="questions-list">${s.perguntas.map(q=>`<li><span>💬</span><em>"${q}"</em></li>`).join('')}</ul>
     </div>`).join('');
 }
 
 // ── INIT ──
 renderProjects();
+renderSemaforo();
 renderDevopsStatus();
 renderChecklist();
 renderGlossario();
 renderPerguntas();
 renderCalendar();
-calcCerimonias();
+renderTimeline();
+startQuiz();
+loadUrg();
+loadNotaDia();
 </script>
 </body>
 </html>
