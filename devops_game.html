@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps Quest — SEDU-ES</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0F;
+  --surface:#12121A;
+  --surface2:#1A1A26;
+  --surface3:#22223A;
+  --border:#2A2A40;
+  --border-bright:#3D3D60;
+  --text:#E8E8F0;
+  --text2:#9898B8;
+  --text3:#5A5A80;
+  --accent:#6C63FF;
+  --accent-glow:rgba(108,99,255,0.4);
+  --accent2:#FF6B9D;
+  --accent2-glow:rgba(255,107,157,0.3);
+  --green:#00D68F;
+  --green-dark:#003D2A;
+  --red:#FF4757;
+  --red-dark:#3D0010;
+  --yellow:#FFD60A;
+  --yellow-dark:#3D3300;
+  --orange:#FF8C00;
+  --r:14px;--rsm:8px;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 80%, rgba(255,107,157,0.06) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── LAYOUT ── */
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+.game-header{
+  background:rgba(18,18,26,0.95);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(10px);
+  gap:1rem;flex-wrap:wrap;
+  min-height:64px;
+}
+.game-logo{
+  font-family:'Unbounded',sans-serif;
+  font-size:.85rem;font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  white-space:nowrap;
+}
+.player-bar{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.level-badge{
+  background:linear-gradient(135deg,var(--accent),#9C8FFF);
+  border-radius:50px;padding:.3rem .9rem;
+  font-family:'Unbounded',sans-serif;font-size:.62rem;font-weight:700;
+  color:#fff;white-space:nowrap;
+}
+.xp-bar-wrap{display:flex;align-items:center;gap:.5rem}
+.xp-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text3);white-space:nowrap}
+.xp-bar{width:120px;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .6s ease}
+.total-xp{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);font-weight:700}
+.btn-menu{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:600;padding:.4rem .9rem;border-radius:var(--rsm);cursor:pointer;transition:all .15s}
+.btn-menu:hover{border-color:var(--accent);color:var(--text)}
+.btn-menu.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── SCREENS ── */
+.screen{display:none}.screen.active{display:block}
+
+/* ── MAP SCREEN ── */
+.map-content{padding:2rem;max-width:1100px;margin:0 auto}
+.map-hero{text-align:center;margin-bottom:3rem}
+.map-title{
+  font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1.2;margin-bottom:.5rem;
+}
+.map-subtitle{font-size:.9rem;color:var(--text2);line-height:1.6}
+
+.world-section{margin-bottom:2.5rem}
+.world-title{
+  font-family:'Unbounded',sans-serif;font-size:.75rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.world-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.missions-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+
+.mission-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.3rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
+}
+.mission-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--accent-glow),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.mission-card:hover:not(.locked)::before{opacity:1}
+.mission-card:hover:not(.locked){border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.mission-card.locked{opacity:.5;cursor:not-allowed}
+.mission-card.completed{border-color:var(--green)}
+.mission-card.completed::before{background:linear-gradient(135deg,rgba(0,214,143,0.15),transparent);opacity:1}
+
+.mission-num{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;
+  color:var(--text3);margin-bottom:.6rem;letter-spacing:.05em;
+}
+.mission-icon{font-size:1.6rem;margin-bottom:.5rem;display:block}
+.mission-title{font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.4rem}
+.mission-desc{font-size:.75rem;color:var(--text2);line-height:1.5;margin-bottom:.8rem}
+.mission-footer{display:flex;align-items:center;justify-content:space-between}
+.mission-xp{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);font-weight:700}
+.mission-stars{display:flex;gap:2px}
+.star{font-size:.75rem;opacity:.3}
+.star.earned{opacity:1}
+.mission-type{
+  font-family:'Space Grotesk',sans-serif;font-size:.6rem;font-weight:600;
+  padding:2px 7px;border-radius:10px;
+}
+.type-conceito{background:rgba(108,99,255,.2);color:var(--accent)}
+.type-cenario{background:rgba(255,107,157,.2);color:var(--accent2)}
+.lock-icon{position:absolute;top:.8rem;right:.8rem;font-size:1rem;opacity:.4}
+
+/* ── MISSION SCREEN ── */
+.mission-content{padding:2rem;max-width:780px;margin:0 auto}
+.mission-header-bar{
+  display:flex;align-items:center;gap:.9rem;margin-bottom:1.8rem;flex-wrap:wrap;
+}
+.back-btn{
+  background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:600;
+  padding:.45rem .9rem;border-radius:var(--rsm);cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:.4rem;
+}
+.back-btn:hover{border-color:var(--border-bright);color:var(--text)}
+.mission-header-title{
+  font-family:'Unbounded',sans-serif;font-size:.82rem;font-weight:700;
+  color:var(--text);flex:1;
+}
+.mission-xp-badge{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;
+  background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);
+  color:var(--accent);padding:.3rem .8rem;border-radius:20px;
+}
+
+/* PROGRESS */
+.mission-progress{margin-bottom:1.5rem}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:.4rem}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text3)}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease}
+
+/* STAGE */
+.stage{display:none}.stage.active{display:block}
+
+/* CONCEPT STAGE */
+.concept-box{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.8rem;margin-bottom:1.2rem;
+}
+.concept-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;
+  display:flex;align-items:center;gap:.4rem;
+}
+.concept-title{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.6rem;line-height:1.3}
+.concept-text{font-size:.88rem;color:var(--text2);line-height:1.8}
+.concept-text strong{color:var(--text);font-weight:600}
+.concept-highlight{
+  background:rgba(108,99,255,.1);border-left:3px solid var(--accent);
+  border-radius:0 var(--rsm) var(--rsm) 0;padding:.8rem 1.1rem;
+  margin:1rem 0;font-size:.85rem;color:var(--text2);line-height:1.7;
+}
+.concept-highlight strong{color:var(--accent)}
+
+.status-pill-demo{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .9rem;border-radius:20px;font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;font-weight:700;margin:.2rem;
+}
+.status-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin:1rem 0}
+
+/* SCENARIO STAGE */
+.scenario-context{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.3rem 1.5rem;margin-bottom:1.2rem;
+}
+.scenario-proj{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem;
+}
+.scenario-msg{
+  background:var(--bg);border:1px solid var(--border-bright);border-radius:var(--rsm);
+  padding:.85rem 1.1rem;margin:1rem 0;font-size:.86rem;color:var(--text2);line-height:1.65;
+  font-family:'JetBrains Mono',monospace;
+}
+.scenario-msg .msg-sender{color:var(--accent);font-weight:700}
+.scenario-msg .msg-status{color:var(--yellow);font-weight:700}
+.scenario-question{font-family:'Unbounded',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:1.1rem}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+.option-btn{
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rsm);
+  padding:.9rem 1.2rem;font-size:.86rem;color:var(--text2);cursor:pointer;
+  transition:all .2s;text-align:left;font-family:'Space Grotesk',sans-serif;line-height:1.5;
+  display:flex;align-items:flex-start;gap:.7rem;
+}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(108,99,255,.08);color:var(--text)}
+.option-btn.correct{border-color:var(--green);background:rgba(0,214,143,.1);color:var(--green)}
+.option-btn.wrong{border-color:var(--red);background:rgba(255,71,87,.1);color:var(--red)}
+.option-btn.neutral{border-color:var(--border-bright);opacity:.6}
+.option-btn:disabled{cursor:not-allowed}
+.option-letter{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;
+  width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface3);color:var(--text3);flex-shrink:0;margin-top:1px;
+}
+.option-btn.correct .option-letter{background:rgba(0,214,143,.2);color:var(--green)}
+.option-btn.wrong .option-letter{background:rgba(255,71,87,.2);color:var(--red)}
+
+/* FEEDBACK */
+.feedback-box{
+  border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1rem;display:none;line-height:1.7;
+}
+.feedback-box.show{display:block}
+.feedback-box.correct{background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.3);color:#00D68F}
+.feedback-box.wrong{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:#FF6B7A}
+.feedback-title{font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:700;margin-bottom:.4rem}
+.feedback-text{font-size:.84rem;opacity:.9;line-height:1.65}
+
+/* REWARD */
+.reward-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;
+  align-items:center;justify-content:center;
+}
+.reward-overlay.show{display:flex}
+.reward-box{
+  background:var(--surface);border:1px solid var(--border-bright);border-radius:20px;
+  padding:2.5rem;text-align:center;max-width:420px;width:90%;
+  box-shadow:0 0 60px var(--accent-glow);position:relative;overflow:hidden;
+}
+.reward-box::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(108,99,255,.1),rgba(255,107,157,.08));
+  pointer-events:none;
+}
+.reward-stars{font-size:2.2rem;margin-bottom:.8rem;letter-spacing:.2rem}
+.reward-title{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:900;color:var(--text);margin-bottom:.4rem}
+.reward-xp{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  color:var(--accent);margin-bottom:.5rem;
+}
+.reward-msg{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:1.5rem}
+.reward-levelup{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:var(--r);padding:.9rem;margin-bottom:1.2rem;
+  font-family:'Unbounded',sans-serif;font-size:.82rem;font-weight:700;color:#fff;
+  display:none;
+}
+.reward-levelup.show{display:block}
+
+/* BUTTONS */
+.btn-game{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.82rem;
+  padding:.7rem 1.5rem;border-radius:var(--rsm);border:none;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),#9C8FFF);color:#fff;
+  box-shadow:0 4px 15px var(--accent-glow);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-glow)}
+.btn-secondary{
+  background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+}
+.btn-secondary:hover{border-color:var(--border-bright);color:var(--text)}
+.btn-success{background:linear-gradient(135deg,#00D68F,#00B377);color:#fff;box-shadow:0 4px 15px rgba(0,214,143,.3)}
+.btn-success:hover{transform:translateY(-1px)}
+
+/* GLOSSARY SCREEN */
+.glossary-content{padding:2rem;max-width:900px;margin:0 auto}
+.glossary-search{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:.85rem 1.2rem;font-family:'Space Grotesk',sans-serif;font-size:.9rem;
+  color:var(--text);outline:none;transition:border-color .2s;margin-bottom:1.2rem;
+}
+.glossary-search:focus{border-color:var(--accent)}
+.glossary-search::placeholder{color:var(--text3)}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}
+.gloss-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.1rem;transition:all .2s;cursor:default;
+}
+.gloss-card:hover{border-color:var(--border-bright);transform:translateY(-1px)}
+.gloss-acronym{font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:3px}
+.gloss-full{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:5px}
+.gloss-def{font-size:.78rem;color:var(--text2);line-height:1.6}
+.gloss-tag{font-family:'Space Grotesk',sans-serif;font-size:.6rem;font-weight:600;padding:2px 7px;border-radius:10px;margin-top:5px;display:inline-block}
+
+/* RANKING / PROFILE */
+.profile-content{padding:2rem;max-width:700px;margin:0 auto}
+.profile-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:2rem;text-align:center;margin-bottom:1.5rem;position:relative;overflow:hidden;
+}
+.profile-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, var(--accent-glow) 0%, transparent 70%);
+  pointer-events:none;
+}
+.profile-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;margin:0 auto 1rem;
+  box-shadow:0 0 30px var(--accent-glow);
+}
+.profile-level{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:.3rem}
+.profile-xp{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent)}
+.profile-next{font-family:'Space Grotesk',sans-serif;font-size:.75rem;color:var(--text3);margin-top:.3rem}
+.profile-xp-bar{width:100%;height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin:1rem 0}
+.profile-xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .6s}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.5rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem;text-align:center}
+.stat-val{font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:900;color:var(--accent)}
+.stat-label{font-size:.7rem;color:var(--text3);margin-top:.2rem}
+.medals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.7rem}
+.medal-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);
+  padding:.9rem;text-align:center;transition:all .2s;
+}
+.medal-card.earned{border-color:var(--yellow);background:rgba(255,214,10,.06)}
+.medal-card.locked{opacity:.35}
+.medal-icon{font-size:1.8rem;margin-bottom:.3rem}
+.medal-name{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.2rem}
+.medal-desc{font-size:.65rem;color:var(--text3)}
+
+/* LEVELS CONFIG */
+.levels-bar{display:flex;gap:.4rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.level-node{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;min-width:80px;
+}
+.level-circle{
+  width:36px;height:36px;border-radius:50%;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  transition:all .3s;
+}
+.level-circle.reached{border-color:var(--accent);background:rgba(108,99,255,.2);box-shadow:0 0 12px var(--accent-glow)}
+.level-line{flex:1;height:2px;background:var(--border);margin-top:-18px;margin-bottom:18px}
+.level-line.reached{background:var(--accent)}
+.level-name{font-family:'Space Grotesk',sans-serif;font-size:.6rem;font-weight:600;color:var(--text3);text-align:center}
+.level-name.reached{color:var(--accent)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .game-header{padding:0 1rem}
+  .map-content,.mission-content,.glossary-content,.profile-content{padding:1.2rem}
+  .missions-row{grid-template-columns:1fr 1fr}
+  .map-title{font-size:1.4rem}
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .xp-bar{width:80px}
+  .gloss-grid{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+  .missions-row{grid-template-columns:1fr}
+  .player-bar{gap:.7rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header class="game-header">
+  <div class="game-logo">⚡ DevOps Quest</div>
+  <div class="player-bar">
+    <div class="level-badge" id="levelBadge">Aprendiz</div>
+    <div class="xp-bar-wrap">
+      <span class="xp-label">XP</span>
+      <div class="xp-bar"><div class="xp-fill" id="headerXpFill" style="width:0%"></div></div>
+      <span class="total-xp" id="headerXp">0</span>
+    </div>
+    <button class="btn-menu active" onclick="showScreen('map')">🗺️ Missões</button>
+    <button class="btn-menu" onclick="showScreen('glossary')">📖 Siglas</button>
+    <button class="btn-menu" onclick="showScreen('profile')">👤 Perfil</button>
+  </div>
+</header>
+
+<!-- MAP SCREEN -->
+<div class="screen active" id="screen-map">
+<div class="map-content">
+  <div class="map-hero">
+    <div class="map-title">DevOps Quest</div>
+    <div class="map-subtitle">Aprenda o Azure DevOps jogando com cenários reais dos seus projetos SEDU-ES.<br>Complete missões para subir de nível de Aprendiz a Líder Expert! 🏆</div>
+  </div>
+
+  <div id="levelProgress" style="margin-bottom:2rem"></div>
+
+  <div class="world-section">
+    <div class="world-title">📘 Mundo 1 — Fundamentos do DevOps</div>
+    <div class="missions-row" id="world1"></div>
+  </div>
+
+  <div class="world-section">
+    <div class="world-title">🔥 Mundo 2 — Cenários Reais SEDU-ES</div>
+    <div class="missions-row" id="world2"></div>
+  </div>
+
+  <div class="world-section">
+    <div class="world-title">👑 Mundo 3 — Líder Expert</div>
+    <div class="missions-row" id="world3"></div>
+  </div>
+</div>
+</div>
+
+<!-- MISSION SCREEN -->
+<div class="screen" id="screen-mission">
+<div class="mission-content">
+  <div class="mission-header-bar">
+    <button class="back-btn" onclick="showScreen('map')">← Voltar</button>
+    <div class="mission-header-title" id="missionHeaderTitle"></div>
+    <div class="mission-xp-badge" id="missionXpBadge"></div>
+  </div>
+  <div class="mission-progress">
+    <div class="progress-labels">
+      <span class="progress-label" id="progLabel">Etapa 1</span>
+      <span class="progress-label" id="progFrac"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+  <div id="stagesContainer"></div>
+</div>
+</div>
+
+<!-- GLOSSARY SCREEN -->
+<div class="screen" id="screen-glossary">
+<div class="glossary-content">
+  <h2 style="font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:.5rem">📖 Dicionário de Siglas</h2>
+  <p style="font-size:.82rem;color:var(--text2);margin-bottom:1.2rem">Todas as siglas e termos técnicos que aparecem nas reuniões — em linguagem clara.</p>
+  <input class="glossary-search" placeholder="Buscar sigla ou termo..." oninput="filterGloss(this.value)">
+  <div class="gloss-grid" id="glossGrid"></div>
+</div>
+</div>
+
+<!-- PROFILE SCREEN -->
+<div class="screen" id="screen-profile">
+<div class="profile-content">
+  <div class="profile-card">
+    <div class="profile-avatar">👩‍💼</div>
+    <div class="profile-level" id="profileLevel">Aprendiz</div>
+    <div class="profile-xp" id="profileXp">0 XP</div>
+    <div class="profile-next" id="profileNext"></div>
+    <div class="profile-xp-bar"><div class="profile-xp-fill" id="profileXpFill" style="width:0%"></div></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="statMissoes">0</div><div class="stat-label">Missões</div></div>
+    <div class="stat-card"><div class="stat-val" id="statAcertos">0%</div><div class="stat-label">Acertos</div></div>
+    <div class="stat-card"><div class="stat-val" id="statEstrelas">0</div><div class="stat-label">Estrelas ⭐</div></div>
+  </div>
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem">🏅 Medalhas</div>
+  <div class="medals-grid" id="medalsGrid"></div>
+  <div style="margin-top:1.5rem;text-align:center">
+    <button class="btn-game btn-secondary" onclick="if(confirm('Resetar todo o progresso?')){resetGame()}">🔄 Resetar progresso</button>
+  </div>
+</div>
+</div>
+
+</div><!-- /app -->
+
+<!-- REWARD OVERLAY -->
+<div class="reward-overlay" id="rewardOverlay">
+  <div class="reward-box">
+    <div class="reward-stars" id="rewardStars"></div>
+    <div class="reward-title" id="rewardTitle"></div>
+    <div class="reward-xp" id="rewardXp"></div>
+    <div class="reward-msg" id="rewardMsg"></div>
+    <div class="reward-levelup" id="rewardLevelup"></div>
+    <button class="btn-game btn-primary" onclick="closeReward()">Continuar →</button>
+  </div>
+</div>
+
+<script>
+// ══ GAME DATA ══
+const LEVELS=[
+  {name:'Aprendiz',icon:'🌱',min:0,max:300},
+  {name:'Analista Jr',icon:'📊',min:300,max:700},
+  {name:'Analista Pleno',icon:'🔍',min:700,max:1200},
+  {name:'Líder de Projetos',icon:'🎯',min:1200,max:2000},
+  {name:'Líder Expert',icon:'👑',min:2000,max:9999},
+];
+const PROJ_COLORS={SGTER:'#F59E0B',SIGEST:'#9C8FFF',SEMPRE_NOVA:'#00D68F',EGESTAO:'#FF8C00',QUESTOES:'#FF6B9D'};
+
+const MISSIONS=[
+  // ── MUNDO 1 ──
+  {
+    id:'m1',world:1,num:'01',icon:'🔵',title:'O que é o Azure DevOps?',
+    desc:'Entenda a ferramenta que você usa todo dia para acompanhar os projetos.',
+    xp:50,type:'conceito',
+    stages:[
+      {type:'concept',title:'Azure DevOps — sua central de controle',text:'O <strong>Azure DevOps</strong> é a plataforma onde o time registra tudo: tarefas, bugs, testes e entregas. Pense nele como um <strong>quadro de tarefas inteligente</strong> onde cada card (chamado de <em>work item</em>) tem um dono, uma descrição e um <strong>status</strong> que muda conforme o trabalho avança.<br><br>Você, como líder, usa o DevOps para <strong>ver o que está acontecendo</strong> sem precisar perguntar para cada pessoa individualmente.',highlight:'A regra de ouro: <strong>tudo que não está no DevOps não existe.</strong> Se o dev fez algo mas não registrou, não pode ser cobrado, rastreado nem entregue.',tags:[]},
+      {type:'question',question:'Por que é importante registrar tudo no DevOps?',opts:['Para o time ter mais trabalho burocrático','Para você conseguir acompanhar, cobrar e reportar sem depender da memória de ninguém','Porque a empresa exige relatórios em PDF','Para o cliente ver o que está sendo feito'],ans:1,exp:'Isso! O DevOps é sua fonte de verdade. Quando sua chefe pedir um report de surpresa, você abre o DevOps e tem tudo lá — sem precisar ligar para o dev às 18h pedindo atualização.',correct:'Exatamente! 🎯 Você já entende a essência do DevOps.',wrong:'Não exatamente. O principal motivo é sua autonomia como líder!'},
+    ]
+  },
+  {
+    id:'m2',world:1,num:'02',icon:'🟠',title:'Os 8 Status do DevOps',
+    desc:'Aprenda o que cada status significa e o que você deve fazer ao ver cada um.',
+    xp:80,type:'conceito',
+    stages:[
+      {type:'concept',title:'Os 8 status que você precisa dominar',text:'Cada work item percorre um ciclo de vida. Aprenda a ler esse ciclo como um semáforo:',highlight:'<strong>Fluxo normal:</strong> Proposed → Active → Awaiting QA → Resolved → Closed<br><strong>Problemas:</strong> Revised (voltou para corrigir) · Refused (cancelado) · Paused (travado)',tags:[
+        {label:'Proposed',color:'#5A5A80',bg:'rgba(90,90,128,0.2)',desc:'No backlog, aguardando'},
+        {label:'Active',color:'#3B82F6',bg:'rgba(59,130,246,0.2)',desc:'Dev trabalhando'},
+        {label:'Awaiting QA',color:'#F59E0B',bg:'rgba(245,158,11,0.2)',desc:'Aguardando teste'},
+        {label:'Resolved',color:'#F97316',bg:'rgba(249,115,22,0.2)',desc:'Testado, aguarda fechar'},
+        {label:'Closed',color:'#00D68F',bg:'rgba(0,214,143,0.2)',desc:'Concluído!'},
+        {label:'Revised',color:'#EF4444',bg:'rgba(239,68,68,0.2)',desc:'Voltou para corrigir'},
+        {label:'Paused',color:'#EAB308',bg:'rgba(234,179,8,0.2)',desc:'Travado!'},
+        {label:'Refused',color:'#DC2626',bg:'rgba(220,38,38,0.2)',desc:'Cancelado'},
+      ]},
+      {type:'question',question:'Você abre o DevOps e vê um item em "Revised" sem nenhuma movimentação há 2 dias. O que provavelmente aconteceu?',opts:['O dev já resolveu e esqueceu de atualizar o status','O dev não foi avisado que o item voltou para correção','O QA aprovou e está aguardando fechamento','O item foi cancelado pelo cliente'],ans:1,exp:'Revised significa que o QA encontrou um problema e devolveu para o dev corrigir. Se ficou parado, o dev provavelmente não foi notificado. Ação: verifique se tem feedback no Discussion e avise o dev diretamente.',correct:'Perfeito! 🎯 Revised parado = dev não foi avisado. Aja agora!',wrong:'Cuidado! Revised significa que o item VOLTOU para o dev corrigir — e se não moveu, ele provavelmente não sabe disso.'},
+      {type:'question',question:'Qual é a DIFERENÇA entre "Resolved" e "Closed"?',opts:['Não há diferença, são a mesma coisa','Resolved = teste passou mas ainda não foi fechado formalmente. Closed = encerrado e aceito por todos','Resolved = dev terminou. Closed = QA aprovou','Resolved é para bugs, Closed é para funcionalidades'],ans:1,exp:'Resolved significa que o teste passou e o item está aguardando ser fechado oficialmente. Closed significa que foi concluído e aceito. Em sustentação, itens Resolved podem acumular — organize validações semanais!',correct:'Isso! Resolved é o "quase lá". Closed é o "pronto!" 🏁',wrong:'Não exatamente. Resolved quer dizer que o teste passou, mas o item ainda precisa ser formalmente fechado.'},
+    ]
+  },
+  {
+    id:'m3',world:1,num:'03',icon:'🧪',title:'Testes no DevOps',
+    desc:'Entenda Test Plans, Test Cases e como saber se os testes estão sendo feitos.',
+    xp:80,type:'conceito',
+    stages:[
+      {type:'concept',title:'Test Plans — onde vivem os testes',text:'Dentro do DevOps existe uma seção chamada <strong>Test Plans</strong>. Lá ficam os <em>Test Cases</em> — roteiros que descrevem o que o QA deve testar e o resultado esperado.<br><br>Um work item pode ter vários Test Cases. Quando o QA executa um teste, ele marca o resultado:',highlight:'✅ <strong>Passed</strong> — funcionou | ❌ <strong>Failed</strong> — encontrou erro | 🚫 <strong>Blocked</strong> — não conseguiu testar | ⏸️ <strong>Not Run</strong> — ainda não executou<br><br><strong>Armadilha comum:</strong> item em "Resolved" não significa que foi testado! Sempre cruze: Resolved → tem Test Case com status Passed?',tags:[]},
+      {type:'question',question:'Você vê um item em "Awaiting QA" há 3 dias. Como saber se o teste está sendo feito?',opts:['Envie mensagem no grupo perguntando','Vá em Test Plans no DevOps e verifique se o item tem Test Case criado e qual o status dele','Espere mais uns dias, o QA deve estar ocupado','Feche o item e reabra para chamar atenção'],ans:1,exp:'Isso! Em Test Plans você vê se o Test Case foi criado e se foi executado. Se estiver em "Not Run" há mais de 2 dias, o teste não aconteceu. Aí você pergunta: "Quem vai testar e quando?"',correct:'Perfeito! 🎯 Test Plans é sua vitrine de qualidade.',wrong:'A resposta correta é verificar no Test Plans! Mensagem no grupo vem depois, não antes de checar.'},
+    ]
+  },
+  {
+    id:'m4',world:1,num:'04',icon:'⏱️',title:'Tempo Ideal por Status',
+    desc:'Quando um item está demorando demais? Aprenda a reconhecer o sinal de alerta.',
+    xp:100,type:'conceito',
+    stages:[
+      {type:'concept',title:'Relógio da sprint — quando cobrar?',text:'Em <strong>sprint ativa</strong> (SGTER, SIGEST, SEMPRE NOVA), o tempo é crítico. Em <strong>sustentação</strong> (SGF, E-GESTÃO, ALIMENTAÇÃO), o ritmo é mais tranquilo.',highlight:'⏱️ Sprint ativa: Active até 3d · Awaiting QA até 2d · Resolved até 1d · Paused = IMEDIATO<br>🔧 Sustentação: Active até 5d · Awaiting QA até 3d · Resolved até 2d · Paused até 3d com justificativa',tags:[]},
+      {type:'question',question:'É segunda-feira. Você vê que um item do SGTER está em "Active" desde quarta-feira passada (5 dias). O que você faz?',opts:['Nada, pode ser uma tarefa complexa','Entra em contato com o dev perguntando se há algum impedimento','Muda o status para Paused você mesma','Remove o item da sprint'],ans:1,exp:'Em sprint ativa, Active acima de 3 dias é sinal de alerta. A abordagem certa é perguntar diretamente: "Vi que o item X está em Active desde quarta. Tem algum impedimento que posso ajudar a resolver?"',correct:'Isso! Ação assertiva sem ser agressiva. 💪',wrong:'5 dias em Active numa sprint ativa é acima do limite. Você deve investigar!'},
+      {type:'question',question:'Um item do E-GESTÃO (sustentação) está Paused há 4 dias. Não tem nenhum comentário no Discussion. O que é urgente fazer?',opts:['Esperar mais uma semana antes de agir','Exigir que o responsável registre o motivo no Discussion e dê uma previsão de retomada','Fechar o item e criar um novo','Escalar direto para a gestão sem falar com o time'],ans:1,exp:'Em sustentação Paused sem motivo registrado é um problema. Você não tem como rastrear ou escalar sem saber o motivo. Primeiro: cobre o registro no Discussion. Depois, avalie se precisa escalar.',correct:'Correto! Sem Discussion, sem rastreamento. 📝',wrong:'O primeiro passo é sempre entender o motivo — e ele deve estar no Discussion do item!'},
+    ]
+  },
+
+  // ── MUNDO 2 ──
+  {
+    id:'m5',world:2,num:'05',icon:'🚌',title:'Crise no SGTER',
+    desc:'Sprint ativa, Review amanhã, 3 itens travados. O que você faz?',
+    xp:120,type:'cenario',
+    stages:[
+      {type:'scenario',proj:'SGTER — Sprint 14 · Review amanhã!',context:'É quinta-feira às 14h. A Review do SGTER é amanhã às 10h. Você abre o DevOps e vê:\n\n• 2 itens em "Awaiting QA" sem Test Case criado\n• 1 item em "Revised" há 2 dias sem movimentação\n• 1 item em "Active" há 5 dias\n• 3 itens em "Closed" (ótimo!)',question:'Qual item exige sua atenção IMEDIATA (primeira ação)?',opts:['Os 2 itens em Awaiting QA sem Test Case','O item em Revised há 2 dias sem movimentação','O item em Active há 5 dias','Os itens em Closed — verificar se estão certos'],ans:1,exp:'O item Revised há 2 dias sem movimento é mais crítico: o dev provavelmente não foi notificado do problema. Se você não agir agora, este item não vai entrar na Review. Ação: verificar o Discussion e notificar o dev imediatamente!',correct:'Ação certeira! Revised parado é o maior risco para a Review. 🎯',wrong:'Atenção! O Revised parado é o mais urgente — se o dev não souber, o item não fica pronto para amanhã.'},
+      {type:'scenario',proj:'SGTER — Sprint 14 · Agindo rápido',context:'Você resolveu o Revised — o dev foi notificado e está corrigindo. Agora foco nos outros problemas:\n\n• 2 itens em "Awaiting QA" sem Test Case criado\n• 1 item em "Active" há 5 dias (dev diz que está quase pronto)',question:'Sobre os itens em Awaiting QA sem Test Case — o que você diz ao QA?',opts:['"Pode testar mesmo sem Test Case, fica mais rápido"','"Preciso que você crie os Test Cases e execute os testes hoje — a Review é amanhã. Pode me confirmar a previsão?"','"Vamos cancelar esses itens da Review, não vai dar tempo"','"Transfere os itens de volta para Active"'],ans:1,exp:'Perfeito! Você foi assertiva, deu o contexto (Review amanhã), pediu uma ação específica (criar Test Case e testar) e pediu confirmação de prazo. Sem Test Case executado, o item não pode ir para Closed.',correct:'Comunicação assertiva! Direta, específica e com prazo. 💪',wrong:'A abordagem certa é ser direta e dar contexto: a Review é amanhã e você precisa de confirmação de prazo.'},
+    ]
+  },
+  {
+    id:'m6',world:2,num:'06',icon:'🏢',title:'Mistério no SIGEST',
+    desc:'Itens acumulando em Resolved. Quem precisa agir?',
+    xp:120,type:'cenario',
+    stages:[
+      {type:'scenario',proj:'SIGEST — Sprint em andamento',context:'Você abre o DevOps do SIGEST e vê 6 itens em "Resolved" acumulados. Os mais antigos estão lá há 4 dias. Os itens têm Test Cases com status "Passed". O Discussion está vazio em todos eles.',question:'Por que esses itens estão em Resolved há tanto tempo sem fechar?',opts:['O QA esqueceu de marcar como Passed','Alguém precisa validar e fechar — e esse alguém pode ser você ou o PO do projeto','Os itens foram rejeitados pelo cliente','O sistema DevOps está com bug'],ans:1,exp:'Resolved com Test Case Passed significa: o desenvolvimento acabou, o teste passou, e está aguardando a validação final para ir para Closed. Essa validação é feita por você (líder) ou pelo PO. Organize uma sessão rápida de validação!',correct:'Isso! Resolved acumulado = sessão de validação necessária. 🎯',wrong:'Resolved com Passed significa que está aguardando VOCÊ (ou o PO) fazer a validação final!'},
+      {type:'scenario',proj:'SIGEST — Organizando a validação',context:'Você vai organizar uma sessão de validação. Antes, percebe que um dos itens Resolved não tem Test Case — foi para Resolved sem passar por teste formal.',question:'O que você faz com esse item específico?',opts:['Fecha junto com os outros — se o dev diz que está pronto, confia','Devolve para Revised e pede ao QA que crie e execute o Test Case antes de fechar','Remove o item da sprint','Ignora, não tem tempo para isso agora'],ans:1,exp:'Resolved sem Test Case é um risco real. Pode parecer funcionar mas vai para produção sem validação formal. Você deve devolver para Revised com a orientação: "QA precisa criar Test Case e executar antes de fecharmos".',correct:'Correto! Sua função como líder é garantir qualidade, não só velocidade. 🏆',wrong:'Fechar sem Test Case é arriscado! Pode ir para produção com problemas não detectados.'},
+    ]
+  },
+  {
+    id:'m7',world:2,num:'07',icon:'💰',title:'SOS E-GESTÃO',
+    desc:'Um projeto sem documentação. Como você age sem travar?',
+    xp:140,type:'cenario',
+    stages:[
+      {type:'scenario',proj:'E-GESTÃO — Sustentação (sem doc. formal)',context:'Sua chefe te liga: "Preciso saber o que o E-GESTÃO faz exatamente e se está estável." Você sabe que:\n\n• O projeto foi herdado de outra fábrica\n• Não tem documentação formal no SGR\n• O Tech Lead conhece o sistema\n• Há 2 itens em Paused há 5 dias sem comentário',question:'Como você responde à sua chefe de forma assertiva?',opts:['"Não sei, não tem documentação desse projeto"','"O E-GESTÃO é o sistema de repasses financeiros às escolas. Está em sustentação. Identifico 2 itens travados há 5 dias — vou apurar o motivo hoje e te mando o status até as 17h"','"Vou precisar de uma semana para investigar"','"Melhor perguntar direto para o Tech Lead"'],ans:1,exp:'Líder assertiva! Você usou o que SABE (o que o sistema faz), reconheceu o que está monitorando (2 itens Paused) e deu um prazo concreto para o que ainda precisa apurar. Isso é gestão com dados!',correct:'Resposta de líder! Usa o que sabe, admite o que vai apurar e dá prazo. 🌟',wrong:'Nunca diga "não sei" sem complementar com o que vai fazer para descobrir. Você tem mais informação do que pensa!'},
+      {type:'scenario',proj:'E-GESTÃO — Investigando os Paused',context:'Você abre o DevOps e verifica os 2 itens Paused há 5 dias. O Discussion está completamente vazio nos dois itens.',question:'Qual mensagem você manda para o responsável?',opts:['"Por que esses itens estão parados?"','"Vi que os itens X e Y estão em Paused há 5 dias sem comentário no Discussion. Por favor, registre o motivo e a previsão de retomada diretamente no item — preciso dessas informações para o acompanhamento. Obrigada!"','"Vou fechar esses itens, não estão indo a lugar nenhum"','"Pode esperar, são de sustentação, não é urgente"'],ans:1,exp:'Mensagem perfeita! Você foi específica (itens X e Y), deu contexto (5 dias parados), pediu uma ação clara (registrar no Discussion) e explicou o motivo (acompanhamento). Sem agressividade e sem deixar dúvidas.',correct:'Comunicação assertiva de líder! Específica, construtiva e com contexto. 💪',wrong:'A mensagem precisa ser específica e pedir a ação certa: registro no Discussion do item.'},
+    ]
+  },
+  {
+    id:'m8',world:2,num:'08',icon:'🎙️',title:'Report de Surpresa',
+    desc:'Sua chefe pediu um status agora. Você tem 5 minutos.',
+    xp:150,type:'cenario',
+    stages:[
+      {type:'scenario',proj:'Reunião com a chefia — sem aviso prévio',context:'São 15h de uma quarta-feira. Sua chefe aparece: "Me dá um status rápido de como estão os projetos." Você tem 5 minutos e precisa falar de cabeça (ou com o que lembra do DevOps de hoje).',question:'Qual a MELHOR estrutura para um report de surpresa?',opts:['Falar de todos os 10 projetos em ordem alfabética com todos os detalhes','Começar pelos problemas e terminar com o que está bem','Organizar por: Sprint ativa (o que está em andamento), Sustentação (algum incidente?), Iniciando (progresso?), e um impedimento para escalar se houver','Dizer que precisa de tempo para preparar um relatório formal'],ans:2,exp:'A estrutura correta! Sprint ativa → Sustentação → Início. É concisa, organizada por prioridade e mostra domínio. Sua chefe quer panorama, não detalhes de cada item.',correct:'Estrutura de ouro! Prioridade → Estabilidade → Progresso → Riscos. 🌟',wrong:'A melhor estrutura organiza por tipo de projeto: Sprint ativa, Sustentação, Iniciando — nessa ordem de prioridade.'},
+      {type:'scenario',proj:'Praticando o report de 5 minutos',context:'Use esta estrutura:\n• Sprint ativa (SGTER, SIGEST, SEMPRE NOVA): o que está sendo entregue?\n• Sustentação (SGF, E-GESTÃO, ALIMENTAÇÃO): está estável?\n• Início/Retomada (SISPC, PGP, QUESTÕES, PES): evoluindo?\n• Impedimento para escalar (se houver)',question:'Sua chefe pergunta: "O SGTER está na sprint e tem entrega essa semana?" Qual resposta demonstra mais domínio?',opts:['"Acho que sim, preciso confirmar com o dev"','"Sim! A Sprint 14 tem Review amanhã. Temos X itens prontos e Y em validação. O principal risco é [item específico]"','"Posso verificar e te falo amanhã"','"Está tudo certo, não se preocupe"'],ans:1,exp:'Isso! Você confirmou, deu o contexto (Sprint 14, Review amanhã), quantificou (X prontos, Y em validação) e nomeou o risco. Isso é relatório de líder — com dados, não com suposições.',correct:'É assim que se faz! Dados + contexto + risco nomeado = confiança. 🏆',wrong:'Nunca "acho" ou "vejo amanhã" num report surpresa. Use os dados que você vê no DevOps!'},
+    ]
+  },
+
+  // ── MUNDO 3 ──
+  {
+    id:'m9',world:3,num:'09',icon:'🔤',title:'Decoder de Mensagens Técnicas',
+    desc:'PR, merge, release, pull request... Aprenda a traduzir as mensagens do grupo.',
+    xp:180,type:'conceito',
+    stages:[
+      {type:'concept',title:'O dicionário do grupo de TI',text:'Quando o dev manda no grupo: <strong>"PR aberto para revisão"</strong>, o que ele quer dizer?<br><br><strong>Pull Request (PR)</strong> = o dev terminou uma parte do código e está pedindo para outro dev revisar antes de juntar tudo. É o Code Review em ação.<br><br><strong>"PR aprovado / mergeado"</strong> = o código foi revisado, aprovado e juntado ao código principal. Pronto para ir ao QA.<br><br><strong>"Nota de release atualizada"</strong> = documento listando tudo que foi entregue nessa versão. Significa que o <strong>deploy foi feito</strong>.<br><br><strong>"Parecer da qualidade atualizado"</strong> = o QA registrou o resultado do teste. Você vê em Test Plans → plano da sprint → Test Cases.',highlight:'Quando o dev fala em PR → é Code Review acontecendo<br>Quando fala em release/deploy → sistema foi atualizado<br>Quando fala em parecer → vai no DevOps, Test Plans, Discussion',tags:[]},
+      {type:'question',question:'O dev manda no grupo: "PR do SGTER mergeado, subindo para homologação." O que isso significa para você?',opts:['O dev está com problema e pedindo ajuda','O código foi revisado e aprovado, o sistema está sendo atualizado em homologação — avise o QA para se preparar para testar','O item foi para Closed no DevOps','A sprint foi encerrada'],ans:1,exp:'PR mergeado + subindo para homologação = o código passou pelo Code Review e está sendo publicado no ambiente de teste. Sua ação: avisar o QA que em breve haverá itens para testar em homologação!',correct:'Traduziu perfeitamente! 🎯 PR mergeado → QA pode se preparar!',wrong:'PR mergeado significa que o Code Review terminou e o código foi aprovado. O sistema está indo para homologação.'},
+      {type:'question',question:'Chega a mensagem: "Nota de release atualizada no Confluence." Onde você pode ver o que foi entregue?',opts:['No e-mail de entrega que deve ter chegado','Na nota de release mencionada — ela lista tudo que foi entregue. Também pode conferir no DevOps quais itens mudaram para Resolved/Closed','No grupo do WhatsApp do projeto','Só o Tech Lead sabe'],ans:1,exp:'A Nota de Release lista tudo que foi entregue na versão. No DevOps você confirma os itens — deve ver os work items em Resolved ou Closed. Se não estiver atualizado, peça ao dev que atualize os status!',correct:'Correto! Nota de release + DevOps = visão completa da entrega. ✅',wrong:'A Nota de Release é o documento que lista as entregas. Combine com o DevOps para ver os itens correspondentes.'},
+    ]
+  },
+  {
+    id:'m10',world:3,num:'10',icon:'🗺️',title:'Mapa de Dependências',
+    desc:'Quem depende de quem? Entenda as conexões entre os projetos.',
+    xp:200,type:'conceito',
+    stages:[
+      {type:'concept',title:'Por que o SEGES aparece em tudo?',text:'O <strong>SEGES</strong> é o sistema central de dados escolares da SEDU-ES. Quase todos os projetos precisam de dados que vêm de lá (alunos, escolas, professores, turmas).<br><br>Por isso, quando o SEGES tem instabilidade, <strong>vários projetos são impactados ao mesmo tempo</strong>. Como líder, se vários times reclamarem de problemas de dados no mesmo dia, seu primeiro pensamento deve ser: <em>"Será que é o SEGES?"</em>',highlight:'<strong>SEGES</strong> → alimenta: SGTER (alunos), SIGEST (unidades), SEMPRE NOVA (escolas), QUESTÕES (turmas/alunos), ALIMENTAÇÃO (alunos), PES (estudantes)<br><br><strong>ACESSO CIDADÃO</strong> → login de todos os projetos<br><br><strong>E-DOCS</strong> → documentos do E-GESTÃO e SISPC',tags:[]},
+      {type:'question',question:'Segunda-feira de manhã: SGTER, QUESTÕES e ALIMENTAÇÃO reportam problemas com dados de alunos ao mesmo tempo. Qual é sua primeira hipótese?',opts:['Problema em cada projeto individualmente — 3 bugs diferentes','Problema na integração com o SEGES — que alimenta todos esses projetos com dados de alunos','Problema no servidor da SEDU','Os devs não trabalharam no final de semana'],ans:1,exp:'Bingo! Quando vários projetos têm o mesmo tipo de problema (dados de alunos) ao mesmo tempo, a causa raiz provavelmente é o sistema que os alimenta — o SEGES. Sua ação: verificar com a GTI se o SEGES está estável.',correct:'Raciocínio sistêmico! Um problema no SEGES impacta múltiplos projetos. 🧠',wrong:'Quando múltiplos projetos têm o mesmo problema simultaneamente, pense no sistema que os conecta — o SEGES!'},
+    ]
+  },
+  {
+    id:'m11',world:3,num:'11',icon:'👑',title:'Simulado Final — Líder Expert',
+    desc:'10 situações reais dos seus projetos. Prove que você é Líder Expert!',
+    xp:250,type:'cenario',
+    stages:[
+      {type:'scenario',proj:'SEMPRE NOVA — Sprint ativa',context:'Item em "Awaiting QA" há 4 dias. Você verifica o Test Plans e vê que não existe nenhum Test Case criado para este item.',question:'Qual é a sua ação e para quem?',opts:['Aguarda mais uns dias','Pede ao QA para criar o Test Case e executar o teste com urgência, informando que a sprint está em risco','Move o item para Closed mesmo sem teste','Manda mensagem no grupo geral perguntando quem é o responsável'],ans:1,exp:'Correto! Awaiting QA sem Test Case = teste não vai acontecer. Você vai direto ao QA com ação específica e contexto (sprint em risco).',correct:'Ação certeira e específica! 🎯',wrong:'Você deve ir direto ao QA com a ação específica: criar o Test Case e executar.'},
+      {type:'scenario',proj:'SISPC — Iniciando',context:'É a terceira semana do projeto e há 15 itens em "Proposed" sem nenhum entrar em "Active" ainda. O analista diz que ainda está "refinando o backlog".',question:'Quando isso é um sinal de alerta para você?',opts:['Nunca — refinamento pode levar o tempo que precisar','Agora! Projetos iniciando não podem travar. 3 semanas sem nenhum item em desenvolvimento é risco de perda de ritmo e engajamento do time','Só quando a GTI reclamar','Quando o primeiro item for recusado'],ans:1,exp:'Projetos que travam logo no início perdem momentum. 3 semanas sem item em Active é crítico. Ação: reunião de priorização urgente para destravar pelo menos 2-3 itens para desenvolvimento.',correct:'Faro de líder! Proposed acumulando = projeto travado. 🚨',wrong:'3 semanas sem nenhum item em desenvolvimento é um sinal de alerta sério para um projeto que está iniciando!'},
+      {type:'scenario',proj:'PGP — Iniciando',context:'O DPO (Farley) manda mensagem: "A tela de RAT está com o campo de hipótese legal errado. Precisamos corrigir." O item correspondente está em "Resolved".',question:'Qual é o fluxo correto de ação?',opts:['Fechar o item assim mesmo e criar um novo para a correção','Mover o item de volta para Revised com o feedback detalhado do DPO no Discussion, notificar o dev e avisar o QA que precisará retestar','Ignorar — o item foi testado e aprovado pelo QA','Pedir ao DPO para entrar no DevOps e registrar ele mesmo'],ans:1,exp:'Fluxo perfeito! Resolved → Revised com feedback no Discussion → notifica dev → QA retesta depois da correção. O Discussion é fundamental para o dev saber exatamente o que corrigir.',correct:'Fluxo completo e correto! Discussion → Dev → QA → Resolved novamente. 🏆',wrong:'O fluxo correto é: Resolved → Revised com feedback detalhado no Discussion → notifica dev → QA retesta.'},
+    ]
+  },
+];
+
+// ── GLOSSARY DATA ──
+const GLOSSARY=[
+  {acronym:'SEGES',full:'Sistema Estadual de Gestão Escolar',def:'Sistema central da SEDU-ES com dados de alunos, escolas, professores e turmas. Muitos projetos dependem dele.',tag:'Sistema',tagClass:'ctx-sistema'},
+  {acronym:'GTI',full:'Gerência de Tecnologia da Informação',def:'Área interna da SEDU-ES que orienta, valida e aprecia os projetos de tecnologia.',tag:'Área',tagClass:'ctx-area'},
+  {acronym:'GERFE',full:'Gerência de Recursos Físicos Escolares',def:'Área da SEDU-ES responsável pelo projeto SEMPRE NOVA (manutenção de edificações).',tag:'Área',tagClass:'ctx-area'},
+  {acronym:'CEFOPE',full:'Centro de Formação dos Profissionais da Educação',def:'Área responsável pelos projetos SGF (formações) e PES (estágio).',tag:'Área',tagClass:'ctx-area'},
+  {acronym:'SRE',full:'Superintendência Regional de Educação',def:'As regionais que gerenciam as escolas em cada região do Espírito Santo.',tag:'Área',tagClass:'ctx-area'},
+  {acronym:'DPO',full:'Data Protection Officer (Encarregado de Dados)',def:'Responsável pela proteção de dados pessoais (LGPD). No PGP, é o Farley.',tag:'LGPD',tagClass:'ctx-lgpd'},
+  {acronym:'RAT',full:'Registro de Atividades de Tratamento',def:'Documento obrigatório pela LGPD que lista todas as atividades onde dados pessoais são tratados. Primeira prioridade do PGP.',tag:'LGPD',tagClass:'ctx-lgpd'},
+  {acronym:'RIPD',full:'Relatório de Impacto à Proteção de Dados Pessoais',def:'Documento LGPD que avalia os riscos de uma atividade de tratamento de dados. Segunda prioridade do PGP.',tag:'LGPD',tagClass:'ctx-lgpd'},
+  {acronym:'LGPD',full:'Lei Geral de Proteção de Dados Pessoais',def:'Lei Federal nº 13.709/2018. Define regras sobre coleta, uso e proteção de dados pessoais no Brasil.',tag:'LGPD',tagClass:'ctx-lgpd'},
+  {acronym:'PETE',full:'Programa Estadual do Transporte Escolar',def:'Programa de parceria com municípios para gestão do transporte escolar. Gerenciado pelo SGTER.',tag:'Educação',tagClass:'ctx-educacao'},
+  {acronym:'AMA',full:'Avaliação de Monitoramento da Aprendizagem',def:'Banco de questões usado pelo projeto QUESTÕES para montar atividades escolares.',tag:'Educação',tagClass:'ctx-educacao'},
+  {acronym:'PAEBES',full:'Programa de Avaliação da Educação Básica do Espírito Santo',def:'Programa de avaliação das escolas capixabas. Seus Descritores são usados nas questões do projeto QUESTÕES.',tag:'Educação',tagClass:'ctx-educacao'},
+  {acronym:'PNAE',full:'Programa Nacional de Alimentação Escolar',def:'Programa federal que regula a alimentação nas escolas públicas. Gerenciado pelo projeto ALIMENTAÇÃO.',tag:'Educação',tagClass:'ctx-educacao'},
+  {acronym:'PR',full:'Pull Request',def:'Pedido de revisão de código. O dev terminou uma parte e pede para outro dev revisar antes de "mergear" (juntar) ao código principal.',tag:'DevOps',tagClass:'ctx-sistema'},
+  {acronym:'Deploy',full:'Publicação do Sistema',def:'Processo de publicar o código em um ambiente (homologação ou produção). Quando o dev diz "subindo deploy", o sistema está sendo atualizado.',tag:'DevOps',tagClass:'ctx-sistema'},
+  {acronym:'Merge',full:'Junção de Código',def:'Quando um PR é aprovado e o código é integrado ao código principal. Sinal de que o Code Review foi concluído.',tag:'DevOps',tagClass:'ctx-sistema'},
+  {acronym:'Release',full:'Versão Entregue',def:'Uma versão do sistema com um conjunto de funcionalidades entregues. A Nota de Release documenta o que foi incluído naquela versão.',tag:'DevOps',tagClass:'ctx-sistema'},
+  {acronym:'IES',full:'Instituição de Ensino Superior',def:'Faculdades e universidades que firmam convênio com a SEDU-ES para receber estagiários. Gerenciadas pelo PES.',tag:'Educação',tagClass:'ctx-educacao'},
+  {acronym:'SGR',full:'Sistema de Gestão de Requisitos',def:'Onde ficam documentados os requisitos dos projetos da CRP. O E-GESTÃO não tem documentação formal aqui.',tag:'Sistema',tagClass:'ctx-sistema'},
+  {acronym:'SSO',full:'Single Sign-On (Login Único)',def:'Sistema de autenticação que permite usar uma única senha para vários sistemas. O Acesso Cidadão funciona assim.',tag:'Sistema',tagClass:'ctx-sistema'},
+  {acronym:'OAuth',full:'Open Authorization',def:'Protocolo de autenticação usado pelo Acesso Cidadão em todos os projetos SEDU-ES.',tag:'Sistema',tagClass:'ctx-sistema'},
+  {acronym:'MVP',full:'Mínimo Produto Viável',def:'A versão mais simples do sistema que entrega valor real ao usuário. É a primeira entrega dos projetos que estão iniciando.',tag:'Processo',tagClass:'ctx-area'},
+];
+
+// ── GAME STATE ──
+let state={xp:0,completed:{},answers:{},stars:{},totalQ:0,totalCorrect:0};
+let currentMission=null,currentStage=0,stageAnswered=false,stageCorrect=false,missionScore=0,missionTotal=0;
+
+function loadState(){
+  const s=localStorage.getItem('devops_quest');
+  if(s){state=JSON.parse(s);}
+  updateUI();
+}
+function saveState(){localStorage.setItem('devops_quest',JSON.stringify(state));}
+function resetGame(){state={xp:0,completed:{},answers:{},stars:{},totalQ:0,totalCorrect:0};saveState();location.reload();}
+
+// ── LEVEL ──
+function getLevel(xp){
+  for(let i=LEVELS.length-1;i>=0;i--){if(xp>=LEVELS[i].min)return i;}
+  return 0;
+}
+function updateUI(){
+  const lvlIdx=getLevel(state.xp);
+  const lvl=LEVELS[lvlIdx];
+  const next=LEVELS[lvlIdx+1];
+  const pct=next?((state.xp-lvl.min)/(next.min-lvl.min)*100):100;
+  document.getElementById('levelBadge').textContent=lvl.icon+' '+lvl.name;
+  document.getElementById('headerXpFill').style.width=pct+'%';
+  document.getElementById('headerXp').textContent=state.xp+' XP';
+  document.getElementById('profileLevel').textContent=lvl.icon+' '+lvl.name;
+  document.getElementById('profileXp').textContent=state.xp+' XP total';
+  document.getElementById('profileNext').textContent=next?('Faltam '+(next.min-state.xp)+' XP para '+next.name):'Nível máximo alcançado! 👑';
+  document.getElementById('profileXpFill').style.width=pct+'%';
+  const comp=Object.keys(state.completed).length;
+  const acc=state.totalQ>0?Math.round(state.totalCorrect/state.totalQ*100):0;
+  const totalStars=Object.values(state.stars).reduce((a,b)=>a+b,0);
+  document.getElementById('statMissoes').textContent=comp;
+  document.getElementById('statAcertos').textContent=acc+'%';
+  document.getElementById('statEstrelas').textContent=totalStars;
+  renderLevelProgress();
+  renderMedals();
+}
+
+function renderLevelProgress(){
+  const lvlIdx=getLevel(state.xp);
+  let html='<div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">';
+  LEVELS.forEach((l,i)=>{
+    const reached=i<=lvlIdx;
+    html+=`<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
+      <div style="width:36px;height:36px;border-radius:50%;border:2px solid ${reached?'var(--accent)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:.9rem;${reached?'background:rgba(108,99,255,.2);box-shadow:0 0 12px var(--accent-glow)':''}">${l.icon}</div>
+      <div style="font-family:Space Grotesk,sans-serif;font-size:.58rem;font-weight:600;color:${reached?'var(--accent)':'var(--text3)'};text-align:center;max-width:70px">${l.name}</div>
+    </div>`;
+    if(i<LEVELS.length-1)html+=`<div style="flex:1;min-width:20px;height:2px;background:${i<lvlIdx?'var(--accent)':'var(--border)'};margin-bottom:18px"></div>`;
+  });
+  html+='</div>';
+  document.getElementById('levelProgress').innerHTML=html;
+}
+
+// ── MAP ──
+function renderMap(){
+  [1,2,3].forEach(w=>{
+    const el=document.getElementById('world'+w);
+    const ms=MISSIONS.filter(m=>m.world===w);
+    el.innerHTML=ms.map(m=>{
+      const done=state.completed[m.id];
+      const stars=state.stars[m.id]||0;
+      const prev=MISSIONS[MISSIONS.indexOf(m)-1];
+      const locked=prev&&!state.completed[prev.id]&&m.id!=='m1';
+      return `<div class="mission-card ${done?'completed':''} ${locked?'locked':''}" onclick="${locked?'showLocked()':'startMission("'+m.id+'")'}">
+        ${locked?'<div class="lock-icon">🔒</div>':''}
+        <div class="mission-num">MISSÃO ${m.num} · <span class="${m.type==='conceito'?'type-conceito':'type-cenario'}">${m.type==='conceito'?'📘 CONCEITO':'🔥 CENÁRIO'}</span></div>
+        <span class="mission-icon">${m.icon}</span>
+        <div class="mission-title">${m.title}</div>
+        <div class="mission-desc">${m.desc}</div>
+        <div class="mission-footer">
+          <div class="mission-xp">+${m.xp} XP</div>
+          <div class="mission-stars">
+            ${'⭐'.repeat(stars)}${'☆'.repeat(Math.max(0,3-stars))}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+function showLocked(){alert('Complete a missão anterior para desbloquear! 🔒');}
+
+// ── MISSION ──
+function startMission(id){
+  currentMission=MISSIONS.find(m=>m.id===id);
+  currentStage=0;missionScore=0;missionTotal=0;
+  document.getElementById('missionHeaderTitle').textContent=currentMission.icon+' '+currentMission.title;
+  document.getElementById('missionXpBadge').textContent='+'+currentMission.xp+' XP';
+  showScreen('mission');
+  renderStage();
+}
+
+function renderStage(){
+  const m=currentMission;
+  const s=m.stages[currentStage];
+  const total=m.stages.length;
+  document.getElementById('progLabel').textContent='Etapa '+(currentStage+1)+' de '+total;
+  document.getElementById('progFrac').textContent=Math.round((currentStage/total)*100)+'%';
+  document.getElementById('progFill').style.width=(currentStage/total*100)+'%';
+  stageAnswered=false;
+
+  const cont=document.getElementById('stagesContainer');
+  if(s.type==='concept'){
+    let tagsHtml='';
+    if(s.tags&&s.tags.length){
+      tagsHtml='<div class="status-pills">'+s.tags.map(t=>`<span class="status-pill-demo" style="background:${t.bg};color:${t.color}">${t.label}<span style="font-size:.65rem;opacity:.7"> — ${t.desc}</span></span>`).join('')+'</div>';
+    }
+    cont.innerHTML=`
+      <div class="concept-box">
+        <div class="concept-tag">📘 CONCEITO</div>
+        <div class="concept-title">${s.title}</div>
+        <div class="concept-text">${s.text}</div>
+        ${tagsHtml}
+        ${s.highlight?`<div class="concept-highlight">${s.highlight}</div>`:''}
+      </div>
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+        <button class="btn-game btn-primary" onclick="nextStage()">Entendi! Próxima etapa →</button>
+      </div>`;
+  } else if(s.type==='question'||s.type==='scenario'){
+    const letters=['A','B','C','D'];
+    let ctxHtml='';
+    if(s.type==='scenario'){
+      const lines=s.context.split('\n');
+      ctxHtml=`<div class="scenario-context">
+        <div class="scenario-proj">📁 ${s.proj}</div>
+        ${lines.map(l=>l.trim().startsWith('•')?`<div style="font-size:.82rem;color:var(--text2);padding:.25rem 0;line-height:1.5">${l}</div>`:`<div style="font-size:.84rem;color:var(--text2);line-height:1.6;margin-bottom:.3rem">${l}</div>`).join('')}
+      </div>`;
+    }
+    cont.innerHTML=`
+      ${ctxHtml}
+      <div class="concept-box" style="margin-bottom:1.1rem">
+        <div class="concept-tag">❓ ${s.type==='scenario'?'CENÁRIO REAL':'QUESTÃO'}</div>
+        <div class="scenario-question">${s.question}</div>
+        <div class="options">
+          ${s.opts.map((o,i)=>`<button class="option-btn" id="opt${i}" onclick="answerStage(${i})"><span class="option-letter">${letters[i]}</span>${o}</button>`).join('')}
+        </div>
+        <div class="feedback-box" id="stageFeedback"></div>
+      </div>
+      <div id="stageActions" style="display:none;display:flex;gap:.7rem;flex-wrap:wrap">
+        <button class="btn-game btn-primary" id="nextStageBtn" onclick="nextStage()">Próxima etapa →</button>
+      </div>`;
+    missionTotal++;
+  }
+}
+
+function answerStage(idx){
+  if(stageAnswered)return;
+  stageAnswered=true;
+  const s=currentMission.stages[currentStage];
+  const correct=idx===s.ans;
+  stageCorrect=correct;
+  if(correct){missionScore++;state.totalCorrect++;}
+  state.totalQ++;
+  document.querySelectorAll('.option-btn').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===s.ans)btn.classList.add('correct');
+    else if(i===idx&&!correct)btn.classList.add('wrong');
+    else btn.classList.add('neutral');
+  });
+  const fb=document.getElementById('stageFeedback');
+  fb.className='feedback-box show '+(correct?'correct':'wrong');
+  fb.innerHTML=`<div class="feedback-title">${correct?'✅ '+s.correct:'❌ '+s.wrong}</div><div class="feedback-text">${s.exp}</div>`;
+  document.getElementById('stageActions').style.display='flex';
+}
+
+function nextStage(){
+  currentStage++;
+  if(currentStage>=currentMission.stages.length){
+    completeMission();
+  } else {
+    renderStage();
+  }
+}
+
+function completeMission(){
+  const m=currentMission;
+  const pct=missionTotal>0?missionScore/missionTotal:1;
+  const stars=pct>=0.8?3:pct>=0.5?2:1;
+  const earned=Math.round(m.xp*(pct>=0.8?1:pct>=0.5?.7:.4));
+  const prevLvl=getLevel(state.xp);
+  state.xp+=earned;
+  state.completed[m.id]=true;
+  state.stars[m.id]=Math.max(state.stars[m.id]||0,stars);
+  const newLvl=getLevel(state.xp);
+  saveState();
+  updateUI();
+  renderMap();
+  // show reward
+  document.getElementById('rewardStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('rewardTitle').textContent=stars===3?'Missão Completa! 🏆':stars===2?'Muito bem! 🌟':'Continue praticando! 💪';
+  document.getElementById('rewardXp').textContent='+'+earned+' XP';
+  const msgs=['Você está aprendendo! Revise os conceitos e tente novamente.','Bom trabalho! Você está no caminho certo.','Perfeito! Você dominou esta missão!'];
+  document.getElementById('rewardMsg').textContent=msgs[stars-1];
+  const lu=document.getElementById('rewardLevelup');
+  if(newLvl>prevLvl){lu.textContent='🎉 NOVO NÍVEL! Você é agora '+LEVELS[newLvl].icon+' '+LEVELS[newLvl].name+'!';lu.classList.add('show');}
+  else{lu.classList.remove('show');}
+  document.getElementById('rewardOverlay').classList.add('show');
+}
+function closeReward(){
+  document.getElementById('rewardOverlay').classList.remove('show');
+  showScreen('map');
+}
+
+// ── MEDALS ──
+const MEDALS=[
+  {id:'first',icon:'🌱',name:'Primeira Missão',desc:'Complete sua primeira missão',check:s=>Object.keys(s.completed).length>=1},
+  {id:'devops5',icon:'⚡',name:'DevOps em 5',desc:'Complete 5 missões',check:s=>Object.keys(s.completed).length>=5},
+  {id:'all_done',icon:'🏆',name:'Líder Expert',desc:'Complete todas as missões',check:s=>Object.keys(s.completed).length>=MISSIONS.length},
+  {id:'perfect',icon:'💎',name:'Nota 10',desc:'3 estrelas em qualquer missão',check:s=>Object.values(s.stars).some(v=>v===3)},
+  {id:'accuracy',icon:'🎯',name:'Precisão',desc:'80%+ de acertos',check:s=>s.totalQ>=5&&s.totalCorrect/s.totalQ>=0.8},
+  {id:'xp500',icon:'🔥',name:'500 XP',desc:'Alcance 500 XP',check:s=>s.xp>=500},
+  {id:'xp1000',icon:'💫',name:'1000 XP',desc:'Alcance 1000 XP',check:s=>s.xp>=1000},
+  {id:'world2',icon:'🔥',name:'Mundo 2',desc:'Complete o Mundo 2',check:s=>['m5','m6','m7','m8'].every(id=>s.completed[id])},
+];
+function renderMedals(){
+  document.getElementById('medalsGrid').innerHTML=MEDALS.map(m=>{
+    const earned=m.check(state);
+    return `<div class="medal-card ${earned?'earned':'locked'}">
+      <div class="medal-icon">${m.icon}</div>
+      <div class="medal-name">${m.name}</div>
+      <div class="medal-desc">${m.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── GLOSSARY ──
+function renderGlossary(filter=''){
+  const f=filter.toLowerCase();
+  const items=GLOSSARY.filter(g=>!f||g.acronym.toLowerCase().includes(f)||g.full.toLowerCase().includes(f)||g.def.toLowerCase().includes(f));
+  document.getElementById('glossGrid').innerHTML=items.map(g=>`
+    <div class="gloss-card">
+      <div class="gloss-acronym">${g.acronym}</div>
+      <div class="gloss-full">${g.full}</div>
+      <div class="gloss-def">${g.def}</div>
+      <span class="gloss-tag ${g.tagClass}">${g.tag}</span>
+    </div>`).join('');
+}
+function filterGloss(v){renderGlossary(v);}
+
+// ── SCREENS ──
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.btn-menu').forEach(b=>b.classList.remove('active'));
+  const map={map:0,glossary:1,profile:2};
+  if(map[id]!==undefined)document.querySelectorAll('.btn-menu')[map[id]].classList.add('active');
+}
+
+// ── INIT ──
+loadState();
+renderMap();
+renderGlossary();
+</script>
+</body>
+</html>
