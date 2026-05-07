@@ -3,1171 +3,1486 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel da Líder — SEDU-ES</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<title>MISSÃO SEDU — Cockpit da Larisse</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F5F2EC;--surface:#FFF;--surface2:#F0EDE6;--border:#D8D2C6;--border-strong:#B8B0A0;
-  --text:#1A1714;--text2:#4A4540;--text3:#7A7268;
-  --accent:#1B4F8C;--accent-light:#E8EEF7;
-  --green:#2D6A3F;--green-light:#E8F2EB;
-  --orange:#B85C00;--orange-light:#FFF0E0;
-  --yellow:#8C7200;--yellow-light:#FFFBE0;
-  --red:#9B1C1C;--red-light:#FEF2F2;
-  --blue:#1D4ED8;--blue-light:#EFF6FF;
-  --purple:#6D28D9;--purple-light:#F5F3FF;
-  --r:12px;--rsm:8px;
-  --shadow:0 2px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-  --sidebar:270px;
+  --bg:#0D0F14;
+  --panel:#141720;
+  --panel2:#1A1E2A;
+  --panel3:#1F2436;
+  --border:#252B3B;
+  --border2:#2E3650;
+  --text:#D4D8E8;
+  --text2:#7A82A0;
+  --text3:#3D4560;
+  --green:#0FD98A;
+  --green-bg:rgba(15,217,138,.1);
+  --orange:#FF8C2F;
+  --orange-bg:rgba(255,140,47,.1);
+  --red:#FF3D57;
+  --red-bg:rgba(255,61,87,.1);
+  --blue:#3D9EFF;
+  --blue-bg:rgba(61,158,255,.1);
+  --yellow:#FFD43B;
+  --yellow-bg:rgba(255,212,59,.1);
+  --purple:#A78BFA;
+  --purple-bg:rgba(167,139,250,.1);
+  --xp:#FFD43B;
+  --r:10px;--rsm:6px;--rlg:14px;
 }
-html{scroll-behavior:smooth;font-size:18px}
-body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* NOTION BTN */
-.notion-btn{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;background:#000;color:#fff;border:none;border-radius:50px;padding:.7rem 1.3rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:7px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);transition:all .2s;text-decoration:none}
-.notion-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.35)}
+/* SCANLINE EFFECT */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
 
-/* SIDEBAR */
-.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--text);color:#fff;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:transform .3s ease}
-.sidebar-header{padding:1.6rem 1.4rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.1)}
-.sidebar-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#fff;line-height:1.2}
-.sidebar-logo span{display:block;font-size:.62rem;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
-.sidebar-date{font-size:.68rem;color:rgba(255,255,255,.3);margin-top:5px;font-family:'Syne',sans-serif}
-.sidebar-nav{padding:1rem 0;flex:1}
-.nav-section-label{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:0 1.4rem;margin-bottom:3px;margin-top:1.1rem}
-.nav-item{display:flex;align-items:center;gap:9px;padding:.58rem 1.4rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:500;color:rgba(255,255,255,.58);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent}
-.nav-item:hover{color:#fff;background:rgba(255,255,255,.06)}
-.nav-item.active{color:#fff;background:rgba(255,255,255,.1);border-left-color:#fff}
-.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:200;background:rgba(13,15,20,.95);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:0;min-height:56px}
+.hdr-brand{padding:.6rem 1.2rem;border-right:1px solid var(--border);
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;
+  letter-spacing:.08em;color:var(--green);white-space:nowrap}
+.hdr-brand span{color:var(--text2)}
+.hdr-tabs{display:flex;flex:1;overflow-x:auto}
+.tab{padding:.9rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:.8rem;letter-spacing:.06em;color:var(--text2);cursor:pointer;
+  border:none;background:none;white-space:nowrap;border-bottom:2px solid transparent;
+  transition:all .15s;text-transform:uppercase}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.hdr-xp{padding:.5rem 1rem;border-left:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;white-space:nowrap}
+.xp-val{color:var(--xp);font-weight:700}
 
-/* HAMBURGER */
-.hamburger{display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--text);border:none;border-radius:8px;padding:.5rem;cursor:pointer;flex-direction:column;gap:5px}
-.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .2s}
-.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.hamburger.open span:nth-child(2){opacity:0}
-.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+/* LAYOUT */
+.screen{display:none}.screen.active{display:block}
+.container{max-width:1080px;margin:0 auto;padding:1.5rem 1rem}
 
-/* MAIN */
-.main{margin-left:var(--sidebar);flex:1;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2.2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-title{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;color:var(--text)}
-.topbar-subtitle{font-size:.72rem;color:var(--text3);margin-top:1px}
-.page{display:none}.page.active{display:block}
-.content{padding:1.8rem 2.2rem;max-width:1100px}
-.section-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.2}
-.section-desc{font-size:.88rem;color:var(--text3);margin-top:4px;max-width:560px}
-.section-header{margin-bottom:1.6rem}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.7rem;box-shadow:var(--shadow)}
+/* SECTION TITLES */
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;
+  letter-spacing:.05em;margin-bottom:.25rem}
+.sec-sub{font-size:.82rem;color:var(--text2);margin-bottom:1.5rem;line-height:1.5}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--text2);margin-bottom:.9rem;
+  display:flex;align-items:center;gap:.5rem}
 
 /* BADGES */
-.badge{display:inline-flex;align-items:center;gap:4px;font-family:'Syne',sans-serif;font-size:.66rem;font-weight:600;padding:3px 9px;border-radius:20px}
-.badge-sprint{background:var(--orange-light);color:var(--orange)}
-.badge-sustentacao{background:var(--green-light);color:var(--green)}
-.badge-iniciando{background:var(--blue-light);color:var(--blue)}
-.badge-retomando{background:var(--yellow-light);color:var(--yellow)}
+.badge{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.03em}
+.badge-sprint{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(255,140,47,.3)}
+.badge-sus{background:var(--green-bg);color:var(--green);border:1px solid rgba(15,217,138,.3)}
+.badge-pause{background:rgba(122,130,160,.1);color:var(--text2);border:1px solid var(--border2)}
+.badge-retoma{background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(255,212,59,.3)}
+.badge-inicia{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(61,158,255,.3)}
+
+/* STATUS CHIPS */
+.chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:4px;cursor:pointer;
+  transition:all .15s}
+.chip-ok{background:var(--green-bg);color:var(--green)}
+.chip-warn{background:var(--orange-bg);color:var(--orange)}
+.chip-danger{background:var(--red-bg);color:var(--red)}
+.chip-info{background:var(--blue-bg);color:var(--blue)}
 
 /* BUTTONS */
-.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;padding:.7rem 1.5rem;border-radius:var(--rsm);border:none;cursor:pointer;transition:all .15s}
-.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#153d70}
-.btn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
-.btn-danger{background:var(--red-light);color:var(--red);border:1px solid #FCA5A5}.btn-danger:hover{background:#FCA5A5}
-.btn-success{background:var(--green-light);color:var(--green);border:1px solid #86EFAC}.btn-success:hover{background:#86EFAC}
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;
+  font-size:.85rem;padding:.55rem 1.1rem;border-radius:var(--rsm);border:none;cursor:pointer;
+  transition:all .15s;display:inline-flex;align-items:center;gap:.4rem;text-transform:uppercase}
+.btn-g{background:var(--green);color:#000}
+.btn-g:hover{background:#0be87a;transform:translateY(-1px)}
+.btn-o{background:var(--orange);color:#000}
+.btn-o:hover{background:#ffa050}
+.btn-ghost{background:var(--panel2);border:1px solid var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--text2);color:var(--text)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{font-size:.72rem;padding:.35rem .7rem}
 
-/* TABS */
-.tabs{display:flex;gap:3px;border-bottom:2px solid var(--border);margin-bottom:1.2rem;flex-wrap:wrap}
-.tab-btn{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;padding:.52rem 1rem;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab-panel{display:none}.tab-panel.active{display:block}
+/* INPUTS */
+input[type=text],input[type=number],input[type=date],select,textarea{
+  background:var(--panel2);border:1px solid var(--border2);border-radius:var(--rsm);
+  color:var(--text);font-family:'Barlow',sans-serif;font-size:.88rem;
+  padding:.5rem .75rem;width:100%;transition:border .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+textarea{resize:vertical;min-height:70px;line-height:1.6}
+label{font-size:.78rem;color:var(--text2);display:block;margin-bottom:.3rem;font-weight:600}
 
-/* HIGHLIGHT */
-.highlight{background:var(--accent-light);border-left:4px solid var(--accent);border-radius:0 var(--rsm) var(--rsm) 0;padding:.85rem 1.2rem;margin:.7rem 0;font-size:.86rem;color:var(--text2);line-height:1.7}
-.highlight strong{color:var(--accent);font-family:'Syne',sans-serif}
+/* FORM ROW */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.form-row.trio{grid-template-columns:1fr 1fr 1fr}
+.form-group{margin-bottom:.8rem}
+@media(max-width:600px){.form-row,.form-row.trio{grid-template-columns:1fr}}
 
-/* TABLES */
-.data-table{width:100%;border-collapse:collapse}
-.data-table th{font-family:'Syne',sans-serif;font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);text-align:left;padding:.62rem .88rem;border-bottom:2px solid var(--border)}
-.data-table td{padding:.78rem .88rem;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);vertical-align:top;line-height:1.6}
-.data-table tr:last-child td{border-bottom:none}
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:1.2rem 0}
 
-/* ======= HOME / ALERTAS ======= */
-.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
-.urgencias-box{grid-column:1/-1;background:var(--surface);border:2px solid var(--orange);border-radius:var(--r);padding:1.4rem 1.7rem}
-.urgencias-title{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:6px}
-.urgencia-item{display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
-.urgencia-item:last-child{border-bottom:none}
-.urgencia-num{width:24px;height:24px;border-radius:50%;background:var(--orange);color:#fff;font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.urgencia-input{border:none;background:none;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);width:100%;outline:none}
-.urgencia-input::placeholder{color:var(--text3)}
+/* ═══════════════════════════════════
+   SCREEN 1 — COCKPIT
+═══════════════════════════════════ */
+.cockpit-top{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:700px){.cockpit-top{grid-template-columns:1fr}}
 
-.semaforo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.8rem}
-.semaforo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.1rem;cursor:pointer;transition:all .15s}
-.semaforo-card:hover{box-shadow:var(--shadow)}
-.semaforo-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
-.semaforo-sigla{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:var(--text)}
-.semaforo-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;cursor:pointer}
-.semaforo-status{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:600;margin-top:2px}
-.semaforo-nota{font-size:.75rem;color:var(--text3);margin-top:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.semaforo-controls{display:flex;gap:4px;margin-top:.5rem}
-.sem-btn{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:border-color .15s}
-.sem-btn:hover{border-color:var(--border-strong)}
-.sem-btn.active{border-color:var(--text)}
+.proj-row{display:flex;align-items:center;gap:.7rem;padding:.6rem .8rem;
+  border-radius:var(--rsm);cursor:pointer;transition:background .15s;
+  border:1px solid transparent}
+.proj-row:hover{background:var(--panel2);border-color:var(--border)}
+.proj-row.has-alert{border-color:rgba(255,61,87,.25)}
+.proj-emoji{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0}
+.proj-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;flex:1}
+.proj-full{font-size:.7rem;color:var(--text2);margin-top:1px}
+.proj-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.traffic-dot{width:11px;height:11px;border-radius:50%;cursor:pointer;transition:transform .15s;flex-shrink:0}
+.traffic-dot:hover{transform:scale(1.3)}
 
-/* ANOTAÇÕES */
-.nota-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:1rem}
-.nota-modal.open{display:flex}
-.nota-box{background:var(--surface);border-radius:var(--r);padding:1.8rem;width:100%;max-width:560px;box-shadow:var(--shadow-lg)}
-.nota-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:1rem}
-.nota-textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.85rem 1rem;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);resize:vertical;min-height:140px;line-height:1.6;transition:border-color .15s;background:var(--surface2)}
-.nota-textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)}
-.nota-hist{max-height:180px;overflow-y:auto;margin-top:.8rem;border:1px solid var(--border);border-radius:var(--rsm)}
-.nota-hist-item{padding:.6rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--text2);line-height:1.5}
-.nota-hist-item:last-child{border-bottom:none}
-.nota-hist-date{font-family:'Syne',sans-serif;font-size:.62rem;color:var(--text3);margin-bottom:2px}
+/* URGENCY */
+.urgency-box{background:var(--red-bg);border:1px solid rgba(255,61,87,.3);
+  border-radius:var(--r);padding:1rem;margin-bottom:1rem}
+.urgency-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  color:var(--red);letter-spacing:.05em;margin-bottom:.6rem}
+.urgency-input{background:rgba(255,61,87,.08);border:1px solid rgba(255,61,87,.2);
+  color:var(--text);width:100%;padding:.55rem .75rem;border-radius:var(--rsm);
+  font-family:'Barlow',sans-serif;font-size:.85rem;resize:none;min-height:60px}
+.urgency-input:focus{outline:none;border-color:var(--red)}
 
-/* ======= LINHA DO TEMPO SPRINT ======= */
-.timeline-wrap{overflow-x:auto;padding-bottom:1rem}
-.timeline{display:flex;align-items:flex-start;gap:0;min-width:900px;padding:1rem 0}
-.tl-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
-.tl-step::after{content:'';position:absolute;top:28px;left:50%;width:100%;height:3px;z-index:0}
-.tl-step:last-child::after{display:none}
-.tl-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:3px solid var(--border);background:var(--surface);position:relative;z-index:1;transition:all .2s;flex-shrink:0}
-.tl-step.done .tl-icon{border-color:var(--green);background:var(--green-light)}
-.tl-step.active-step .tl-icon{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 4px var(--accent-light)}
-.tl-step.done::after{background:var(--green)}
-.tl-step.active-step::after{background:var(--border)}
-.tl-step:not(.done):not(.active-step)::after{background:var(--border)}
-.tl-label{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;color:var(--text);margin-top:.5rem;text-align:center;max-width:80px;line-height:1.3}
-.tl-sublabel{font-size:.62rem;color:var(--text3);text-align:center;max-width:80px;margin-top:2px;line-height:1.3}
-.tl-resp{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:600;padding:2px 6px;border-radius:10px;margin-top:3px;text-align:center}
-.resp-analista{background:#FDE68A;color:#92400E}
-.resp-cliente{background:#BFDBFE;color:#1E40AF}
-.resp-dev{background:#D1FAE5;color:#065F46}
-.resp-qa{background:#EDE9FE;color:#5B21B6}
-.resp-lider{background:#FCE7F3;color:#9D174D}
-.resp-todos{background:var(--surface2);color:var(--text2)}
+/* CHAMADOS TIMER */
+.chamado-row{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;
+  background:var(--panel2);border-radius:var(--rsm);margin-bottom:.4rem;
+  border-left:3px solid var(--border)}
+.chamado-row.days-0{border-color:var(--green)}
+.chamado-row.days-1{border-color:var(--yellow)}
+.chamado-row.days-2{border-color:var(--orange)}
+.chamado-row.days-3{border-color:var(--red)}
+.ch-days{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.75rem;
+  min-width:32px;text-align:right;flex-shrink:0}
+.ch-name{font-size:.82rem;flex:1}
+.ch-proj{font-size:.65rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.ch-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.85rem;padding:2px 4px}
+.ch-del:hover{color:var(--red)}
 
-.tl-proj-selector{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
-.tl-proj-btn{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;padding:.35rem .9rem;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s}
-.tl-proj-btn:hover{border-color:var(--border-strong)}
-.tl-proj-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
+/* XP NOTIFICATION */
+.xp-toast{position:fixed;top:70px;right:1rem;z-index:500;
+  background:var(--yellow-bg);border:1px solid rgba(255,212,59,.4);
+  border-radius:var(--r);padding:.7rem 1.1rem;
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--yellow);font-weight:700;
+  display:none;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-.tl-step-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.5rem;margin-top:1.5rem}
-.tl-detail-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:.5rem}
-.tl-detail-list{list-style:none}
-.tl-detail-list li{padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);display:flex;gap:.5rem;line-height:1.5}
-.tl-detail-list li:last-child{border-bottom:none}
+/* ═══════════════════════════════════
+   SCREEN 2 — SPRINT
+═══════════════════════════════════ */
+.sprint-pipeline{display:flex;gap:.4rem;margin-bottom:1.5rem;overflow-x:auto;padding-bottom:.5rem}
+.pipe-stage{flex:1;min-width:130px;background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r);padding:.9rem .8rem;text-align:center}
+.pipe-stage-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.78rem;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem}
+.pipe-stage-num{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700}
+.pipe-arrow{display:flex;align-items:center;color:var(--text3);font-size:.9rem;flex-shrink:0;margin-top:1.5rem}
 
-/* ======= QUIZ ======= */
-.quiz-wrap{max-width:680px}
-.quiz-progress{display:flex;gap:4px;margin-bottom:1.2rem}
-.quiz-prog-dot{height:6px;flex:1;border-radius:3px;background:var(--border);transition:background .3s}
-.quiz-prog-dot.done{background:var(--green)}
-.quiz-prog-dot.current{background:var(--accent)}
-.quiz-question{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:1.2rem;line-height:1.4}
-.quiz-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem}
-.quiz-option{background:var(--surface);border:2px solid var(--border);border-radius:var(--rsm);padding:.9rem 1.2rem;font-size:.9rem;color:var(--text2);cursor:pointer;transition:all .15s;text-align:left;font-family:'Source Serif 4',serif;line-height:1.5}
-.quiz-option:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
-.quiz-option.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
-.quiz-option.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
-.quiz-option:disabled{cursor:not-allowed}
-.quiz-feedback{padding:.9rem 1.2rem;border-radius:var(--rsm);font-size:.88rem;margin-bottom:.8rem;line-height:1.6;display:none}
-.quiz-feedback.correct{background:var(--green-light);color:var(--green);border:1px solid #86EFAC;display:block}
-.quiz-feedback.wrong{background:var(--red-light);color:var(--red);border:1px solid #FCA5A5;display:block}
-.quiz-score{font-family:'Syne',sans-serif;font-size:.8rem;color:var(--text3);margin-bottom:1rem}
-.quiz-result{text-align:center;padding:2rem}
-.quiz-result-score{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--accent)}
-.quiz-result-msg{font-size:1rem;color:var(--text2);margin-top:.5rem}
-.quiz-category-select{margin-bottom:1.2rem}
+/* CICLO COMPLETO */
+.ciclo-step{display:flex;gap:.9rem;padding:1rem;background:var(--panel2);
+  border-radius:var(--r);margin-bottom:.6rem;border-left:3px solid var(--border)}
+.ciclo-step.active-step{border-left-color:var(--green);background:var(--green-bg)}
+.ciclo-num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.8rem;
+  color:var(--text3);min-width:24px;padding-top:1px}
+.ciclo-body{}
+.ciclo-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;margin-bottom:.2rem}
+.ciclo-desc{font-size:.8rem;color:var(--text2);line-height:1.6}
+.ciclo-devops{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--blue);margin-top:.3rem}
 
-/* ======= PROJETOS ======= */
-.projects-grid{display:flex;flex-direction:column;gap:.9rem}
-.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s}
-.project-card:hover{box-shadow:var(--shadow-lg)}
-.project-card-header{padding:1.2rem 1.6rem;display:flex;align-items:flex-start;gap:.9rem;cursor:pointer;border-bottom:1px solid transparent;transition:border-color .2s}
-.project-card-header.open{border-bottom-color:var(--border)}
-.project-icon{width:42px;height:42px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-.project-info{flex:1;min-width:0}
-.project-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
-.project-full-name{font-size:.75rem;color:var(--text3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.project-badges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
-.project-chevron{font-size:.72rem;color:var(--text3);transition:transform .2s;padding-top:3px;flex-shrink:0}
-.project-chevron.open{transform:rotate(90deg)}
-.project-card-body{display:none;padding:1.5rem 1.6rem;background:var(--surface2)}
-.project-card-body.open{display:block}
-.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
-.proj-section-title{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
-.proj-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.2rem}
-.proj-desc{font-size:.86rem;color:var(--text2);line-height:1.7}
-.proj-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
-.proj-tag{font-family:'Syne',sans-serif;font-size:.64rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:20px}
-.questions-list{list-style:none}
-.questions-list li{padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text2);display:flex;align-items:flex-start;gap:.5rem;line-height:1.6}
-.questions-list li:last-child{border-bottom:none}
-.alerta-box{background:var(--red-light);border:1px solid #FCA5A5;border-radius:var(--rsm);padding:.85rem 1rem;font-size:.83rem;color:var(--red);line-height:1.6;margin-top:.7rem}
+/* CALCULADORA */
+.calc-result{background:var(--panel2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:1.2rem;margin-top:1rem}
+.calc-metric{display:flex;justify-content:space-between;align-items:center;
+  padding:.5rem 0;border-bottom:1px solid var(--border)}
+.calc-metric:last-child{border:none}
+.calc-label{font-size:.82rem;color:var(--text2)}
+.calc-value{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.capacity-bar{height:8px;background:var(--panel3);border-radius:4px;margin-top:.6rem;overflow:hidden}
+.capacity-fill{height:100%;border-radius:4px;transition:width .5s ease}
 
-/* NOTA INLINE */
-.proj-nota-wrap{margin-top:.8rem}
-.proj-nota-input{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.7rem .9rem;font-family:'Source Serif 4',serif;font-size:.85rem;color:var(--text);resize:vertical;min-height:60px;background:var(--surface);transition:border-color .15s}
-.proj-nota-input:focus{outline:none;border-color:var(--accent)}
+/* DEVOPS GUIDE */
+.status-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.status-table th{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.78rem;
+  letter-spacing:.05em;text-align:left;padding:.6rem .8rem;background:var(--panel2);
+  border-bottom:1px solid var(--border);color:var(--text2)}
+.status-table td{padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+.status-table tr:last-child td{border:none}
+.status-name{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.75rem}
+.status-game{font-size:.8rem;color:var(--purple);font-style:italic}
+.status-when{font-size:.78rem;color:var(--text2)}
+.status-action{font-size:.78rem;color:var(--orange)}
 
-/* ======= CERIMÔNIAS ======= */
-.cer-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.2rem}
-.cer-form-group{display:flex;flex-direction:column;gap:4px}
-.cer-form-label{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
-.cer-input{border:1.5px solid var(--border);border-radius:var(--rsm);padding:.58rem .88rem;font-family:'Source Serif 4',serif;font-size:.88rem;color:var(--text);background:var(--surface);transition:border-color .15s;width:100%}
-.cer-input:focus{outline:none;border-color:var(--accent)}
-.cer-results{display:flex;flex-direction:column;gap:.7rem}
-.cer-proj-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.cer-proj-header{background:var(--text);color:#fff;padding:.65rem 1.1rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:7px}
-.cer-dates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1px;background:var(--border)}
-.cer-date-cell{background:var(--surface);padding:.75rem .95rem}
-.cer-date-label{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
-.cer-date-val{font-size:.86rem;font-weight:600;color:var(--text)}
-.cer-date-day{font-size:.7rem;color:var(--text3)}
+/* ═══════════════════════════════════
+   SCREEN 3 — RELATÓRIO
+═══════════════════════════════════ */
+.report-section{background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r);padding:1.2rem;margin-bottom:.9rem}
+.report-section-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.report-section-title .indicator{width:8px;height:8px;border-radius:50%;background:var(--green)}
 
-/* ======= CALENDÁRIO ======= */
-.cal-header{display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem;flex-wrap:wrap}
-.cal-nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:.45rem .85rem;font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:background .15s}
-.cal-nav-btn:hover{background:var(--border)}
-.cal-month-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)}
-.cal-grid-wrap{overflow-x:auto}
-.cal-grid{display:grid;grid-template-columns:40px repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;min-width:560px}
-.cal-week-label{background:var(--text);color:#fff;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;padding:.4rem .2rem;text-align:center;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;letter-spacing:.05em}
-.cal-day-header{background:var(--surface2);font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);padding:.45rem;text-align:center}
-.cal-cell{background:var(--surface);padding:.35rem;min-height:65px;vertical-align:top;position:relative}
-.cal-cell.empty{background:var(--surface2)}
-.cal-cell.today{background:var(--accent-light)}
-.cal-day-num{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--text3);margin-bottom:2px}
-.cal-cell.today .cal-day-num{color:var(--accent);font-weight:800}
-.cal-event{font-size:.58rem;font-family:'Syne',sans-serif;font-weight:600;padding:1px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+.help-tip{background:var(--blue-bg);border:1px solid rgba(61,158,255,.2);
+  border-radius:var(--rsm);padding:.6rem .9rem;font-size:.75rem;color:var(--blue);
+  line-height:1.6;margin-bottom:.7rem}
+.help-tip strong{color:#7fc6ff}
 
-/* DEVOPS STATUS */
-.devops-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem;margin-top:.9rem}
-.status-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:1rem 1.2rem}
-.status-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.status-dot-big{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.status-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem}
-.status-translation{font-size:.72rem;color:var(--text3);margin-left:auto;font-style:italic}
-.status-meaning{font-size:.83rem;color:var(--text2);line-height:1.6;margin-bottom:4px}
-.status-action{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:20px;display:inline-block}
-.sa-ok{background:var(--green-light);color:var(--green)}
-.sa-warn{background:var(--orange-light);color:var(--orange)}
-.sa-danger{background:var(--red-light);color:var(--red)}
+.sprint-entry{background:var(--panel2);border:1px solid var(--border);
+  border-radius:var(--rsm);padding:.9rem;margin-bottom:.6rem;position:relative}
+.sprint-entry-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.sprint-entry-proj{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem}
+.btn-rem-entry{position:absolute;top:.7rem;right:.7rem;background:none;border:none;
+  color:var(--text3);cursor:pointer;font-size:.9rem}
+.btn-rem-entry:hover{color:var(--red)}
 
-/* CHECKLIST */
-.daily-item{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;border-radius:6px}
-.daily-item:hover{background:var(--surface2)}.daily-item:last-child{border-bottom:none}
-.daily-check{width:22px;height:22px;border:2px solid var(--border-strong);border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--surface);font-size:.78rem}
-.daily-item.done .daily-check{background:var(--green);border-color:var(--green);color:#fff}
-.daily-text{font-size:.88rem;color:var(--text2);line-height:1.6}.daily-item.done .daily-text{text-decoration:line-through;color:var(--text3)}
-.daily-tag{font-family:'Syne',sans-serif;font-size:.65rem;color:var(--text3);margin-top:1px}
+/* PREVIEW */
+.preview-box{background:#000;border:1px solid var(--border2);border-radius:var(--r);
+  padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:#c8d0e8;line-height:1.8;white-space:pre-wrap;max-height:500px;overflow-y:auto;
+  margin-top:1rem}
 
-/* REPORT */
-.report-label{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
-.report-field{width:100%;border:1.5px solid var(--border);border-radius:var(--rsm);padding:.82rem 1.05rem;font-family:'Source Serif 4',serif;font-size:.9rem;color:var(--text);background:var(--surface2);resize:vertical;min-height:72px;line-height:1.6;transition:border-color .15s}
-.report-field:focus{outline:none;border-color:var(--accent);background:var(--surface)}
-.report-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem 1.6rem;margin-bottom:1.1rem}
-.report-mini{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+/* ═══════════════════════════════════
+   SCREEN 4 — JOGO (DEVOPS QUEST)
+═══════════════════════════════════ */
+.mission-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.mission-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.1rem;cursor:pointer;transition:all .2s;position:relative}
+.mission-card:hover:not(.locked){border-color:var(--green);transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(15,217,138,.15)}
+.mission-card.done{border-color:var(--green);background:var(--green-bg)}
+.mission-card.locked{opacity:.4;cursor:not-allowed}
+.mc-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);margin-bottom:.4rem}
+.mc-icon{font-size:1.4rem;margin-bottom:.4rem}
+.mc-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;margin-bottom:.3rem}
+.mc-desc{font-size:.75rem;color:var(--text2);line-height:1.5}
+.mc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.7rem}
+.mc-xp{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--xp);font-weight:700}
+.mc-check{color:var(--green);font-size:1rem}
 
-/* GLOSSÁRIO */
-.gloss-item{padding:1rem 0;border-bottom:1px solid var(--border)}.gloss-item:last-child{border-bottom:none}
-.gloss-term{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:2px}
-.gloss-def{font-size:.86rem;color:var(--text2);line-height:1.7}
+.lesson-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+  z-index:300;overflow-y:auto}
+.lesson-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+.lesson-box{background:var(--panel);border:1px solid var(--border2);border-radius:var(--rlg);
+  max-width:680px;width:100%;padding:2rem}
+.lesson-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem}
+.lesson-icon{font-size:2rem}
+.lesson-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.3rem;line-height:1.2}
+.lesson-subtitle{font-size:.78rem;color:var(--text2)}
+.lesson-concept{background:var(--panel2);border-left:3px solid var(--green);
+  border-radius:0 var(--rsm) var(--rsm) 0;padding:.9rem 1.1rem;margin-bottom:1rem;
+  font-size:.86rem;line-height:1.75;color:var(--text)}
+.lesson-concept strong{color:var(--green)}
+.lesson-tip{background:var(--orange-bg);border:1px solid rgba(255,140,47,.2);
+  border-radius:var(--rsm);padding:.75rem;margin-bottom:1rem;
+  font-size:.82rem;color:var(--text2);line-height:1.6}
+.lesson-tip strong{color:var(--orange)}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+/* QUIZ */
+.quiz-q{font-family:'Barlow',sans-serif;font-weight:600;font-size:.95rem;
+  line-height:1.5;margin-bottom:1rem;color:var(--text)}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.8rem}
+.quiz-opt{background:var(--panel2);border:1.5px solid var(--border2);border-radius:var(--rsm);
+  padding:.8rem 1rem;font-size:.84rem;cursor:pointer;transition:all .15s;
+  text-align:left;font-family:'Barlow',sans-serif;color:var(--text2)}
+.quiz-opt:hover:not(:disabled){border-color:var(--blue);background:var(--blue-bg);color:var(--text)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.quiz-opt:disabled{cursor:not-allowed}
+.quiz-feedback{border-radius:var(--rsm);padding:.8rem 1rem;font-size:.84rem;
+  line-height:1.6;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:var(--green-bg);border:1px solid rgba(15,217,138,.3);color:var(--green)}
+.quiz-feedback.ko{background:var(--red-bg);border:1px solid rgba(255,61,87,.3);color:#ff8a96}
 
-/* RESPONSIVE */
-@media(max-width:768px){
-  :root{--sidebar:0px}
-  html{font-size:16px}
-  .hamburger{display:flex}
-  .sidebar{transform:translateX(-100%);width:280px}
-  .sidebar.open{transform:translateX(0)}
-  .sidebar-overlay.open{display:block}
-  .main{margin-left:0}
-  .topbar{padding:.9rem 1rem .9rem 4rem}
-  .content{padding:1.2rem 1rem}
-  .proj-grid{grid-template-columns:1fr}
-  .report-mini{grid-template-columns:1fr}
-  .home-grid{grid-template-columns:1fr}
-  .urgencias-box{grid-column:1}
-  .semaforo-grid{grid-template-columns:repeat(2,1fr)}
-  .devops-status-grid{grid-template-columns:1fr}
-  .notion-btn{bottom:.8rem;right:.8rem;padding:.6rem 1rem;font-size:.76rem}
-}
-@media(max-width:480px){
-  html{font-size:15px}
-  .semaforo-grid{grid-template-columns:1fr 1fr}
-  .project-full-name{display:none}
-  .cer-form{grid-template-columns:1fr}
-}
+/* SCREEN 5 — CHECKLIST */
+.ck-item{display:flex;align-items:flex-start;gap:.8rem;padding:.75rem;
+  border-radius:var(--rsm);transition:background .15s;cursor:pointer;border:1px solid transparent}
+.ck-item:hover{background:var(--panel2)}
+.ck-item.done-ck{background:rgba(15,217,138,.05);border-color:rgba(15,217,138,.15)}
+.ck-box{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  transition:all .15s}
+.ck-item.done-ck .ck-box{background:var(--green);border-color:var(--green);color:#000;font-size:.7rem}
+.ck-text{font-size:.85rem;line-height:1.5;flex:1}
+.ck-item.done-ck .ck-text{text-decoration:line-through;color:var(--text2)}
+.ck-source{font-size:.7rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.ck-xp-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--xp);
+  background:var(--yellow-bg);padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+/* PROGRESS RING */
+.ring-wrap{display:flex;align-items:center;gap:1rem;padding:1rem;
+  background:var(--panel2);border-radius:var(--r);margin-bottom:1rem}
+.ring-svg{flex-shrink:0}
+.ring-info{}
+.ring-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.4rem;color:var(--green)}
+.ring-label{font-size:.78rem;color:var(--text2)}
+
+/* ═══════════════════════════════════
+   LEVEL UP OVERLAY
+═══════════════════════════════════ */
+.levelup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);
+  z-index:1000;align-items:center;justify-content:center}
+.levelup-overlay.show{display:flex}
+.levelup-box{text-align:center;padding:2.5rem;max-width:380px}
+.levelup-emoji{font-size:3rem;margin-bottom:.5rem;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.levelup-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2rem;
+  color:var(--xp);margin-bottom:.4rem}
+.levelup-sub{color:var(--text2);font-size:.88rem;margin-bottom:1.5rem}
 </style>
 </head>
 <body>
 
-<a class="notion-btn" href="https://www.notion.so/322d70f44d5480f2a305fce0bcba0326?v=342d70f44d548061bf82000cf461a96b" target="_blank">
-  📝 Transcrição ao vivo
-</a>
-
-<button class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
-<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">Painel da Líder<span>SEDU-ES · GTI · CRP</span></div>
-    <div class="sidebar-date" id="sidebarDate"></div>
+<div id="xpToast" class="xp-toast"></div>
+<div id="levelupOverlay" class="levelup-overlay">
+  <div class="levelup-box">
+    <div class="levelup-emoji">⚡</div>
+    <div class="levelup-title" id="levelupTitle">LEVEL UP!</div>
+    <div class="levelup-sub" id="levelupSub"></div>
+    <button class="btn btn-g" onclick="closeLevelup()">CONTINUAR MISSÃO</button>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">Principal</div>
-    <button class="nav-item active" onclick="nav('home',this)"><div class="nav-dot" style="background:#EF4444"></div>🏠 Início & Alertas</button>
-    <button class="nav-item" onclick="nav('projetos',this)"><div class="nav-dot" style="background:#F59E0B"></div>📁 Meus Projetos</button>
-    <button class="nav-item" onclick="nav('checklist',this)"><div class="nav-dot" style="background:#10B981"></div>✅ Checklist Diário</button>
-    <button class="nav-item" onclick="nav('report',this)"><div class="nav-dot" style="background:#6366F1"></div>📋 Gerar Report</button>
-    <div class="nav-section-label">Sprint & Cerimônias</div>
-    <button class="nav-item" onclick="nav('timeline',this)"><div class="nav-dot" style="background:#F97316"></div>🚂 Ciclo da Sprint</button>
-    <button class="nav-item" onclick="nav('cerimonias',this)"><div class="nav-dot" style="background:#14B8A6"></div>📅 Datas Automáticas</button>
-    <button class="nav-item" onclick="nav('calendario',this)"><div class="nav-dot" style="background:#8B5CF6"></div>🗓️ Calendário</button>
-    <div class="nav-section-label">DevOps</div>
-    <button class="nav-item" onclick="nav('devops-status',this)"><div class="nav-dot" style="background:#3B82F6"></div>🔵 Status & Fluxo</button>
-    <button class="nav-item" onclick="nav('devops-tempo',this)"><div class="nav-dot" style="background:#0EA5E9"></div>⏱ Tempo Ideal</button>
-    <button class="nav-item" onclick="nav('devops-testes',this)"><div class="nav-dot" style="background:#EC4899"></div>🧪 Testes & Pareceres</button>
-    <div class="nav-section-label">Aprender</div>
-    <button class="nav-item" onclick="nav('quiz',this)"><div class="nav-dot" style="background:#A855F7"></div>🎯 Quiz de Fixação</button>
-    <button class="nav-item" onclick="nav('glossario',this)"><div class="nav-dot" style="background:#EF4444"></div>📖 Glossário</button>
-    <button class="nav-item" onclick="nav('perguntas',this)"><div class="nav-dot" style="background:#22C55E"></div>💬 Perguntas Prontas</button>
-  </nav>
-</aside>
-
-<div class="main">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title" id="topbarTitle">Início & Alertas</div>
-      <div class="topbar-subtitle" id="topbarSub">Suas urgências e o status rápido dos projetos</div>
-    </div>
-    <button class="btn btn-secondary" onclick="window.print()" style="font-size:.76rem;padding:.45rem .9rem">🖨️ Imprimir</button>
-  </div>
-
-  <!-- ========== HOME ========== -->
-  <div class="page active" id="page-home">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Bom dia, Líder! 👋</div>
-      <div class="section-desc">Registre suas urgências do dia e veja rapidamente a saúde de cada projeto.</div>
-    </div>
-
-    <div class="urgencias-box" style="margin-bottom:1.2rem">
-      <div class="urgencias-title">🔴 Urgências de hoje</div>
-      <div class="urgencia-item"><div class="urgencia-num">1</div><input class="urgencia-input" id="urg1" placeholder="Escreva a urgência mais importante do dia..." oninput="saveUrg()"></div>
-      <div class="urgencia-item"><div class="urgencia-num">2</div><input class="urgencia-input" id="urg2" placeholder="Segunda urgência..." oninput="saveUrg()"></div>
-      <div class="urgencia-item"><div class="urgencia-num">3</div><input class="urgencia-input" id="urg3" placeholder="Terceira urgência..." oninput="saveUrg()"></div>
-    </div>
-
-    <div class="card" style="margin-bottom:1.2rem">
-      <div class="proj-section-title" style="margin-bottom:.9rem">🚦 Semáforo dos projetos — clique nos círculos para mudar o status</div>
-      <div class="semaforo-grid" id="semaforoGrid"></div>
-    </div>
-
-    <div class="card">
-      <div class="proj-section-title" style="margin-bottom:.7rem">📝 Nota rápida do dia</div>
-      <textarea class="proj-nota-input" id="notaDia" placeholder="Anote aqui qualquer coisa importante que aconteceu hoje..." style="min-height:90px;width:100%" oninput="saveNotaDia()"></textarea>
-    </div>
-  </div></div>
-
-  <!-- ========== PROJETOS ========== -->
-  <div class="page" id="page-projetos">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Meus 10 Projetos</div>
-      <div class="section-desc">Toque para expandir. Cada projeto tem resumo, funcionalidades e perguntas prontas.</div>
-    </div>
-    <div class="projects-grid" id="projectsGrid"></div>
-  </div></div>
-
-  <!-- ========== CHECKLIST ========== -->
-  <div class="page" id="page-checklist">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Checklist Diário</div>
-      <div class="section-desc">Sua rotina de 15 minutos. Marque cada item conforme analisa o DevOps.</div>
-    </div>
-    <div class="card"><div class="proj-section-title">🔴 Sprint Ativa — SGTER, SIGEST, SEMPRE NOVA</div><ul id="cl-sprint"></ul></div>
-    <div class="card" style="margin-top:.9rem"><div class="proj-section-title">🟡 Iniciando / Retomando — QUESTÕES, SISPC, PGP, PES</div><ul id="cl-inicio"></ul></div>
-    <div class="card" style="margin-top:.9rem"><div class="proj-section-title">🟢 Sustentação — SGF, E-GESTÃO, ALIMENTAÇÃO</div><ul id="cl-sustentacao"></ul></div>
-    <div style="margin-top:1rem;display:flex;gap:.8rem;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="resetChecklist()">🔄 Reiniciar checklist</button>
-    </div>
-  </div></div>
-
-  <!-- ========== REPORT ========== -->
-  <div class="page" id="page-report">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Gerar Report</div>
-      <div class="section-desc">Preencha e copie o texto formatado para sua chefe.</div>
-    </div>
-    <div class="report-block">
-      <div class="report-mini">
-        <div><div class="report-label">Data</div><input type="date" class="report-field" id="rData" style="min-height:unset;resize:none"></div>
-        <div><div class="report-label">Período</div><input type="text" class="report-field" id="rPeriodo" placeholder="Ex: Semana de 28/04 a 02/05" style="min-height:unset;resize:none"></div>
-      </div>
-    </div>
-    <div class="report-block"><div class="report-label">Sprint Ativa — o que está em andamento?</div><textarea class="report-field" id="rSprint" placeholder="SGTER, SIGEST, SEMPRE NOVA..."></textarea></div>
-    <div class="report-block"><div class="report-label">Sustentação — incidentes relevantes?</div><textarea class="report-field" id="rSustentacao" placeholder="SGF, E-GESTÃO, ALIMENTAÇÃO..."></textarea></div>
-    <div class="report-block"><div class="report-label">Início / Retomada — progresso?</div><textarea class="report-field" id="rInicio" placeholder="SISPC, PGP, QUESTÕES, PES..."></textarea></div>
-    <div class="report-block"><div class="report-label">Impedimentos e riscos</div><textarea class="report-field" id="rRiscos" placeholder="O que precisa de atenção da gestão..."></textarea></div>
-    <div class="report-block"><div class="report-label">Próximos passos</div><textarea class="report-field" id="rProximos" placeholder="Plannings, reviews, entregas previstas..."></textarea></div>
-    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="gerarReport()">📋 Gerar texto</button>
-      <button class="btn btn-secondary" onclick="limparReport()">🗑️ Limpar</button>
-    </div>
-    <div id="reportOutput" style="display:none;margin-top:1.2rem">
-      <div class="report-label">Texto gerado — copie e cole</div>
-      <textarea class="report-field" id="reportTexto" style="min-height:320px;font-family:monospace;font-size:.8rem" readonly></textarea>
-      <button class="btn btn-secondary" style="margin-top:.5rem" onclick="copiarReport()">📋 Copiar</button>
-    </div>
-  </div></div>
-
-  <!-- ========== TIMELINE DA SPRINT ========== -->
-  <div class="page" id="page-timeline">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">🚂 Ciclo da Sprint</div>
-      <div class="section-desc">O fluxo completo do seu time — do levantamento de requisitos até a nova planning.</div>
-    </div>
-
-    <div class="tl-proj-selector" id="tlProjSelector"></div>
-
-    <div class="card" style="overflow:visible">
-      <div class="timeline-wrap">
-        <div class="timeline" id="timeline"></div>
-      </div>
-    </div>
-
-    <div class="tl-step-detail" id="tlDetail" style="display:none">
-      <div class="tl-detail-title" id="tlDetailTitle"></div>
-      <ul class="tl-detail-list" id="tlDetailList"></ul>
-    </div>
-  </div></div>
-
-  <!-- ========== CERIMÔNIAS ========== -->
-  <div class="page" id="page-cerimonias">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Datas Automáticas</div>
-      <div class="section-desc">Digite a data da Review e a duração — o sistema calcula todas as cerimônias.</div>
-    </div>
-    <div class="card" style="margin-bottom:1.2rem">
-      <div class="proj-section-title">Configure a Sprint</div>
-      <div class="cer-form">
-        <div class="cer-form-group">
-          <label class="cer-form-label">Data da Review</label>
-          <input type="date" class="cer-input" id="reviewDate" onchange="calcCerimonias()">
-        </div>
-        <div class="cer-form-group">
-          <label class="cer-form-label">Duração da Sprint</label>
-          <select class="cer-input" id="sprintDur" onchange="calcCerimonias()">
-            <option value="">Selecione...</option>
-            <option value="14">15 dias (2 semanas)</option>
-            <option value="29">30 dias (4 semanas)</option>
-          </select>
-        </div>
-        <div class="cer-form-group">
-          <label class="cer-form-label">Projetos</label>
-          <select class="cer-input" id="cerProj" onchange="calcCerimonias()">
-            <option value="all">Sprint ativa (todos)</option>
-            <option value="SGTER">SGTER</option>
-            <option value="SIGEST">SIGEST</option>
-            <option value="SEMPRE NOVA">SEMPRE NOVA</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div id="cerResults" class="cer-results"></div>
-  </div></div>
-
-  <!-- ========== CALENDÁRIO ========== -->
-  <div class="page" id="page-calendario">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Calendário</div>
-      <div class="section-desc">Visualize o mês com semanas numeradas e cerimônias marcadas automaticamente.</div>
-    </div>
-    <div class="cal-header">
-      <button class="cal-nav-btn" onclick="changeMonth(-1)">← Anterior</button>
-      <div class="cal-month-title" id="calTitle"></div>
-      <button class="cal-nav-btn" onclick="changeMonth(1)">Próximo →</button>
-      <button class="cal-nav-btn" onclick="goToday()">Hoje</button>
-    </div>
-    <div class="cal-grid-wrap"><div class="cal-grid" id="calGrid"></div></div>
-    <p style="font-size:.72rem;color:var(--text3);margin-top:.6rem">Cerimônias aparecem quando configuradas em "Datas Automáticas".</p>
-  </div></div>
-
-  <!-- ========== DEVOPS STATUS ========== -->
-  <div class="page" id="page-devops-status">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Status do Azure DevOps</div>
-      <div class="section-desc">O que cada status significa e o que fazer ao ver cada um.</div>
-    </div>
-    <div class="highlight"><strong>Fluxo normal:</strong> Proposed → Active → Awaiting QA → Resolved → Closed.<br>Problemas: <strong>Revised</strong> (volta corrigir) · <strong>Refused</strong> (descartado) · <strong>Paused</strong> (travado, ação imediata).</div>
-    <div class="devops-status-grid" id="devopsStatusGrid"></div>
-  </div></div>
-
-  <!-- ========== DEVOPS TEMPO ========== -->
-  <div class="page" id="page-devops-tempo">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Tempo Ideal por Status</div>
-      <div class="section-desc">Quando é hora de agir — por tipo de projeto.</div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab('t-sprint',this)">Sprint Ativa</button>
-      <button class="tab-btn" onclick="showTab('t-sust',this)">Sustentação</button>
-      <button class="tab-btn" onclick="showTab('t-ini',this)">Iniciando</button>
-    </div>
-    <div class="tab-panel active" id="tab-t-sprint">
-      <div class="highlight"><strong>SGTER, SIGEST, SEMPRE NOVA</strong> — ritmo acelerado, cada dia conta.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-        <tr><td><strong>Active</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Pergunte se há impedimento</td></tr>
-        <tr><td><strong>Awaiting QA</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Cobre quem vai testar</td></tr>
-        <tr><td><strong>Resolved</strong></td><td>até 1 dia</td><td>acima de 1 dia</td><td>Dev ou PO precisam validar</td></tr>
-        <tr><td><strong>Revised</strong></td><td>horas</td><td>sem movimento no mesmo dia</td><td>Dev não foi avisado — aja agora</td></tr>
-        <tr><td><strong>Paused</strong></td><td>0 — ação imediata</td><td>qualquer Paused</td><td>Escale imediatamente</td></tr>
-      </tbody></table></div>
-    </div>
-    <div class="tab-panel" id="tab-t-sust">
-      <div class="highlight"><strong>SGF, E-GESTÃO, ALIMENTAÇÃO</strong> — ritmo mais tranquilo.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-        <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Verifique se o escopo não mudou</td></tr>
-        <tr><td><strong>Awaiting QA</strong></td><td>até 3 dias</td><td>acima de 3 dias</td><td>Cobre agenda de teste</td></tr>
-        <tr><td><strong>Resolved</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Inclua na validação semanal</td></tr>
-        <tr><td><strong>Paused</strong></td><td>até 3 dias c/ justificativa</td><td>sem motivo registrado</td><td>Exija comentário no Discussion</td></tr>
-      </tbody></table></div>
-    </div>
-    <div class="tab-panel" id="tab-t-ini">
-      <div class="highlight"><strong>QUESTÕES, SISPC, PGP, PES</strong> — não podem travar no início.</div>
-      <div class="card" style="padding:0;overflow:hidden;margin-top:.8rem"><table class="data-table"><thead><tr><th>Status</th><th>Tempo normal</th><th>Quando agir</th><th>O que fazer</th></tr></thead><tbody>
-        <tr><td><strong>Proposed (acúmulo)</strong></td><td>sinal de alerta</td><td>muitos itens parados</td><td>Solicite reunião de priorização</td></tr>
-        <tr><td><strong>Active</strong></td><td>até 5 dias</td><td>acima de 5 dias</td><td>Pergunte o que está travando</td></tr>
-        <tr><td><strong>Paused</strong></td><td>até 2 dias</td><td>acima de 2 dias</td><td>Risco de perder embalo — resolva já</td></tr>
-      </tbody></table></div>
-    </div>
-  </div></div>
-
-  <!-- ========== TESTES ========== -->
-  <div class="page" id="page-devops-testes">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Testes & Pareceres</div>
-      <div class="section-desc">Como verificar se os testes estão sendo feitos e como cobrar registros.</div>
-    </div>
-    <div class="card"><div class="proj-section-title">Status de Teste — o que cada um significa</div>
-      <table class="data-table" style="margin-top:.4rem"><thead><tr><th>Status</th><th>Tradução</th><th>O que significa</th></tr></thead><tbody>
-        <tr><td>✅ <strong>Passed</strong></td><td>Aprovado</td><td>Testou e funcionou — pronto para Resolved</td></tr>
-        <tr><td>❌ <strong>Failed</strong></td><td>Reprovado</td><td>Testou e encontrou erro — deve ir para Revised</td></tr>
-        <tr><td>🚫 <strong>Blocked</strong></td><td>Bloqueado</td><td>Não conseguiu nem testar — há impedimento</td></tr>
-        <tr><td>⏸️ <strong>Not Run</strong></td><td>Não executado</td><td>Criado mas nunca executado</td></tr>
-        <tr><td>🔵 <strong>Active</strong></td><td>Ativo</td><td>Criado, aguardando execução</td></tr>
-      </tbody></table>
-    </div>
-    <div class="card" style="margin-top:.9rem">
-      <div class="alerta-box" style="margin-top:0"><strong>⚠️ Armadilha:</strong> Item Resolved ≠ item testado. Sempre cruze: item Resolved → tem Test Case com status Passed?</div>
-    </div>
-    <div class="card" style="margin-top:.9rem">
-      <div class="proj-section-title">Como verificar os testes</div>
-      <ul class="questions-list">
-        <li><span>1️⃣</span> Vá em <strong>Test Plans</strong> no DevOps</li>
-        <li><span>2️⃣</span> Verifique se o item em Awaiting QA tem Test Case criado</li>
-        <li><span>3️⃣</span> Veja se o Test Case foi executado (Passed, Failed ou Blocked)</li>
-        <li><span>4️⃣</span> Test Case em "Not Run" há mais de 2 dias = teste não aconteceu</li>
-        <li><span>5️⃣</span> Sempre pergunte: os testes foram em homologação?</li>
-      </ul>
-    </div>
-    <div class="card" style="margin-top:.9rem">
-      <div class="proj-section-title">Quando cobrar um Parecer</div>
-      <ul class="questions-list">
-        <li><span>📝</span> Resolved → Revised: QA deve ter registrado o motivo no Discussion</li>
-        <li><span>📝</span> Item Paused: deve ter comentário explicando o bloqueio</li>
-        <li><span>📝</span> Item Refused: motivo da recusa documentado</li>
-        <li><span>📝</span> Teste Failed: descrição do erro no item</li>
-      </ul>
-      <div class="highlight" style="margin-top:.8rem"><strong>Frase assertiva:</strong> "Por favor, registre o motivo diretamente no item do DevOps, aba Discussion."</div>
-    </div>
-  </div></div>
-
-  <!-- ========== QUIZ ========== -->
-  <div class="page" id="page-quiz">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">🎯 Quiz de Fixação</div>
-      <div class="section-desc">Teste o que você sabe sobre os projetos e o DevOps. 5 perguntas aleatórias por rodada.</div>
-    </div>
-    <div class="quiz-wrap" id="quizWrap"></div>
-  </div></div>
-
-  <!-- ========== GLOSSÁRIO ========== -->
-  <div class="page" id="page-glossario">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">Glossário Técnico</div>
-      <div class="section-desc">Termos que aparecem nas reuniões — em linguagem clara.</div>
-    </div>
-    <div class="card" id="glossarioContent"></div>
-  </div></div>
-
-  <!-- ========== PERGUNTAS ========== -->
-  <div class="page" id="page-perguntas">
-  <div class="content">
-    <div class="section-header">
-      <div class="section-title">💬 Perguntas Prontas</div>
-      <div class="section-desc">Para nunca travar numa reunião. Organizadas por situação.</div>
-    </div>
-    <div id="perguntasContent"></div>
-  </div></div>
-
 </div>
 
-<div class="nota-modal" id="notaModal">
-  <div class="nota-box">
-    <div class="nota-title" id="notaModalTitle">Anotações</div>
-    <textarea class="nota-textarea" id="notaModalText" placeholder="Anote o que está acontecendo neste projeto agora..."></textarea>
-    <div class="nota-hist" id="notaHist" style="display:none"></div>
-    <div style="display:flex;gap:.7rem;margin-top:.9rem;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="saveNota()">💾 Salvar</button>
-      <button class="btn btn-secondary" onclick="closeNota()">Fechar</button>
+<div id="lessonOverlay" class="lesson-overlay">
+  <div class="lesson-box" id="lessonBox"></div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">MISSÃO<span> SEDU</span></div>
+  <div class="hdr-tabs">
+    <button class="tab active" onclick="showScreen('cockpit',this)">🎯 Cockpit</button>
+    <button class="tab" onclick="showScreen('sprint',this)">⚡ Sprint</button>
+    <button class="tab" onclick="showScreen('relatorio',this)">📄 Relatório</button>
+    <button class="tab" onclick="showScreen('jogo',this)">🎮 DevOps Quest</button>
+    <button class="tab" onclick="showScreen('checklist',this)">✅ Checklist</button>
+  </div>
+  <div class="hdr-xp">XP <span class="xp-val" id="xpDisplay">0</span></div>
+</header>
+
+<!-- ═══════════════════════════════════
+     SCREEN 1 — COCKPIT
+═══════════════════════════════════ -->
+<div id="screen-cockpit" class="screen active">
+<div class="container">
+
+  <div class="sec-title">🎯 COCKPIT DA SEMANA</div>
+  <div class="sec-sub">Visão geral dos seus 10 projetos. Ponto vermelho = atenção. Clique no projeto para anotar.</div>
+
+  <div class="cockpit-top">
+    <!-- PROJETOS -->
+    <div class="card" style="padding:.8rem">
+      <div class="card-title">🚀 PROJETOS — STATUS AGORA</div>
+      <div id="projList"></div>
+    </div>
+    <!-- LATERAL -->
+    <div>
+      <!-- URGÊNCIAS -->
+      <div class="urgency-box" style="margin-bottom:.8rem">
+        <div class="urgency-title">🔴 URGÊNCIAS DE HOJE</div>
+        <textarea class="urgency-input" id="urgencias" placeholder="O que não pode esperar hoje?&#10;(salvo automaticamente)"></textarea>
+      </div>
+      <!-- MEDIÇÕES -->
+      <div class="card" style="padding:.9rem">
+        <div class="card-title" style="margin-bottom:.6rem">📅 MEDIÇÕES</div>
+        <div class="form-group">
+          <label>Prazo da medição</label>
+          <input type="date" id="medicaoPrazo">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="medicaoStatus">
+            <option value="">Selecione...</option>
+            <option>Em andamento</option>
+            <option>Pronta para validação</option>
+            <option>Validada ✅</option>
+            <option>Atrasada ⚠️</option>
+          </select>
+        </div>
+        <button class="btn btn-g btn-sm" onclick="salvarMedicao()">SALVAR</button>
+        <div id="medicaoDisplay" style="margin-top:.7rem;font-size:.78rem"></div>
+      </div>
     </div>
   </div>
+
+  <!-- CHAMADOS -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="card-title">⏱️ CHAMADOS ABERTOS — TIMER DE DIAS</div>
+    <div style="display:flex;gap:.6rem;margin-bottom:.8rem;flex-wrap:wrap">
+      <input type="text" id="chNome" placeholder="Nome do chamado / ID" style="flex:2;min-width:140px">
+      <select id="chProjeto" style="flex:1;min-width:120px">
+        <option value="">Projeto...</option>
+        <option>SGTER</option><option>SIGEST</option><option>SEMPRE NOVA</option>
+        <option>SGF</option><option>E-GESTÃO</option><option>ALIMENTAÇÃO</option>
+        <option>PES</option><option>QUESTÕES</option><option>SISPC</option><option>PGP</option>
+      </select>
+      <input type="date" id="chData" style="flex:1;min-width:130px">
+      <button class="btn btn-o btn-sm" onclick="addChamado()">+ ADICIONAR</button>
+    </div>
+    <div id="chamadosList">
+      <div style="color:var(--text3);font-size:.8rem;text-align:center;padding:.5rem">Nenhum chamado cadastrado</div>
+    </div>
+  </div>
+
+  <!-- QUICK NOTES -->
+  <div class="card">
+    <div class="card-title">📝 ANOTAÇÕES RÁPIDAS DA SEMANA</div>
+    <textarea id="quickNotes" placeholder="Anote qualquer coisa importante: decisões, pendências, riscos..." style="min-height:100px;width:100%"></textarea>
+    <div style="margin-top:.6rem;display:flex;gap:.5rem">
+      <button class="btn btn-g btn-sm" onclick="salvarNotes()">💾 SALVAR</button>
+      <span id="notesSaved" style="font-size:.75rem;color:var(--green);align-self:center;display:none">✓ Salvo</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN 2 — SPRINT
+═══════════════════════════════════ -->
+<div id="screen-sprint" class="screen">
+<div class="container">
+
+  <div class="sec-title">⚡ CICLO DA SPRINT</div>
+  <div class="sec-sub">O caminho completo de um requisito até a entrega — em linguagem clara.</div>
+
+  <!-- PIPELINE VISUAL -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="card-title">🗺️ MAPA DO REQUISITO → ENTREGA</div>
+    <div class="sprint-pipeline">
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--purple)">📋 Requisito</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">SGR → DevOps</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--blue)">📅 Planning</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">Entra na sprint</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--orange)">🔨 Dev</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">Active → Resolved</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--yellow)">🧪 QA</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">Awaiting QA → Closed</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--green)">✅ Review</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">Demo + aceite</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-stage-name" style="color:var(--green)">🚀 Deploy</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.3rem">Wiki atualizada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CICLO DETALHADO -->
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-title">📖 CICLO COMPLETO DETALHADO</div>
+        <div id="cicloSteps"></div>
+      </div>
+    </div>
+    <div>
+      <!-- STATUS DEVOPS -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">🎮 STATUS DO DEVOPS — TRADUZIDO</div>
+        <table class="status-table">
+          <thead><tr><th>Status</th><th>= Em jogo</th><th>Quando agir</th></tr></thead>
+          <tbody id="statusTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALCULADORA -->
+  <div class="card" style="margin-top:1rem">
+    <div class="card-title">🧮 CALCULADORA DE SPRINT</div>
+    <div class="help-tip">📍 <strong>Como usar:</strong> Preencha os dados da sprint. O sistema calcula se a capacidade é suficiente para o planejado.</div>
+    <div class="form-row trio">
+      <div class="form-group">
+        <label>Projeto</label>
+        <select id="calcProj">
+          <option>SGTER</option><option>SIGEST</option><option>SEMPRE NOVA</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Número da Sprint</label>
+        <input type="number" id="calcSprintNum" placeholder="Ex: 5" min="1">
+      </div>
+      <div class="form-group">
+        <label>Nº de devs</label>
+        <input type="number" id="calcDevs" value="3" min="1" max="20">
+      </div>
+    </div>
+    <div class="form-row trio">
+      <div class="form-group">
+        <label>Data início</label>
+        <input type="date" id="calcInicio">
+      </div>
+      <div class="form-group">
+        <label>Data fim (Review)</label>
+        <input type="date" id="calcFim">
+      </div>
+      <div class="form-group">
+        <label>Horas/dia por dev</label>
+        <input type="number" id="calcHorasDia" value="6" min="1" max="8">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Horas planejadas (total da sprint)</label>
+        <input type="number" id="calcPlanejado" placeholder="Ex: 120">
+      </div>
+      <div class="form-group">
+        <label>Bugs em aberto (estimativa horas)</label>
+        <input type="number" id="calcBugs" value="0" placeholder="0">
+      </div>
+    </div>
+    <button class="btn btn-g" onclick="calcularSprint()">⚡ CALCULAR</button>
+    <div id="calcResult" class="calc-result" style="display:none"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN 3 — RELATÓRIO
+═══════════════════════════════════ -->
+<div id="screen-relatorio" class="screen">
+<div class="container">
+
+  <div class="sec-title">📄 GERAR RELATÓRIO SEMANAL</div>
+  <div class="sec-sub">Preencha durante a semana. Na sexta, clique em "Gerar" e copie o texto pronto.</div>
+
+  <!-- CABEÇALHO -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator"></div>CABEÇALHO</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Semana de referência</label>
+        <input type="text" id="rSemana" placeholder="Ex: 05/05 a 09/05/2025">
+      </div>
+      <div class="form-group">
+        <label>Elaborado por</label>
+        <input type="text" id="rAutor" value="Larisse">
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTEIRA DE REQUISITOS -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator" style="background:var(--purple)"></div>ESTEIRA DE REQUISITOS</div>
+    <div class="help-tip">
+      📍 <strong>Onde buscar:</strong> Azure DevOps → seu projeto → <strong>Boards → Backlogs</strong>. Veja quantos itens estão em cada status. Anote o que entrou, o que está em dev e o que foi concluído.
+    </div>
+    <div id="reqs-sprint-entries"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addReqEntry('sprint')" style="margin-bottom:.8rem">+ Adicionar projeto com sprint</button>
+    <div class="divider"></div>
+    <label style="margin-bottom:.5rem">Sustentação — chamados em evidência na semana</label>
+    <div class="help-tip">📍 <strong>Onde buscar:</strong> Azure DevOps → projeto de sustentação → <strong>Boards → Work Items</strong>. Filtre por "Changed Date" desta semana.</div>
+    <textarea id="rSustentacao" placeholder="Ex: SGF — 2 bugs resolvidos: login mobile (#1234) e relatório exportação (#1235)&#10;E-GESTÃO — estável, sem chamados&#10;ALIMENTAÇÃO — 1 chamado em aberto: erro app escola João XXIII"></textarea>
+  </div>
+
+  <!-- ENTREGAS -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator" style="background:var(--green)"></div>ENTREGAS DA SEMANA</div>
+    <div class="help-tip">
+      📍 <strong>Onde buscar:</strong> Azure DevOps → <strong>Boards → Sprints</strong> → filtre status "Closed" desta semana. Também verifique o CP → aba "Entregas do mês".
+    </div>
+    <textarea id="rEntregas" placeholder="Ex: SGTER Sprint 8 — entregue: Gestão de Rotas (US #45, #46) e Cálculo de Custo (US #48)&#10;SIGEST Sprint 5 — entregue: Medição Diária (US #23)&#10;Sem entrega em sustentação esta semana."></textarea>
+  </div>
+
+  <!-- DESENVOLVIMENTO -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator" style="background:var(--orange)"></div>ESTEIRA DE DESENVOLVIMENTO</div>
+    <div class="help-tip">
+      📍 <strong>Onde buscar:</strong> Azure DevOps → <strong>Boards → Sprint atual</strong>. Olhe o quadro Kanban. Anote o número da sprint e o que está em Active/Awaiting QA.
+    </div>
+    <div id="dev-sprint-entries"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addDevEntry()" style="margin-bottom:.8rem">+ Adicionar sprint de desenvolvimento</button>
+  </div>
+
+  <!-- RISCOS E IMPEDIMENTOS -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator" style="background:var(--red)"></div>RISCOS E IMPEDIMENTOS</div>
+    <div class="help-tip">📍 <strong>Onde buscar:</strong> Cliente 360 → aba "Riscos" (cadastrados como Risk no DevOps da CRP). Também reveja suas urgências da semana.</div>
+    <textarea id="rRiscos" placeholder="Ex: SGTER — integração SEFAZ instável, impacta cálculo de custo. Aberto issue #789&#10;SISPC — cliente ainda não validou os campos do formulário RAT. Aguardando resposta."></textarea>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="report-section">
+    <div class="report-section-title"><div class="indicator" style="background:var(--blue)"></div>PRÓXIMOS PASSOS</div>
+    <textarea id="rProximos" placeholder="Ex: Segunda — Planning SIGEST Sprint 6&#10;Quarta — Review SGTER Sprint 8&#10;Sexta — Medição do mês disponível para validação"></textarea>
+  </div>
+
+  <!-- BOTÕES -->
+  <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem">
+    <button class="btn btn-g" onclick="gerarRelatorio()">📄 GERAR RELATÓRIO</button>
+    <button class="btn btn-ghost" onclick="salvarRelatorio()">💾 SALVAR RASCUNHO</button>
+    <button class="btn btn-ghost" onclick="carregarRelatorio()">📂 CARREGAR SALVO</button>
+  </div>
+
+  <!-- PREVIEW -->
+  <div id="reportPreview" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;color:var(--green)">✅ RELATÓRIO GERADO</div>
+      <button class="btn btn-o btn-sm" onclick="copiarRelatorio()">📋 COPIAR TUDO</button>
+    </div>
+    <div class="preview-box" id="reportText"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN 4 — JOGO
+═══════════════════════════════════ -->
+<div id="screen-jogo" class="screen">
+<div class="container">
+
+  <div class="sec-title">🎮 DEVOPS QUEST</div>
+  <div class="sec-sub">Complete as missões para dominar o Azure DevOps. Cada missão = 1 conceito + 1 pergunta do mundo real. Seu progresso é salvo.</div>
+
+  <div style="background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);
+    padding:.9rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+    <div>
+      <div style="font-size:.72rem;color:var(--text2)">MISSÕES COMPLETAS</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--green)" id="missionCount">0/10</div>
+    </div>
+    <div>
+      <div style="font-size:.72rem;color:var(--text2)">XP TOTAL</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--xp)" id="xpTotal2">0</div>
+    </div>
+    <div>
+      <div style="font-size:.72rem;color:var(--text2)">NÍVEL</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--purple)" id="levelDisplay">Recruta</div>
+    </div>
+    <div style="flex:1;min-width:160px">
+      <div style="height:8px;background:var(--panel3);border-radius:4px;overflow:hidden">
+        <div id="xpBarFill" style="height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));transition:width .5s;width:0%"></div>
+      </div>
+      <div style="font-size:.68rem;color:var(--text3);margin-top:3px" id="xpBarLabel">0/100 XP para próximo nível</div>
+    </div>
+  </div>
+
+  <div class="mission-map" id="missionMap"></div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN 5 — CHECKLIST
+═══════════════════════════════════ -->
+<div id="screen-checklist" class="screen">
+<div class="container">
+
+  <div class="sec-title">✅ CHECKLIST DA SEMANA</div>
+  <div class="sec-sub">Baseado no checklist da sua chefe. Cada item marcado = XP. Reseta toda segunda-feira.</div>
+
+  <div class="ring-wrap">
+    <svg class="ring-svg" width="64" height="64" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="26" fill="none" stroke="var(--panel3)" stroke-width="6"/>
+      <circle id="ringCircle" cx="32" cy="32" r="26" fill="none" stroke="var(--green)" stroke-width="6"
+        stroke-dasharray="163.36" stroke-dashoffset="163.36" stroke-linecap="round"
+        transform="rotate(-90 32 32)" style="transition:stroke-dashoffset .5s"/>
+    </svg>
+    <div class="ring-info">
+      <div class="ring-pct" id="ringPct">0%</div>
+      <div class="ring-label">itens concluídos esta semana</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--xp)" id="ckXpEarned">+0 XP ganhos hoje</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="resetChecklist()">↺ Reiniciar</button>
+      <button class="btn btn-g btn-sm" onclick="gainXP(10);showXP('+10 XP — Bom trabalho!')">⚡ +XP Bônus</button>
+    </div>
+  </div>
+
+  <div id="ckSections"></div>
+
+</div>
 </div>
 
 <script>
-// ── DATE ──
-const hoje = new Date();
-const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-document.getElementById('sidebarDate').textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
-document.getElementById('rData').value = hoje.toISOString().split('T')[0];
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let state = {
+  xp: 0,
+  level: 0,
+  missions: {},
+  chamados: [],
+  checklist: {},
+  projStatus: {},
+  urgencias: '',
+  quickNotes: '',
+  medicao: {},
+  relatorio: {}
+};
 
-// ── NAV ──
-const titles={home:['Início & Alertas','Suas urgências e o status dos projetos'],projetos:['Meus Projetos','Visão geral dos 10 projetos'],checklist:['Checklist Diário','Sua rotina de 15 minutos'],report:['Gerar Report','Texto pronto para sua chefe'],timeline:['Ciclo da Sprint','Fluxo completo do seu time'],cerimonias:['Datas Automáticas','Cerimônias calculadas a partir da Review'],calendario:['Calendário','Semanas e datas do mês'],'devops-status':['Status do DevOps','O que cada status significa'],'devops-tempo':['Tempo Ideal','Quando é hora de agir'],'devops-testes':['Testes & Pareceres','Como verificar e cobrar'],quiz:['Quiz de Fixação','Teste seus conhecimentos'],glossario:['Glossário Técnico','Termos em linguagem clara'],perguntas:['Perguntas Prontas','Para nunca travar']};
-function nav(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  el.classList.add('active');
-  const t=titles[id]||[id,''];
-  document.getElementById('topbarTitle').textContent=t[0];
-  document.getElementById('topbarSub').textContent=t[1];
-  if(window.innerWidth<=768)closeSidebar();
-}
-function toggleSidebar(){
-  const s=document.getElementById('sidebar'),h=document.getElementById('hamburger'),o=document.getElementById('overlay');
-  s.classList.toggle('open');h.classList.toggle('open');o.classList.toggle('open');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-  document.getElementById('overlay').classList.remove('open');
-}
-
-// ── TABS ──
-function showTab(id,el){
-  const panel=document.getElementById('tab-'+id);
-  if(!panel)return;
-  panel.closest('.content').querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  panel.closest('.content').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  panel.classList.add('active');el.classList.add('active');
-}
-
-// ── PROJETOS DATA ──
-const projetos=[
-  {sigla:'SGTER',nome:'Sistema de Gestão de Transporte Escolar e Rural',icone:'🚌',cor:'#FEF3C7',iconCor:'#92400E',status:'sprint',resumo:'Controla o transporte escolar da SEDU-ES: rotas, veículos, motoristas, alunos e contratos. ~50 mil alunos por dia em parceria com 70 municípios.',funcionalidades:['Gestão de Rotas e Mapas (GeoTER)','Cadastro de Alunos, Veículos, Motoristas','Contratos SEDU e Programa PETE','Cálculo de Custo de Rota','Gestão de Pagamentos','Dashboard e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos alunos)','SEFAZ (combustível)','DETRAN (veículos)','TRANSCOLAR (carga inicial)','QGIS (mapas)'],alertas:'SEGES fornece os dados dos alunos. Se a integração SEGES travar, afeta diretamente o SGTER.',perguntas:['Qual sprint atual e quantos itens estão em Active?','Tem item Awaiting QA sem testador definido?','A integração DETRAN e SEFAZ está estável?','Há item Paused? Por quê?','Os Test Cases estão criados para esta sprint?']},
-  {sigla:'SIGEST',nome:'Sistema de Gestão de Serviços Terceirizados',icone:'🏢',cor:'#EDE9FE',iconCor:'#5B21B6',status:'sprint',resumo:'Gerencia contratos e serviços terceirizados da SEDU-ES. Medições diárias e mensais, anomalias e relatórios de pagamento dos terceirizados.',funcionalidades:['Gestão de Contratos e Fornecedores','Medição Diária e Mensal','Controle de Anomalias','Visita Técnica','Relatórios de Pagamentos','Auditoria'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados das unidades)','E-DOCS (documentos)'],alertas:'Fique atenta ao acúmulo de itens em Resolved sem validação.',perguntas:['Quantos itens estão em Awaiting QA nesta sprint?','As medições diárias estão registradas normalmente?','Tem anomalia aberta que impacta o pagamento?','Há itens Revised sem o dev notificado?']},
-  {sigla:'SEMPRE NOVA',nome:'Sistema de Manutenção de Edificações Escolares',icone:'🏫',cor:'#DCFCE7',iconCor:'#166534',status:'sprint',resumo:'Apoia manutenção das edificações escolares sob gestão da GERFE. Vistorias técnicas, laudos, planos de manutenção e ordens de serviço. Atende ~480 escolas.',funcionalidades:['Cadastro de Edificações','Diagnóstico e Vistorias','Laudos e Pareceres','Planos de Manutenção','Gestão de OS','Relatórios Gerenciais'],integracoes:['ACESSO CIDADÃO (login)','SEGES (importar escolas)'],alertas:'A GERFE é quem prioriza as funcionalidades. Mudança de escopo passa por eles.',perguntas:['O MVP de vistorias está em que status?','As vistorias estão gerando laudos?','Tem itens de relatório em Awaiting QA?','Há item Paused aguardando decisão da GERFE?']},
-  {sigla:'SGF',nome:'Sistema de Gestão do Ambiente de Formação',icone:'📚',cor:'#E0F2FE',iconCor:'#075985',status:'sustentacao',resumo:'Plataforma para inscrições nas formações do CEFOPE. Professores e servidores se inscrevem em cursos e formações continuadas.',funcionalidades:['Inscrições em Formações','Ambiente Virtual de Aprendizagem','Gestão de Cursistas','Certificação CEFOPE/ESESP'],integracoes:['ACESSO CIDADÃO (login)','Ambiente Virtual de Aprendizagem'],alertas:'Monitore bugs nos períodos de abertura de inscrições — volume alto de acessos simultâneos.',perguntas:['Há chamado aberto de bug do CEFOPE?','O sistema está estável na última semana?','Tem item Paused há mais de 3 dias?','Os professores conseguem se inscrever normalmente?']},
-  {sigla:'E-GESTÃO',nome:'Sistema de Gestão de Repasses Financeiros às Escolas',icone:'💰',cor:'#FEF9C3',iconCor:'#854D0E',status:'sustentacao',resumo:'Controla recursos financeiros repassados às escolas (Conselhos de Escola). Nome antigo: Repasse Financeiro. Herdado de outra fábrica — sem documentação formal no SGR.',funcionalidades:['Gestão de Repasses e Orçamentos','Controle de Receitas e Despesas','Prestação de Contas','Conciliação Bancária','Dashboards e Relatórios'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados de escolas e SREs)','E-DOCS (Termo de Recebimento)'],alertas:'⚠️ SEM DOCUMENTAÇÃO FORMAL no SGR. Qualquer dúvida de negócio depende do time ou do servidor Z:\\Fabrica de Software\\SEDU-ES. Não prometa prazo sem consultar o Tech Lead.',perguntas:['Há escola com problema de acesso?','Tem prestação de contas com prazo vencendo?','O módulo de conciliação bancária está funcionando?','O SEGES está trazendo dados corretos das escolas?']},
-  {sigla:'ALIMENTAÇÃO',nome:'Sistema de Alimentação Escolar (SAE)',icone:'🥗',cor:'#F0FDF4',iconCor:'#15803D',status:'sustentacao',resumo:'Controla a alimentação nas escolas da rede estadual. Cardápios, distribuição, controle nutricional e contratos do PNAE.',funcionalidades:['Controle de Cardápios','Gestão de Alunos e Cartão','Registro de Incorreções','Solicitações de Alimentação','Controle de Contratos PNAE'],integracoes:['ACESSO CIDADÃO (login)','SEGES (alunos e escolas)'],alertas:'Sistema com app mobile — bugs chegam diretamente das escolas e são muito visíveis.',perguntas:['Há escola reportando erro no app?','O cardápio do mês está configurado?','O controle de alunos importa corretamente do SEGES?','Há inconformidade sem resolução?']},
-  {sigla:'QUESTÕES',nome:'Sistema Elaborador de Atividades',icone:'❓',cor:'#FFF7ED',iconCor:'#9A3412',status:'retomando',resumo:'Ferramenta para professores criarem atividades com banco de questões AMA. Filtros por disciplina, série, descritor e dificuldade. Atende ~3.500 turmas e 100.000 alunos.',funcionalidades:['Módulo do Professor (atividades, PDF)','Módulo do Aluno (responder online)','Módulo Gestor (banco de questões)','Dashboard de desempenho'],integracoes:['ACESSO CIDADÃO (login)','SEGES (escolas, turmas, professores, alunos)'],alertas:'Retomado após pausa da GTI — confirme se o escopo foi revalidado antes de cobrar entregas.',perguntas:['O backlog foi refinado após a retomada?','Qual a primeira funcionalidade a ser entregue?','A integração SEGES está funcionando?','O planning foi realizado?']},
-  {sigla:'SISPC',nome:'Sistema de Prestação de Contas',icone:'📊',cor:'#EFF6FF',iconCor:'#1D4ED8',status:'iniciando',resumo:'Plataforma web para centralizar a prestação de contas de Prefeituras e Entidades Privadas junto à SEDU-ES. Substitui planilhas manuais. Atende ~400 usuários.',funcionalidades:['Gestão de Processos de Prestação de Contas','Upload de Documentos Obrigatórios','Geração de Relatórios e Pareceres','Dashboard de KPIs','Sistema de Notificações'],integracoes:['ACESSO CIDADÃO (login)','E-DOCS (documentos e assinatura)'],alertas:'Iniciando — acúmulo de Proposed é sinal de que o backlog não está refinado.',perguntas:['O kickoff foi realizado?','O primeiro módulo está em desenvolvimento?','O analista mapeou os processos com o cliente?','Há impedimento de infraestrutura?']},
-  {sigla:'PGP',nome:'Plataforma de Gestão da Privacidade (LGPD)',icone:'🔒',cor:'#F5F3FF',iconCor:'#6D28D9',status:'iniciando',resumo:'Sistema para gerenciar documentos obrigatórios pela LGPD: RAT e RIPD. Substitui planilhas do DPO. Prioridade: RAT → RIPD → Relatórios → Dashboards.',funcionalidades:['Gestão de RAT e RIPD','Controle de Riscos com Matriz de Criticidade','Fluxo de Aprovação','Versionamento de Documentos','Dashboard de Indicadores'],integracoes:['ACESSO CIDADÃO (login OAuth2)','E-DOCS (futuro repositório)'],alertas:'Iniciando — o módulo de RAT é a primeira entrega. Confirme se o DPO (Farley) validou o escopo.',perguntas:['O módulo de RAT está em desenvolvimento?','O DPO validou os campos obrigatórios?','O fluxo de aprovação está mapeado?','Há dúvida de regra de negócio travando?']},
-  {sigla:'PES',nome:'Programa de Estágio da SEDU-ES',icone:'🎓',cor:'#FDF2F8',iconCor:'#9D174D',status:'iniciando',resumo:'Sistema para o CEFOPE gerenciar estágios de estudantes de licenciaturas e bacharelado. Painel do estagiário, painel da IES e painel administrativo.',funcionalidades:['Painel do Estagiário','Painel da IES','Solicitação e Aprovação de Convênio','Cadastro de Estudantes','Acompanhamento de Status'],integracoes:['ACESSO CIDADÃO (login)','SEGES (dados dos estudantes)'],alertas:'Fluxo: IES solicita convênio → SEDU analisa → aprova/reprova → estudante se cadastra. Valide este fluxo com o CEFOPE.',perguntas:['O fluxo de convênio foi validado com o CEFOPE?','O cadastro de estudantes está em desenvolvimento?','Quem homologa as entregas no cliente?','O backlog inicial foi refinado?']}
+const LEVELS = [
+  {name:'Recruta',min:0},
+  {name:'Analista Júnior',min:100},
+  {name:'Gestora de Projetos',min:250},
+  {name:'Tech Lead',min:500},
+  {name:'Mestre DevOps',min:900},
+  {name:'COMANDANTE SEDU',min:1500}
 ];
 
-function renderProjects(){
-  const g=document.getElementById('projectsGrid');
-  const statusMap={sprint:'🟠 Sprint Ativa',sustentacao:'🟢 Sustentação',iniciando:'🔵 Iniciando',retomando:'🟡 Retomando'};
-  g.innerHTML=projetos.map((p,i)=>`
-    <div class="project-card">
-      <div class="project-card-header" onclick="toggleProj(${i})" id="ph${i}">
-        <div class="project-icon" style="background:${p.cor};color:${p.iconCor}">${p.icone}</div>
-        <div class="project-info">
-          <div class="project-name">${p.sigla}</div>
-          <div class="project-full-name">${p.nome}</div>
-          <div class="project-badges"><span class="badge badge-${p.status}">${statusMap[p.status]}</span></div>
-        </div>
-        <div class="project-chevron" id="pc${i}">▶</div>
-      </div>
-      <div class="project-card-body" id="pb${i}">
-        <div class="proj-grid">
-          <div>
-            <div class="proj-section-title">O que é</div>
-            <div class="proj-box"><div class="proj-desc">${p.resumo}</div></div>
-            <div style="margin-top:.8rem"><div class="proj-section-title">Funcionalidades</div><div class="proj-box"><div class="proj-tags">${p.funcionalidades.map(f=>`<span class="proj-tag">${f}</span>`).join('')}</div></div></div>
-            <div style="margin-top:.8rem"><div class="proj-section-title">Integrações</div><div class="proj-box"><div class="proj-tags">${p.integracoes.map(f=>`<span class="proj-tag">🔗 ${f}</span>`).join('')}</div></div></div>
-            <div class="proj-nota-wrap">
-              <div class="proj-section-title">📝 Minha anotação</div>
-              <textarea class="proj-nota-input" id="nota-${p.sigla}" placeholder="Anote o que está acontecendo neste projeto agora..." oninput="saveNotaProj('${p.sigla}',this.value)">${localStorage.getItem('nota_'+p.sigla)||''}</textarea>
-            </div>
-          </div>
-          <div>
-            <div class="proj-section-title">Perguntas para o time</div>
-            <div class="proj-box"><ul class="questions-list">${p.perguntas.map(q=>`<li><span>💬</span>${q}</li>`).join('')}</ul></div>
-            ${p.alertas?`<div style="margin-top:.8rem"><div class="proj-section-title">⚠️ Atenção</div><div class="alerta-box">${p.alertas}</div></div>`:''}
-          </div>
-        </div>
-      </div>
-    </div>`).join('');
+function load(){
+  try{const s=localStorage.getItem('missao_sedu');if(s)state={...state,...JSON.parse(s)}}catch(e){}
 }
-function toggleProj(i){
-  const b=document.getElementById('pb'+i),c=document.getElementById('pc'+i),h=document.getElementById('ph'+i);
-  const o=b.classList.contains('open');
-  b.classList.toggle('open',!o);c.classList.toggle('open',!o);h.classList.toggle('open',!o);
-}
-function saveNotaProj(sigla,val){localStorage.setItem('nota_'+sigla,val);}
+function save(){localStorage.setItem('missao_sedu',JSON.stringify(state))}
 
-// ── SEMÁFORO ──
-const semColors={ok:{dot:'#22C55E',label:'OK',css:'color:var(--green)'},atencao:{dot:'#F59E0B',label:'Atenção',css:'color:var(--orange)'},critico:{dot:'#EF4444',label:'Crítico',css:'color:var(--red)'}};
-function renderSemaforo(){
-  const grid=document.getElementById('semaforoGrid');
-  grid.innerHTML=projetos.map(p=>{
-    const saved=localStorage.getItem('sem_'+p.sigla)||'ok';
-    const sc=semColors[saved];
-    const nota=localStorage.getItem('nota_'+p.sigla)||'';
-    return `<div class="semaforo-card" onclick="openNota('${p.sigla}')">
-      <div class="semaforo-top">
-        <div class="semaforo-sigla">${p.sigla}</div>
-        <div class="semaforo-dot" style="background:${sc.dot}" id="semdot-${p.sigla}" onclick="event.stopPropagation();cycleSem('${p.sigla}')"></div>
+function gainXP(n){
+  state.xp+=n;
+  const lBefore=currentLevel();
+  save();
+  updateXPBar();
+  const lAfter=currentLevel();
+  if(lAfter>lBefore) showLevelup(lAfter);
+}
+function currentLevel(){
+  let l=0;
+  for(let i=0;i<LEVELS.length;i++){if(state.xp>=LEVELS[i].min)l=i;}
+  return l;
+}
+function showXP(msg){
+  const t=document.getElementById('xpToast');
+  t.textContent=msg;t.style.display='block';
+  setTimeout(()=>t.style.display='none',2200);
+}
+function updateXPBar(){
+  document.getElementById('xpDisplay').textContent=state.xp;
+  if(document.getElementById('xpTotal2'))document.getElementById('xpTotal2').textContent=state.xp;
+  const li=currentLevel();
+  const lv=LEVELS[li];
+  const ln=LEVELS[li+1]||{name:'MAX',min:lv.min+500};
+  const pct=Math.min(100,Math.round((state.xp-lv.min)/(ln.min-lv.min)*100));
+  if(document.getElementById('levelDisplay'))document.getElementById('levelDisplay').textContent=lv.name;
+  if(document.getElementById('xpBarFill'))document.getElementById('xpBarFill').style.width=pct+'%';
+  if(document.getElementById('xpBarLabel'))document.getElementById('xpBarLabel').textContent=`${state.xp-lv.min}/${ln.min-lv.min} XP para ${ln.name}`;
+  if(document.getElementById('levelupTitle'))document.getElementById('levelupTitle').textContent='LEVEL UP — '+lv.name+'!';
+}
+function showLevelup(li){
+  const lv=LEVELS[li];
+  document.getElementById('levelupTitle').textContent='⚡ '+lv.name.toUpperCase();
+  document.getElementById('levelupSub').textContent='Você alcançou '+lv.xp+' XP. Continue!';
+  document.getElementById('levelupOverlay').classList.add('show');
+}
+function closeLevelup(){document.getElementById('levelupOverlay').classList.remove('show')}
+
+// ═══════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════
+function showScreen(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='cockpit')renderChamados();
+  if(id==='checklist')renderChecklist();
+  if(id==='jogo')renderMissions();
+  if(id==='relatorio')carregarRelatorio();
+}
+
+// ═══════════════════════════════════
+// PROJETOS
+// ═══════════════════════════════════
+const PROJETOS = [
+  {s:'SGTER',n:'Sistema de Gestão de Transporte Escolar e Rural',tipo:'sprint',e:'🚌'},
+  {s:'SIGEST',n:'Sistema de Gestão de Serviços Terceirizados',tipo:'sprint',e:'🏢'},
+  {s:'SEMPRE NOVA',n:'Sistema de Manutenção de Edificações Escolares',tipo:'sprint',e:'🏫'},
+  {s:'SGF',n:'Sistema de Gestão do Ambiente de Formação',tipo:'sustentacao',e:'📚'},
+  {s:'E-GESTÃO',n:'Sistema de Gestão de Repasses Financeiros',tipo:'sustentacao',e:'💰'},
+  {s:'ALIMENTAÇÃO',n:'Sistema de Alimentação Escolar',tipo:'sustentacao',e:'🥗'},
+  {s:'PES',n:'Programa de Estágio SEDU-ES',tipo:'pausado',e:'🎓'},
+  {s:'QUESTÕES',n:'Sistema Elaborador de Atividades',tipo:'retomando',e:'❓'},
+  {s:'PGP',n:'Plataforma de Gestão da Privacidade (LGPD)',tipo:'iniciando',e:'🔒'},
+  {s:'SISPC',n:'Sistema de Prestação de Contas',tipo:'iniciando',e:'📊'}
+];
+
+const TIPO_BADGE = {
+  sprint:'<span class="badge badge-sprint">SPRINT ATIVA</span>',
+  sustentacao:'<span class="badge badge-sus">SUSTENTAÇÃO</span>',
+  pausado:'<span class="badge badge-pause">PAUSADO</span>',
+  retomando:'<span class="badge badge-retoma">RETOMANDO</span>',
+  iniciando:'<span class="badge badge-inicia">INICIANDO</span>'
+};
+
+function renderProjetos(){
+  const el=document.getElementById('projList');
+  if(!el)return;
+  el.innerHTML=PROJETOS.map((p,i)=>{
+    const st=state.projStatus[p.s]||'green';
+    const dotColors={green:'var(--green)',yellow:'var(--yellow)',red:'var(--red)'};
+    return `<div class="proj-row ${st==='red'?'has-alert':''}" onclick="openProjNote('${p.s}')">
+      <div class="proj-emoji">${p.e}</div>
+      <div style="flex:1;min-width:0">
+        <div class="proj-name">${p.s}</div>
+        <div class="proj-full">${p.n}</div>
       </div>
-      <div class="semaforo-status" style="${sc.css}" id="semlabel-${p.sigla}">${sc.label}</div>
-      <div class="semaforo-nota" id="semnota-${p.sigla}">${nota||'Sem anotação'}</div>
+      <div class="proj-right">
+        ${TIPO_BADGE[p.tipo]}
+        <div class="traffic-dot" style="background:${dotColors[st]}" 
+          title="Clique para mudar status"
+          onclick="event.stopPropagation();cycleStatus('${p.s}')"></div>
+      </div>
     </div>`;
   }).join('');
 }
-function cycleSem(sigla){
-  const order=['ok','atencao','critico'];
-  const cur=localStorage.getItem('sem_'+sigla)||'ok';
+function cycleStatus(sigla){
+  const order=['green','yellow','red'];
+  const cur=state.projStatus[sigla]||'green';
   const next=order[(order.indexOf(cur)+1)%3];
-  localStorage.setItem('sem_'+sigla,next);
-  const sc=semColors[next];
-  document.getElementById('semdot-'+sigla).style.background=sc.dot;
-  document.getElementById('semlabel-'+sigla).textContent=sc.label;
-  document.getElementById('semlabel-'+sigla).style.cssText=sc.css+';font-family:Syne,sans-serif;font-size:.62rem;font-weight:600;margin-top:2px';
+  state.projStatus[sigla]=next;
+  save();renderProjetos();
+  gainXP(2);showXP('+2 XP — status atualizado');
+}
+function openProjNote(sigla){
+  const note=prompt(`📝 Anotação para ${sigla}:\n(deixe em branco para manter)`,state['note_'+sigla]||'');
+  if(note!==null){state['note_'+sigla]=note;save();}
 }
 
-// ── NOTA MODAL ──
-let currentNotaSigla='';
-function openNota(sigla){
-  currentNotaSigla=sigla;
-  document.getElementById('notaModalTitle').textContent='📝 '+sigla+' — Anotações';
-  document.getElementById('notaModalText').value=localStorage.getItem('nota_'+sigla)||'';
-  const hist=JSON.parse(localStorage.getItem('nota_hist_'+sigla)||'[]');
-  const hEl=document.getElementById('notaHist');
-  if(hist.length){
-    hEl.style.display='block';
-    hEl.innerHTML='<div style="padding:.5rem .9rem;font-family:Syne,sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">Histórico</div>'+hist.slice(-5).reverse().map(h=>`<div class="nota-hist-item"><div class="nota-hist-date">${h.date}</div>${h.text}</div>`).join('');
-  }else{hEl.style.display='none';}
-  document.getElementById('notaModal').classList.add('open');
+// ═══════════════════════════════════
+// CHAMADOS
+// ═══════════════════════════════════
+function addChamado(){
+  const nome=document.getElementById('chNome').value.trim();
+  const proj=document.getElementById('chProjeto').value;
+  const data=document.getElementById('chData').value;
+  if(!nome||!data)return alert('Preencha nome e data de abertura.');
+  state.chamados.push({id:Date.now(),nome,proj,data});
+  save();renderChamados();
+  document.getElementById('chNome').value='';
+  document.getElementById('chData').value='';
+  gainXP(5);showXP('+5 XP — chamado registrado');
 }
-function closeNota(){document.getElementById('notaModal').classList.remove('open');}
-function saveNota(){
-  const val=document.getElementById('notaModalText').value;
-  const sigla=currentNotaSigla;
-  localStorage.setItem('nota_'+sigla,val);
-  // histórico
-  const hist=JSON.parse(localStorage.getItem('nota_hist_'+sigla)||'[]');
-  if(val.trim()){
-    hist.push({date:new Date().toLocaleString('pt-BR'),text:val.trim()});
-    if(hist.length>20)hist.shift();
-    localStorage.setItem('nota_hist_'+sigla,JSON.stringify(hist));
-  }
-  // atualiza semáforo nota
-  const notaEl=document.getElementById('semnota-'+sigla);
-  if(notaEl)notaEl.textContent=val||'Sem anotação';
-  // atualiza textarea inline
-  const inlineEl=document.getElementById('nota-'+sigla);
-  if(inlineEl)inlineEl.value=val;
-  closeNota();
+function delChamado(id){
+  state.chamados=state.chamados.filter(c=>c.id!==id);
+  save();renderChamados();
 }
-
-// ── URGÊNCIAS ──
-function saveUrg(){
-  [1,2,3].forEach(n=>localStorage.setItem('urg'+n,document.getElementById('urg'+n).value));
-}
-function loadUrg(){
-  [1,2,3].forEach(n=>{const el=document.getElementById('urg'+n);if(el)el.value=localStorage.getItem('urg'+n)||'';});
-}
-function saveNotaDia(){localStorage.setItem('notaDia',document.getElementById('notaDia').value);}
-function loadNotaDia(){const el=document.getElementById('notaDia');if(el)el.value=localStorage.getItem('notaDia')||'';}
-
-// ── TIMELINE ──
-const tlSteps=[
-  {id:'requisitos',icon:'📋',label:'Levantamento de Requisitos',sub:'Pré-sprint',resp:'analista',respLabel:'Analista de Req.',detail:'O que acontece aqui:',items:['Analista de requisitos levanta ou refina as histórias de usuário','Detalha critérios de aceitação de cada item','Prepara o backlog com itens prontos para planning','Documenta no DevOps (Proposed)']},
-  {id:'aprovacao',icon:'✅',label:'Aprovação do Cliente / GTI',sub:'Pré-sprint',resp:'cliente',respLabel:'Cliente / GTI',detail:'O que acontece aqui:',items:['Cliente ou GTI revisa os requisitos levantados','Valida se os itens refletem a necessidade real','Pode pedir ajustes antes da planning','Dá o aceite formal para entrar na sprint']},
-  {id:'planning',icon:'🗓️',label:'Planning',sub:'Início da sprint',resp:'todos',respLabel:'Time completo',detail:'O que acontece aqui:',items:['Time define quais itens do backlog entram na sprint','Devs estimam o esforço de cada item','Itens mudam de Proposed para Active','Você como líder garante que a sprint está viável']},
-  {id:'dev',icon:'💻',label:'Desenvolvimento',sub:'Durante a sprint',resp:'dev',respLabel:'Desenvolvedores',detail:'O que acontece aqui:',items:['Devs trabalham nos itens com status Active','Daily acontece todo dia útil (standup rápido)','Devs fazem Code Review entre si','Itens prontos mudam para Awaiting QA']},
-  {id:'qa',icon:'🧪',label:'QA Testa',sub:'Durante a sprint',resp:'qa',respLabel:'QA',detail:'O que acontece aqui:',items:['QA executa os Test Cases criados para cada item','Se passou: status vai para Resolved','Se falhou: status vai para Revised (volta pro dev)','QA registra o resultado no Discussion do item']},
-  {id:'homologacao',icon:'🖥️',label:'Deploy / Homologação',sub:'Fim da sprint',resp:'dev',respLabel:'Dev + GTI',detail:'O que acontece aqui:',items:['Dev faz o deploy em ambiente de homologação','GTI / infraestrutura valida o ambiente','Time informa a entrega por e-mail e no DevOps','Cliente recebe acesso para validar antes da Review']},
-  {id:'review',icon:'🎯',label:'Review',sub:'Fim da sprint',resp:'todos',respLabel:'Time + Cliente',detail:'O que acontece aqui:',items:['Time apresenta as funcionalidades entregues ao cliente','Cliente valida e dá feedback','Itens aprovados são fechados (Closed) no DevOps','Eventuais ajustes são registrados como novos itens'],isKey:true},
-  {id:'retro',icon:'🔄',label:'Retrospectiva',sub:'Fim da sprint',resp:'lider',respLabel:'Time + Líder',detail:'O que acontece aqui:',items:['Time discute o que funcionou bem na sprint','Identificam pontos de melhoria no processo','Ações de melhoria são definidas','Líder facilita e registra as decisões']},
-  {id:'nextplanning',icon:'📋',label:'Nova Planning',sub:'Início da próxima sprint',resp:'todos',respLabel:'Time completo',detail:'O que acontece aqui:',items:['Ciclo recomeça com o backlog refinado','Itens não concluídos são reavaliados','Nova sprint começa com escopo claro','Líder confirma disponibilidade do time']}
-];
-let tlActiveStep=null;
-const tlProjColors={SGTER:'#F59E0B',SIGEST:'#7C3AED','SEMPRE NOVA':'#059669'};
-let tlActiveProj='SGTER';
-
-function renderTimeline(){
-  // project selector
-  const sel=document.getElementById('tlProjSelector');
-  sel.innerHTML=['SGTER','SIGEST','SEMPRE NOVA'].map(p=>`
-    <button class="tl-proj-btn${p===tlActiveProj?' active':''}" onclick="setTlProj('${p}',this)">${p}</button>`).join('');
-  // timeline
-  const tl=document.getElementById('timeline');
-  const color=tlProjColors[tlActiveProj]||'var(--accent)';
-  tl.innerHTML=tlSteps.map((s,i)=>`
-    <div class="tl-step${tlActiveStep===i?' active-step':''}" id="tls${i}" onclick="selectTlStep(${i})">
-      <div class="tl-icon" style="${tlActiveStep===i?'border-color:'+color+';background:'+color+'22':''}">
-        ${s.icon}
-      </div>
-      <div class="tl-label">${s.label}</div>
-      <div class="tl-sublabel">${s.sub}</div>
-      <div class="tl-resp resp-${s.resp}">${s.respLabel}</div>
-    </div>`).join('');
-  // connector lines color
-  tl.querySelectorAll('.tl-step').forEach((el,i)=>{
-    el.style.setProperty('--line-color',i<tlSteps.length-1?(tlActiveStep!==null&&i<tlActiveStep?color:'var(--border)'):'transparent');
-  });
-  if(tlActiveStep!==null)renderTlDetail(tlActiveStep);
-}
-function setTlProj(p,btn){
-  tlActiveProj=p;
-  document.querySelectorAll('.tl-proj-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTimeline();
-}
-function selectTlStep(i){
-  tlActiveStep=i;
-  renderTimeline();
-}
-function renderTlDetail(i){
-  const s=tlSteps[i];
-  const det=document.getElementById('tlDetail');
-  det.style.display='block';
-  document.getElementById('tlDetailTitle').textContent=s.icon+' '+s.label+' — '+s.detail;
-  document.getElementById('tlDetailList').innerHTML=s.items.map(it=>`<li><span>→</span>${it}</li>`).join('');
-}
-
-// ── CERIMÔNIAS ──
-function addDias(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
-function fmtDate(d){return d.toLocaleDateString('pt-BR');}
-function fmtDia(d){return DIAS[d.getDay()];}
-
-function calcCerimonias(){
-  const reviewStr=document.getElementById('reviewDate').value;
-  const dur=parseInt(document.getElementById('sprintDur').value);
-  const projSel=document.getElementById('cerProj').value;
-  const cont=document.getElementById('cerResults');
-  if(!reviewStr||!dur){
-    cont.innerHTML='<div class="card" style="color:var(--text3);font-size:.88rem;text-align:center;padding:1.8rem">Preencha a data da Review e a duração da sprint para calcular.</div>';
+function renderChamados(){
+  const el=document.getElementById('chamadosList');if(!el)return;
+  if(!state.chamados.length){
+    el.innerHTML='<div style="color:var(--text3);font-size:.8rem;text-align:center;padding:.5rem">Nenhum chamado cadastrado</div>';
     return;
   }
-  const review=new Date(reviewStr+'T12:00:00');
-  const planning=addDias(review,-(dur-1));
-  const retro=addDias(review,1);
-  const nextPlanning=addDias(review,2);
-  // skip weekend for retro and nextPlanning
-  const skipWknd=(d)=>{const nd=new Date(d);while(nd.getDay()===0||nd.getDay()===6)nd.setDate(nd.getDate()+1);return nd;};
-  const retroAdj=skipWknd(retro);
-  const nextPlanningAdj=skipWknd(nextPlanning.getDay()===0||nextPlanning.getDay()===6?skipWknd(nextPlanning):nextPlanning);
-  const dailyDays=[];
-  for(let i=1;i<dur-1;i++){
-    const d=addDias(planning,i);
-    if(d.getDay()!==0&&d.getDay()!==6)dailyDays.push(d);
-  }
-  const projs=projSel==='all'?['SGTER','SIGEST','SEMPRE NOVA']:[projSel];
-  const colors=tlProjColors;
-  cont.innerHTML=projs.map(proj=>`
-    <div class="cer-proj-result">
-      <div class="cer-proj-header"><span style="color:${colors[proj]||'#fff'}">●</span>${proj} — Sprint de ${dur+1} dias</div>
-      <div class="cer-dates-grid">
-        <div class="cer-date-cell"><div class="cer-date-label">📋 Planning</div><div class="cer-date-val">${fmtDate(planning)}</div><div class="cer-date-day">${fmtDia(planning)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">📅 Dailys</div><div class="cer-date-val">${dailyDays.length} dias úteis</div><div class="cer-date-day">${dailyDays.length?fmtDate(dailyDays[0])+' a ':''} ${dailyDays.length?fmtDate(dailyDays[dailyDays.length-1]):''}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">🎯 Review</div><div class="cer-date-val">${fmtDate(review)}</div><div class="cer-date-day">${fmtDia(review)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">🔄 Retrospectiva</div><div class="cer-date-val">${fmtDate(retroAdj)}</div><div class="cer-date-day">${fmtDia(retroAdj)}</div></div>
-        <div class="cer-date-cell"><div class="cer-date-label">📋 Próx. Planning</div><div class="cer-date-val">${fmtDate(nextPlanningAdj)}</div><div class="cer-date-day">${fmtDia(nextPlanningAdj)}</div></div>
-      </div>
-    </div>`).join('');
-  // save for calendar
-  localStorage.setItem('cerData',JSON.stringify({planning:planning.toISOString().split('T')[0],review:reviewStr,retro:retroAdj.toISOString().split('T')[0],nextPlanning:nextPlanningAdj.toISOString().split('T')[0],projs,dailyDays:dailyDays.map(d=>d.toISOString().split('T')[0])}));
-  renderCalendar();
-}
-
-// ── CALENDÁRIO ──
-let calYear=hoje.getFullYear(),calMonth=hoje.getMonth();
-function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}else if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
-function goToday(){calYear=hoje.getFullYear();calMonth=hoje.getMonth();renderCalendar();}
-
-function renderCalendar(){
-  document.getElementById('calTitle').textContent=`${MESES[calMonth]} ${calYear}`;
-  const firstDay=new Date(calYear,calMonth,1).getDay();
-  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
-  const cerData=JSON.parse(localStorage.getItem('cerData')||'null');
-  const events={};
-  function addEv(ds,label,color){if(!events[ds])events[ds]=[];events[ds].push({label,color});}
-  if(cerData){
-    cerData.projs.forEach(p=>{
-      const c=tlProjColors[p]||'#3B82F6';
-      addEv(cerData.planning,p+' Planning',c);
-      addEv(cerData.review,p+' Review',c);
-      addEv(cerData.retro,p+' Retro',c);
-      addEv(cerData.nextPlanning,p+' Planning',c);
-      (cerData.dailyDays||[]).forEach(ds=>addEv(ds,p+' Daily',c));
-    });
-  }
-  const dayNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  let html='<div class="cal-day-header" style="background:var(--text)"></div>'+dayNames.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
-  let dayCount=0,week=1;
-  html+=`<div class="cal-week-label">S${week}</div>`;
-  for(let i=0;i<firstDay;i++){html+='<div class="cal-cell empty"></div>';dayCount++;}
-  for(let d=1;d<=daysInMonth;d++){
-    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=d===hoje.getDate()&&calMonth===hoje.getMonth()&&calYear===hoje.getFullYear();
-    const dayEvents=events[ds]||[];
-    html+=`<div class="cal-cell${isToday?' today':''}">`;
-    html+=`<div class="cal-day-num">${d}</div>`;
-    dayEvents.forEach(ev=>{html+=`<div class="cal-event" style="background:${ev.color}22;color:${ev.color}">${ev.label}</div>`;});
-    html+='</div>';
-    dayCount++;
-    if(dayCount%7===0&&d<daysInMonth){week++;html+=`<div class="cal-week-label">S${week}</div>`;}
-  }
-  const rem=7-(dayCount%7);
-  if(rem<7)for(let i=0;i<rem;i++)html+='<div class="cal-cell empty"></div>';
-  document.getElementById('calGrid').innerHTML=html;
-}
-
-// ── CHECKLIST ──
-const clItems={sprint:[
-  {t:'SGTER — itens Active parados há mais de 3 dias?',tag:'SGTER'},
-  {t:'SGTER — itens Awaiting QA sem testador definido?',tag:'SGTER'},
-  {t:'SIGEST — itens Revised sem o dev avisado?',tag:'SIGEST'},
-  {t:'SIGEST — acúmulo de Resolved aguardando validação?',tag:'SIGEST'},
-  {t:'SEMPRE NOVA — itens Paused bloqueados?',tag:'SEMPRE NOVA'},
-  {t:'SEMPRE NOVA — itens Awaiting QA da sprint atual?',tag:'SEMPRE NOVA'}
-],inicio:[
-  {t:'QUESTÕES — backlog está sendo movimentado?',tag:'QUESTÕES'},
-  {t:'SISPC — Proposed acumulando sem priorização?',tag:'SISPC'},
-  {t:'PGP — progresso do módulo de RAT?',tag:'PGP'},
-  {t:'PES — ambiente configurado e time desbloqueado?',tag:'PES'}
-],sustentacao:[
-  {t:'SGF — chamado aberto há mais de 3 dias?',tag:'SGF'},
-  {t:'E-GESTÃO — item Paused sem justificativa?',tag:'E-GESTÃO'},
-  {t:'ALIMENTAÇÃO — bugs reportados pelas escolas?',tag:'ALIMENTAÇÃO'}
-]};
-function renderChecklist(){
-  Object.keys(clItems).forEach(tipo=>{
-    const ul=document.getElementById('cl-'+tipo);
-    const saved=JSON.parse(localStorage.getItem('cl_'+tipo)||'[]');
-    ul.innerHTML=clItems[tipo].map((item,i)=>`
-      <li class="daily-item${saved.includes(i)?' done':''}" onclick="toggleCheck('${tipo}',${i},this)">
-        <div class="daily-check">${saved.includes(i)?'✓':''}</div>
-        <div><div class="daily-text">${item.t}</div><div class="daily-tag">${item.tag}</div></div>
-      </li>`).join('');
+  const now=new Date();
+  const sorted=[...state.chamados].sort((a,b)=>{
+    const da=Math.floor((now-new Date(a.data))/(1000*60*60*24));
+    const db=Math.floor((now-new Date(b.data))/(1000*60*60*24));
+    return db-da;
   });
-}
-function toggleCheck(tipo,idx,el){
-  const saved=JSON.parse(localStorage.getItem('cl_'+tipo)||'[]');
-  const pos=saved.indexOf(idx);
-  if(pos===-1)saved.push(idx);else saved.splice(pos,1);
-  localStorage.setItem('cl_'+tipo,JSON.stringify(saved));
-  el.classList.toggle('done',saved.includes(idx));
-  el.querySelector('.daily-check').textContent=saved.includes(idx)?'✓':'';
-}
-function resetChecklist(){
-  Object.keys(clItems).forEach(t=>localStorage.removeItem('cl_'+t));
-  renderChecklist();
-}
-
-// ── REPORT ──
-function gerarReport(){
-  const data=document.getElementById('rData').value;
-  const periodo=document.getElementById('rPeriodo').value;
-  const sprint=document.getElementById('rSprint').value;
-  const sust=document.getElementById('rSustentacao').value;
-  const ini=document.getElementById('rInicio').value;
-  const riscos=document.getElementById('rRiscos').value;
-  const prox=document.getElementById('rProximos').value;
-  const dataFmt=data?new Date(data+'T12:00:00').toLocaleDateString('pt-BR'):'[data]';
-  const txt=`REPORT DE PROJETOS — SEDU-ES\nData: ${dataFmt}${periodo?' | Período: '+periodo:''}\n${'─'.repeat(48)}\n\n📌 SPRINT ATIVA\n${sprint||'(não informado)'}\n\n${'─'.repeat(48)}\n\n🔧 SUSTENTAÇÃO\n${sust||'(não informado)'}\n\n${'─'.repeat(48)}\n\n🚀 INÍCIO / RETOMADA\n${ini||'(não informado)'}\n\n${'─'.repeat(48)}\n\n⚠️ IMPEDIMENTOS E RISCOS\n${riscos||'Nenhum impedimento crítico.'}\n\n${'─'.repeat(48)}\n\n📅 PRÓXIMOS PASSOS\n${prox||'(não informado)'}`;
-  document.getElementById('reportTexto').value=txt;
-  document.getElementById('reportOutput').style.display='block';
-}
-function limparReport(){
-  ['rSprint','rSustentacao','rInicio','rRiscos','rProximos'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('reportOutput').style.display='none';
-}
-function copiarReport(){
-  const el=document.getElementById('reportTexto');el.select();document.execCommand('copy');
-  const btn=event.currentTarget;btn.textContent='✅ Copiado!';setTimeout(()=>btn.textContent='📋 Copiar',2000);
+  el.innerHTML=sorted.map(c=>{
+    const days=Math.max(0,Math.floor((now-new Date(c.data))/(1000*60*60*24)));
+    const cls=days<=1?'days-0':days<=3?'days-1':days<=7?'days-2':'days-3';
+    const col=days<=1?'var(--green)':days<=3?'var(--yellow)':days<=7?'var(--orange)':'var(--red)';
+    return `<div class="chamado-row ${cls}">
+      <div class="ch-days" style="color:${col}">${days}d</div>
+      <div style="flex:1">
+        <div class="ch-name">${c.nome}</div>
+        <div class="ch-proj">${c.proj||'—'} · aberto ${new Date(c.data).toLocaleDateString('pt-BR')}</div>
+      </div>
+      <button class="ch-del" onclick="delChamado(${c.id})" title="Remover">✕</button>
+    </div>`;
+  }).join('');
 }
 
-// ── QUIZ ──
-const allQuestions=[
-  {q:'O que significa o status "Awaiting QA" no DevOps?',opts:['Item foi aprovado pelo cliente','Item está aguardando ser testado pelo QA','Item está em desenvolvimento','Item foi recusado'],ans:1,exp:'Awaiting QA significa que o dev terminou e o item está na fila para ser testado. Sem testador definido é um problema!'},
-  {q:'Qual projeto gerencia os repasses financeiros às escolas?',opts:['SGTER','SGF','E-GESTÃO','SISPC'],ans:2,exp:'O E-GESTÃO (antigo Repasse Financeiro) controla todos os recursos financeiros repassados pelo Estado para as escolas (Conselhos de Escola).'},
-  {q:'O que é o SEGES?',opts:['Sistema de Gestão de Serviços','Sistema Estadual de Gestão Escolar','Sistema de Gestão de Edificações Escolares','Software de Gestão de Eventos'],ans:1,exp:'SEGES é o Sistema Estadual de Gestão Escolar — o sistema central da SEDU-ES com dados de alunos, escolas, professores e turmas. Muitos projetos integram com ele.'},
-  {q:'Em sprint ativa, quanto tempo é aceitável um item ficar em "Active" sem atualização?',opts:['1 dia','3 dias','5 dias','1 semana'],ans:1,exp:'Em sprint ativa, acima de 3 dias sem movimentação é sinal de alerta. Pergunte se há impedimento.'},
-  {q:'Qual o fluxo correto após a Review no seu time?',opts:['Review → Planning → Retro','Review → Retro → Nova Planning','Review → Deploy → Retro','Deploy → Review → Planning'],ans:1,exp:'No seu time o fluxo é: Deploy/Homologação → Entrega informada por e-mail + DevOps → Review com cliente → Retrospectiva → Nova Planning.'},
-  {q:'O que significa "Revised" no DevOps?',opts:['Item foi aprovado na revisão','Item foi devolvido para correção','Item está em revisão de código','Item foi revisado e fechado'],ans:1,exp:'Revised significa que o item foi analisado e precisa de ajuste — voltou para o dev corrigir. O dev precisa ser notificado imediatamente com o feedback no Discussion.'},
-  {q:'Qual projeto está sendo retomado após pausa da GTI?',opts:['SISPC','PGP','QUESTÕES','PES'],ans:2,exp:'O projeto QUESTÕES (Sistema Elaborador de Atividades) estava pausado por decisão da GTI e está sendo retomado.'},
-  {q:'O que é o ACESSO CIDADÃO nos projetos da SEDU-ES?',opts:['Sistema de cadastro de alunos','Sistema de autenticação único do Governo do ES','Plataforma de e-learning','Sistema de gestão de contratos'],ans:1,exp:'ACESSO CIDADÃO é o sistema de autenticação único (SSO) do Governo do ES. Todos os projetos da SEDU-ES usam para login via protocolo OAuth 2.0.'},
-  {q:'Qual é a prioridade de implementação do PGP?',opts:['RIPD → RAT → Relatórios → Dashboards','RAT → RIPD → Relatórios → Dashboards','Dashboards → RAT → RIPD → Relatórios','Relatórios → RAT → RIPD → Dashboards'],ans:1,exp:'O PGP segue a sequência: RAT (Registro de Atividades de Tratamento) → RIPD → Relatórios consolidados → Dashboards de indicadores.'},
-  {q:'O que é o E-DOCS nos projetos da SEDU-ES?',opts:['Sistema de controle de educação','Sistema de documentos eletrônicos do ES','Software de gestão de estágio','Plataforma de formação docente'],ans:1,exp:'E-DOCS é o sistema de documentos eletrônicos do Governo do ES. Usado no E-GESTÃO (Termo de Recebimento de Serviço) e no SISPC (assinatura digital).'},
-  {q:'Qual status indica que um item foi testado e aprovado?',opts:['Resolved','Closed','Passed','Active'],ans:2,exp:'Passed é o status do Test Case que indica que o teste foi executado e funcionou corretamente. Não confunda com Resolved (que é o status do work item após o teste passar).'},
-  {q:'Quantos alunos o SGTER transporta aproximadamente por dia?',opts:['10 mil','30 mil','50 mil','100 mil'],ans:2,exp:'O SGTER gerencia o transporte de aproximadamente 50 mil alunos por dia, em parceria com 70 municípios do Espírito Santo.'},
-  {q:'O que deve acontecer quando um item vai de Resolved para Revised?',opts:['Fechar o item automaticamente','O QA deve registrar o motivo no Discussion','Reabrir a sprint','Notificar o cliente'],ans:1,exp:'Quando um item vai para Revised, o QA DEVE registrar no Discussion o que encontrou de errado. Sem esse registro, o dev não sabe o que corrigir.'},
-  {q:'Qual cerimônia acontece imediatamente após a Review no seu time?',opts:['Planning','Daily','Retrospectiva','Refinamento'],ans:2,exp:'No seu time o fluxo de fim de sprint é: Review → Retrospectiva → Nova Planning.'},
-  {q:'O SEMPRE NOVA atende aproximadamente quantas escolas?',opts:['100','280','480','750'],ans:2,exp:'O SEMPRE NOVA (Sistema de Manutenção de Edificações Escolares) está preparado para atender aproximadamente 480 escolas sob gestão da GERFE.'}
+// ═══════════════════════════════════
+// URGÊNCIAS / NOTAS
+// ═══════════════════════════════════
+function salvarNotes(){
+  state.quickNotes=document.getElementById('quickNotes').value;
+  save();gainXP(3);showXP('+3 XP — anotação salva');
+  const s=document.getElementById('notesSaved');
+  s.style.display='inline';setTimeout(()=>s.style.display='none',2000);
+}
+function salvarMedicao(){
+  state.medicao={prazo:document.getElementById('medicaoPrazo').value,status:document.getElementById('medicaoStatus').value};
+  save();gainXP(5);showXP('+5 XP — medição registrada');
+  renderMedicao();
+}
+function renderMedicao(){
+  const el=document.getElementById('medicaoDisplay');if(!el)return;
+  if(!state.medicao||!state.medicao.prazo){el.innerHTML='';return;}
+  const now=new Date();const prazo=new Date(state.medicao.prazo);
+  const diff=Math.ceil((prazo-now)/(1000*60*60*24));
+  const color=diff<0?'var(--red)':diff<=2?'var(--orange)':'var(--green)';
+  el.innerHTML=`<span style="color:${color}">⏰ Prazo: ${new Date(state.medicao.prazo).toLocaleDateString('pt-BR')} 
+    (${diff<0?'atrasada '+Math.abs(diff)+'d':diff===0?'HOJE':diff+'d restantes'}) — ${state.medicao.status}</span>`;
+}
+
+// ═══════════════════════════════════
+// CALCULADORA SPRINT
+// ═══════════════════════════════════
+function calcularSprint(){
+  const inicio=new Date(document.getElementById('calcInicio').value);
+  const fim=new Date(document.getElementById('calcFim').value);
+  const devs=parseInt(document.getElementById('calcDevs').value)||0;
+  const hDia=parseInt(document.getElementById('calcHorasDia').value)||6;
+  const planejado=parseInt(document.getElementById('calcPlanejado').value)||0;
+  const bugs=parseInt(document.getElementById('calcBugs').value)||0;
+  const proj=document.getElementById('calcProj').value;
+  const spNum=document.getElementById('calcSprintNum').value;
+  if(!document.getElementById('calcInicio').value||!document.getElementById('calcFim').value)
+    return alert('Preencha as datas.');
+  let dias=0;const d=new Date(inicio);
+  while(d<=fim){const wd=d.getDay();if(wd>0&&wd<6)dias++;d.setDate(d.getDate()+1);}
+  const capacidade=dias*devs*hDia;
+  const disponivel=capacidade-bugs;
+  const pct=planejado>0?Math.round(disponivel/planejado*100):100;
+  const status=pct>=90?'✅ Sprint viável':pct>=70?'⚠️ Atenção — capacidade apertada':'🔴 Sprint sobrecarregada';
+  const color=pct>=90?'var(--green)':pct>=70?'var(--yellow)':'var(--red)';
+  const el=document.getElementById('calcResult');
+  el.style.display='block';
+  el.innerHTML=`
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem;
+      color:${color};margin-bottom:.8rem">${status}</div>
+    <div class="calc-metric"><span class="calc-label">📅 Dias úteis</span><span class="calc-value">${dias} dias</span></div>
+    <div class="calc-metric"><span class="calc-label">👥 Devs × Horas/dia</span><span class="calc-value">${devs} × ${hDia}h</span></div>
+    <div class="calc-metric"><span class="calc-label">⚡ Capacidade total</span><span class="calc-value">${capacidade}h</span></div>
+    <div class="calc-metric"><span class="calc-label">🐛 Reserva bugs</span><span class="calc-value" style="color:var(--orange)">-${bugs}h</span></div>
+    <div class="calc-metric"><span class="calc-label">✅ Capacidade disponível</span><span class="calc-value" style="color:var(--green)">${disponivel}h</span></div>
+    <div class="calc-metric"><span class="calc-label">📋 Horas planejadas</span><span class="calc-value">${planejado}h</span></div>
+    <div class="calc-metric"><span class="calc-label">📊 Ocupação da sprint</span>
+      <span class="calc-value" style="color:${color}">${planejado>0?Math.round(planejado/disponivel*100):0}%</span></div>
+    <div class="capacity-bar" style="margin-top:.5rem">
+      <div class="capacity-fill" style="width:${Math.min(100,planejado>0?Math.round(planejado/disponivel*100):0)}%;
+        background:${color}"></div>
+    </div>
+    <div style="margin-top:.8rem;font-size:.78rem;color:var(--text2)">
+      💡 <strong>Para o relatório:</strong> "${proj} Sprint ${spNum} — ${dias} dias úteis, capacidade ${disponivel}h. 
+      ${planejado} horas planejadas (${Math.round(planejado/disponivel*100)}% de ocupação)."
+    </div>`;
+  gainXP(5);showXP('+5 XP — sprint calculada');
+}
+
+// ═══════════════════════════════════
+// CICLO DA SPRINT
+// ═══════════════════════════════════
+const CICLO=[
+  {n:'01',t:'📋 Requisito nasce no SGR',c:'O analista cadastra a User Story no SGR (Sistema de Gestão de Requisitos). Com o número do requisito (ex: US #123), o dev vai criar a tarefa no Azure DevOps.',d:'SGR → criar Work Item no DevOps como User Story'},
+  {n:'02',t:'📅 Planning — entra na sprint',c:'Na reunião de Planning, a equipe escolhe quais requisitos entram na sprint. O Work Item muda de <strong>Proposed → Active</strong> e a sprint começa.',d:'DevOps: Boards → Sprints → Planning'},
+  {n:'03',t:'🔨 Dev trabalha — status Active',c:'O dev está codando. O Work Item fica em <strong>Active</strong>. Seu papel: verificar se está demorando mais que o esperado (sprint ativas: máx 3 dias por item).',d:'DevOps: ver Work Items com status Active há mais de 3 dias'},
+  {n:'04',t:'🔁 Dev terminou — Resolved',c:'Dev terminou o código. Muda para <strong>Resolved</strong>. Agora precisa de teste. Se ninguém testar, fica parado aqui — fique de olho!',d:'DevOps: filtrar Resolved sem tester atribuído'},
+  {n:'05',t:'🧪 QA testa — Awaiting QA',c:'O testador (QA) pega o item. Status muda para <strong>Awaiting QA</strong>. Se encontrar bug, volta para Active. Se passou, vai para Closed.',d:'DevOps: Boards → Sprints → ver coluna Awaiting QA'},
+  {n:'06',t:'✅ Aprovado — Closed',c:'QA aprovou. Item vai para <strong>Closed</strong>. Essa é a única entrega que conta de verdade — itens Closed que você vai listar no relatório semanal.',d:'DevOps: filtrar Closed nesta sprint para o relatório'},
+  {n:'07',t:'🎬 Review — demonstração',c:'No final da sprint, o time apresenta o que foi feito para o cliente. Você precisa confirmar: todos os itens que entrarão na demo estão Closed?',d:'CP: registrar itens entregues. Wiki: nota de release'},
+  {n:'08',t:'📦 Deploy — código vai para produção',c:'O código é publicado. Você deve verificar: a Wiki do projeto foi atualizada com nota de release, parecer de qualidade e informações de acesso?',d:'DevOps: Wiki → Nota de Release / Parecer de Qualidade'},
+  {n:'09',t:'📝 Retro + Medição',c:'Retrospectiva: o time discute o que melhorar. A medição do mês é fechada. Você deve garantir que a medição está disponível até o 2º dia útil.',d:'CP: fechar medição. Cliente 360: atualizar highlights'}
 ];
 
-let quizQuestions=[],quizIndex=0,quizScore=0,quizAnswered=false;
-function startQuiz(){
-  quizQuestions=[...allQuestions].sort(()=>Math.random()-.5).slice(0,5);
-  quizIndex=0;quizScore=0;renderQuiz();
+function renderCiclo(){
+  const el=document.getElementById('cicloSteps');if(!el)return;
+  el.innerHTML=CICLO.map(s=>`
+    <div class="ciclo-step">
+      <div class="ciclo-num">${s.n}</div>
+      <div class="ciclo-body">
+        <div class="ciclo-title">${s.t}</div>
+        <div class="ciclo-desc">${s.c}</div>
+        <div class="ciclo-devops">📍 ${s.d}</div>
+      </div>
+    </div>`).join('');
 }
-function renderQuiz(){
-  const wrap=document.getElementById('quizWrap');
-  if(quizIndex>=quizQuestions.length){
-    const pct=Math.round((quizScore/quizQuestions.length)*100);
-    const msgs=[[0,49,'Continue estudando! Revise o glossário e os cartões dos projetos. 💪'],[50,74,'Bom progresso! Você está pegando o jeito. Mais um quiz! 📈'],[75,89,'Muito bem! Você está dominando o conteúdo. 🌟'],[90,100,'Excelente! Você está pronta para qualquer reunião! 🏆']];
-    const msg=msgs.find(m=>pct>=m[0]&&pct<=m[1])||msgs[3];
-    wrap.innerHTML=`<div class="quiz-result">
-      <div class="quiz-result-score">${quizScore}/${quizQuestions.length}</div>
-      <div style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-top:.3rem">${pct}% de acerto</div>
-      <div class="quiz-result-msg">${msg[2]}</div>
-      <div style="display:flex;gap:.8rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="startQuiz()">🔄 Novo Quiz</button>
-        <button class="btn btn-secondary" onclick="nav('glossario',document.querySelector('.nav-item:nth-child(14))'))">📖 Revisar Glossário</button>
+
+const STATUS_DEVOPS=[
+  {s:'Proposed',g:'Missão na fila',w:'Acúmulo = backlog não refinado',a:'Puxe para planning ou descarte'},
+  {s:'Active',g:'Em combate',w:'Sprint: >3d. Sustentação: >5d',a:'Verifique impedimentos com o dev'},
+  {s:'Resolved',g:'Dev terminou, aguardando teste',w:'>1 dia sem tester atribuído',a:'Cobre o QA para pegar o item'},
+  {s:'Awaiting QA',g:'No teste',w:'>2 dias sem movimento',a:'Pergunte ao QA o que está travando'},
+  {s:'Closed',g:'Missão cumprida ✅',w:'—',a:'Inclua no relatório semanal'},
+  {s:'Paused',g:'Missão congelada',w:'Qualquer pausa >1 dia',a:'Entenda o motivo. Mude prioridade ou remova da sprint'},
+  {s:'Revised',g:'Voltou com correção',w:'Dev não notificado',a:'Confirme que o dev viu o feedback do QA'}
+];
+
+function renderStatusTable(){
+  const el=document.getElementById('statusTableBody');if(!el)return;
+  el.innerHTML=STATUS_DEVOPS.map(s=>`
+    <tr>
+      <td><span class="status-name">${s.s}</span></td>
+      <td><span class="status-game">${s.g}</span></td>
+      <td><span class="status-when">${s.w}</span><br><span class="status-action">${s.a}</span></td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════
+// RELATÓRIO
+// ═══════════════════════════════════
+let sprintReqEntries=[];
+let devEntries=[];
+
+function addReqEntry(tipo){
+  const id='req_'+Date.now();
+  sprintReqEntries.push(id);
+  const el=document.getElementById('reqs-sprint-entries');
+  const div=document.createElement('div');
+  div.className='sprint-entry';div.id=id;
+  div.innerHTML=`
+    <button class="btn-rem-entry" onclick="removeEntry('${id}','req')">✕</button>
+    <div class="sprint-entry-header">
+      <select class="cer-input" style="background:var(--panel3);border:1px solid var(--border2);
+        color:var(--text);padding:.35rem .6rem;border-radius:var(--rsm);font-size:.82rem">
+        ${PROJETOS.filter(p=>p.tipo==='sprint').map(p=>`<option>${p.s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row trio">
+      <div class="form-group">
+        <label>Itens Proposed (backlog)</label>
+        <input type="number" placeholder="Ex: 12" min="0">
+      </div>
+      <div class="form-group">
+        <label>Itens Active (dev)</label>
+        <input type="number" placeholder="Ex: 4" min="0">
+      </div>
+      <div class="form-group">
+        <label>Itens Closed (entregues)</label>
+        <input type="number" placeholder="Ex: 6" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Observação (opcional)</label>
+      <input type="text" placeholder="Ex: 2 itens bloqueados aguardando cliente">
+    </div>`;
+  el.appendChild(div);
+}
+
+function addDevEntry(){
+  const id='dev_'+Date.now();
+  devEntries.push(id);
+  const el=document.getElementById('dev-sprint-entries');
+  const div=document.createElement('div');
+  div.className='sprint-entry';div.id=id;
+  div.innerHTML=`
+    <button class="btn-rem-entry" onclick="removeEntry('${id}','dev')">✕</button>
+    <div class="sprint-entry-header">
+      <select style="background:var(--panel3);border:1px solid var(--border2);
+        color:var(--text);padding:.35rem .6rem;border-radius:var(--rsm);font-size:.82rem">
+        ${PROJETOS.filter(p=>p.tipo==='sprint').map(p=>`<option>${p.s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nº da Sprint</label>
+        <input type="text" placeholder="Ex: Sprint 8">
+      </div>
+      <div class="form-group">
+        <label>Status geral</label>
+        <select style="background:var(--panel3);border:1px solid var(--border2);color:var(--text);padding:.35rem .6rem;border-radius:var(--rsm);font-size:.82rem">
+          <option>Em andamento ✅</option>
+          <option>Com impedimento ⚠️</option>
+          <option>Atrasada 🔴</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Conteúdo em desenvolvimento (cite US/números)</label>
+      <textarea placeholder="Ex: US #45 Gestão de Rotas (Active), US #46 Cálculo de Custo (Awaiting QA), US #47 Relatório (Closed)"></textarea>
+    </div>`;
+  el.appendChild(div);
+}
+
+function removeEntry(id,tipo){
+  const el=document.getElementById(id);
+  if(el)el.remove();
+  if(tipo==='req')sprintReqEntries=sprintReqEntries.filter(x=>x!==id);
+  else devEntries=devEntries.filter(x=>x!==id);
+}
+
+function gerarRelatorio(){
+  const semana=document.getElementById('rSemana').value||'(semana não informada)';
+  const autor=document.getElementById('rAutor').value||'Larisse';
+  const sustentacao=document.getElementById('rSustentacao').value;
+  const entregas=document.getElementById('rEntregas').value;
+  const riscos=document.getElementById('rRiscos').value;
+  const proximos=document.getElementById('rProximos').value;
+
+  // Esteira de requisitos
+  let estReqs='';
+  document.querySelectorAll('#reqs-sprint-entries .sprint-entry').forEach(entry=>{
+    const proj=entry.querySelector('select')?.value||'';
+    const inputs=entry.querySelectorAll('input[type=number]');
+    const proposed=inputs[0]?.value||'0';
+    const active=inputs[1]?.value||'0';
+    const closed=inputs[2]?.value||'0';
+    const obs=entry.querySelector('input[type=text]')?.value||'';
+    estReqs+=`  • ${proj}: ${proposed} no backlog | ${active} em desenvolvimento | ${closed} entregues${obs?' — '+obs:''}\n`;
+  });
+  if(!estReqs)estReqs='  (não informado)\n';
+
+  // Dev entries
+  let devBlock='';
+  document.querySelectorAll('#dev-sprint-entries .sprint-entry').forEach(entry=>{
+    const sels=entry.querySelectorAll('select');
+    const proj=sels[0]?.value||'';
+    const statusGeral=sels[1]?.value||'';
+    const spNum=entry.querySelector('input[type=text]')?.value||'';
+    const conteudo=entry.querySelector('textarea')?.value||'';
+    devBlock+=`  ▶ ${proj} — ${spNum} — ${statusGeral}\n`;
+    if(conteudo)devBlock+=`    ${conteudo}\n`;
+    devBlock+='\n';
+  });
+  if(!devBlock)devBlock='  (não informado)\n';
+
+  const hoje=new Date().toLocaleDateString('pt-BR');
+  const texto=`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RELATÓRIO SEMANAL DE PROJETOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Semana: ${semana}
+Elaborado por: ${autor}
+Data de geração: ${hoje}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. ESTEIRA DE REQUISITOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJETOS COM SPRINT ATIVA:
+${estReqs}
+SUSTENTAÇÃO — CHAMADOS EM EVIDÊNCIA:
+${sustentacao||'  Sem chamados relevantes na semana.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. ENTREGAS DA SEMANA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${entregas||'  Sem entregas formais esta semana.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. ESTEIRA DE DESENVOLVIMENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${devBlock}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. RISCOS E IMPEDIMENTOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${riscos||'  Nenhum risco crítico identificado.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. PRÓXIMOS PASSOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${proximos||'  A definir.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Relatório gerado pelo sistema Missão SEDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+  document.getElementById('reportText').textContent=texto;
+  document.getElementById('reportPreview').style.display='block';
+  document.getElementById('reportPreview').scrollIntoView({behavior:'smooth'});
+  gainXP(25);showXP('+25 XP — relatório gerado! 🎉');
+}
+
+function copiarRelatorio(){
+  const txt=document.getElementById('reportText').textContent;
+  navigator.clipboard.writeText(txt).then(()=>showXP('✅ Copiado!'));
+}
+function salvarRelatorio(){
+  state.relatorio={
+    semana:document.getElementById('rSemana').value,
+    autor:document.getElementById('rAutor').value,
+    sustentacao:document.getElementById('rSustentacao').value,
+    entregas:document.getElementById('rEntregas').value,
+    riscos:document.getElementById('rRiscos').value,
+    proximos:document.getElementById('rProximos').value
+  };
+  save();showXP('💾 Rascunho salvo');gainXP(3);
+}
+function carregarRelatorio(){
+  if(!state.relatorio)return;
+  const r=state.relatorio;
+  if(r.semana)document.getElementById('rSemana').value=r.semana;
+  if(r.autor)document.getElementById('rAutor').value=r.autor;
+  if(r.sustentacao)document.getElementById('rSustentacao').value=r.sustentacao;
+  if(r.entregas)document.getElementById('rEntregas').value=r.entregas;
+  if(r.riscos)document.getElementById('rRiscos').value=r.riscos;
+  if(r.proximos)document.getElementById('rProximos').value=r.proximos;
+}
+
+// ═══════════════════════════════════
+// JOGO — MISSÕES
+// ═══════════════════════════════════
+const MISSIONS=[
+  {id:'m01',icon:'🏠',title:'O que é o Azure DevOps?',xp:30,
+    concept:`O <strong>Azure DevOps</strong> é a "sala de guerra" do seu time de desenvolvimento. Dentro dele você encontra tudo que o time usa para trabalhar.\n\nPense assim: se o projeto fosse uma construção de casa, o Azure DevOps seria a <strong>planta, a lista de tarefas, o diário de obra e o almoxarifado</strong> — tudo num lugar só.\n\nO que você vai usar no dia a dia:\n• <strong>Boards</strong> → quadro de tarefas (igual post-it mas digital)\n• <strong>Sprints</strong> → tarefas desta quinzena/mês\n• <strong>Wiki</strong> → documentação, notas de release\n• <strong>Repos</strong> → código-fonte (você não precisa mexer aqui)`,
+    tip:`📍 <strong>Para acessar:</strong> dev.azure.com → organização CRP → projeto (ex: SGTER). Você vai ver o menu lateral com Boards, Repos, Wiki...`,
+    q:'No Azure DevOps, onde você vê as tarefas em andamento do time?',
+    opts:['Repos → Commits','Boards → Sprints','Pipelines → Builds','Wiki → Home'],ans:1,
+    exp:'Boards → Sprints mostra o quadro da sprint atual com todas as tarefas e seus status.'
+  },
+  {id:'m02',icon:'📋',title:'Work Items — o que são tarefas?',xp:30,
+    concept:`No Azure DevOps, cada tarefa tem um nome especial: <strong>Work Item</strong>.\n\nExistem tipos diferentes:\n• <strong>User Story (US)</strong> → uma funcionalidade que o usuário quer. Ex: "Como aluno, quero ver meu resultado de atividade"\n• <strong>Task</strong> → uma subtarefa técnica. Ex: "Criar endpoint de resultado"\n• <strong>Bug</strong> → algo que quebrou e precisa ser corrigido\n• <strong>Feature</strong> → um agrupamento de User Stories relacionadas\n\nNo relatório, quando você mencionar "US #45", está referenciando o número de identificação de uma User Story.`,
+    tip:'📍 <strong>Para achar:</strong> Boards → Backlogs → você verá a lista de User Stories. Boards → Work Items → filtre por tipo, status, projeto.',
+    q:'Uma funcionalidade nova pedida pelo cliente (ex: "tela de login") seria cadastrada como qual tipo de Work Item?',
+    opts:['Bug','Task','User Story','Feature'],ans:2,
+    exp:'User Story representa uma funcionalidade do ponto de vista do usuário: "Como [ator], quero [ação] para [benefício]".'
+  },
+  {id:'m03',icon:'🔄',title:'O ciclo de status — da fila à entrega',xp:40,
+    concept:`Cada Work Item passa por fases. Isso é o que você mais vai monitorar:\n\n<strong>Proposed</strong> → Missão na fila de espera\n<strong>Active</strong> → Dev está trabalhando agora\n<strong>Resolved</strong> → Dev terminou, esperando teste\n<strong>Awaiting QA</strong> → Testador pegou o item\n<strong>Closed</strong> → ✅ Entregue e aprovado\n<strong>Paused</strong> → Parou por algum motivo\n<strong>Revised</strong> → Voltou com correção\n\nA sua missão como gestora: garantir que nada fique "preso" num status por muito tempo sem justificativa.`,
+    tip:'📍 <strong>Regra prática:</strong> Todo item em Active há mais de 3 dias em sprint ativa merece uma pergunta ao dev na daily.',
+    q:'Um item está há 5 dias em "Resolved" sem testador. O que isso significa?',
+    opts:['Está tudo certo, é normal demorar','O dev ainda não terminou','O QA não pegou o item para testar — precisa cobrar','O item foi cancelado'],ans:2,
+    exp:'Resolved significa que o dev terminou, mas está aguardando o QA testar. Se passar muito tempo, o QA precisa ser acionado.'
+  },
+  {id:'m04',icon:'📅',title:'Sprint — o que é e como ler',xp:40,
+    concept:`<strong>Sprint</strong> é um ciclo de trabalho com data de início e fim definidas. A maioria dos times trabalha com sprints de 2 semanas.\n\nDentro de uma sprint:\n• <strong>Planning</strong> → equipe define quais tarefas entram\n• <strong>Daily</strong> → reunião rápida diária (15 min): o que fiz, o que vou fazer, tem impedimento?\n• <strong>Review</strong> → apresentação do que foi feito (você assiste e confirma entregas)\n• <strong>Retro</strong> → time discute como melhorar\n\nVocê precisa saber: qual sprint está ativa agora? Quantos itens foram fechados?`,
+    tip:'📍 <strong>Para ver:</strong> Boards → Sprints → selecione o projeto → você verá a sprint atual com todos os itens e colunas de status.',
+    q:'Na Review, o time apresentou 3 funcionalidades. O que você deve fazer?',
+    opts:['Só assistir, não precisa registrar nada','Confirmar quais User Stories foram Closed e registrar no relatório','Aprovar o código no Repos','Criar novos Work Items para a próxima sprint'],ans:1,
+    exp:'Na Review você confirma o que foi entregue (Closed) e registra no relatório semanal como entregas da sprint.'
+  },
+  {id:'m05',icon:'🧪',title:'Testes — como saber se está sendo feito?',xp:40,
+    concept:`O <strong>QA (Quality Assurance)</strong> é o testador do time. Ele pega itens Resolved e executa os testes.\n\nComo verificar se os testes estão ocorrendo:\n1. No Azure DevOps → Boards → Sprint atual → filtre itens em "Awaiting QA"\n2. Veja se o campo "Assigned to" tem um testador atribuído\n3. Se tiver item em Awaiting QA há mais de 2 dias → pergunte ao QA na daily\n\nPlano de teste (<strong>Test Case</strong>):\nNo Azure DevOps → Test Plans → você verá os planos de teste criados. Se não houver Test Cases criados para uma sprint, os testes não estão formalizados.`,
+    tip:'📍 <strong>Verificação rápida:</strong> Boards → Sprints → quantos itens estão em "Awaiting QA"? Algum está há mais de 2 dias? Se sim, cobre o QA.',
+    q:'Como você sabe se o QA está fazendo as classificações corretas de bugs?',
+    opts:['Pergunta na daily se está classificando','Verifica no Azure DevOps → Boards → Work Items se os bugs têm prioridade e severidade preenchidas','Lê o código no Repos','Não precisa verificar, o QA sabe o que faz'],ans:1,
+    exp:'No DevOps, bugs devem ter Prioridade (1-4) e Severidade preenchidas. Sem isso, o QA não classificou corretamente.'
+  },
+  {id:'m06',icon:'📖',title:'Wiki — seu diário de bordo',xp:30,
+    concept:`A <strong>Wiki</strong> do Azure DevOps é onde fica a documentação do projeto. Você precisa garantir que após cada deploy, o time atualiza:\n\n• <strong>Nota de Release</strong> → o que foi publicado nesta versão\n• <strong>Parecer de Qualidade</strong> → o QA aprovou? Teve ressalvas?\n• <strong>Informações de Acesso</strong> → URL do sistema, usuários de teste\n• <strong>Equipe do Projeto</strong> → quem é dev, quem é QA, quem é LT\n\nSe a Wiki não está atualizada, a medição pode ter problemas e o cliente fica sem visibilidade.`,
+    tip:'📍 <strong>Para acessar:</strong> Azure DevOps → menu lateral → Wiki. Verifique se existe uma página para a última sprint/release.',
+    q:'A sprint terminou, o código foi publicado. Qual documentação deve existir na Wiki?',
+    opts:['Nada, a Wiki é opcional','Nota de Release e Parecer de Qualidade, no mínimo','Só o código-fonte do projeto','Lista de bugs encontrados'],ans:1,
+    exp:'Nota de Release (o que foi publicado) e Parecer de Qualidade (QA aprovou?) são mínimo obrigatório após cada deploy.'
+  },
+  {id:'m07',icon:'🔗',title:'CP, SGR e Cliente 360 — os sistemas da CRP',xp:40,
+    concept:`A CRP tem seus próprios sistemas que você usa junto com o DevOps:\n\n<strong>SGR (Sistema de Gestão de Requisitos)</strong> → onde os requisitos nascem, antes de ir ao DevOps. Você confere se os requisitos estão bem escritos e organizados.\n\n<strong>CP (Controle de Projetos)</strong> → gestão interna: horas dos devs, planejamento de sprints, entregas do mês, medições. Você confere aqui se as horas estão lançadas e se os saldos estão dentro do limite (alerta: +24h positivo ou negativo).\n\n<strong>Cliente 360</strong> → visão completa do cliente. Relatório semanal automático, pendências (issues) e riscos (risks) cadastrados.`,
+    tip:'📍 <strong>Rotina semanal:</strong> Segunda → CP (horas). Quarta → SGR (requisitos em ordem?). Sexta → Cliente 360 (relatório) + DevOps (sprint ok?).',
+    q:'No CP, um desenvolvedor tem saldo de +30 horas positivas. O que você deve fazer?',
+    opts:['Nada, é sinal de produtividade','Realizar planejamento — saldo acima de +24h precisa ser justificado e redistribuído','Demitir o desenvolvedor','Cadastrar as horas extras no DevOps'],ans:1,
+    exp:'Saldo acima de +24h (positivo ou negativo) é um alerta no CP. É preciso entender a causa e planejar para normalizar.'
+  },
+  {id:'m08',icon:'📊',title:'Sustentação × Sprint — diferença prática',xp:35,
+    concept:`Seus 10 projetos têm dois ritmos diferentes:\n\n<strong>Sprint (SGTER, SIGEST, SEMPRE NOVA)</strong>:\n• Trabalho em ciclos de 2 semanas\n• Você acompanha o sprint board todo dia\n• Itens Active não podem ficar mais de 3 dias parados\n• Tem Planning, Review, Retro\n\n<strong>Sustentação (SGF, E-GESTÃO, ALIMENTAÇÃO)</strong>:\n• Não tem sprint — trabalha por demanda (chamados)\n• Você acompanha o volume de chamados abertos\n• Itens Active podem ficar até 5 dias (ritmo mais tranquilo)\n• Fique atenta em períodos de alta: abertura de inscrições, fechamento de período`,
+    tip:'📍 <strong>Para sustentação:</strong> Azure DevOps → projeto de sustentação → Boards → Work Items → filtre por "Changed Date" desta semana para ver o que movimentou.',
+    q:'SGF é um projeto de sustentação. Como você acompanha se está tudo bem?',
+    opts:['Verifica sprint board diariamente igual ao SGTER','Monitora volume de chamados abertos e Move os que estão parados há mais de 5 dias','Faz Planning e Review semanais','Cria User Stories no SGR todo dia'],ans:1,
+    exp:'Sustentação não tem sprint. Você monitora chamados (Work Items) abertos e age quando um item está parado há mais de 5 dias.'
+  },
+  {id:'m09',icon:'📝',title:'Relatório semanal — passo a passo',xp:50,
+    concept:`Toda sexta você precisa entregar o relatório. Aqui está o passo a passo para coletar os dados:\n\n<strong>1. Esteira de requisitos</strong> → Azure DevOps → cada projeto → Boards → Backlogs → conte Proposed, Active, Closed\n\n<strong>2. Chamados em evidência</strong> → DevOps sustentação → Work Items → filter "Changed Date: this week"\n\n<strong>3. Entregas</strong> → DevOps sprint → Boards → Sprints → filter "Closed" → liste as User Stories com número\n\n<strong>4. Esteira de desenvolvimento</strong> → DevOps → Boards → Sprint atual → anote número da sprint, quais US estão em Active/Awaiting QA\n\n<strong>5. Riscos</strong> → Cliente 360 → aba Riscos → veja o que tem aberto`,
+    tip:'💡 <strong>Dica anti-estresse:</strong> Não espere sexta para coletar tudo. Use o sistema desta ferramenta para anotar durante a semana. Na sexta, só gera.',
+    q:'Você está coletando os dados para o relatório. Para saber quais User Stories foram entregues esta semana, onde você olha?',
+    opts:['SGR → lista de requisitos','CP → planejamento de sprints','Azure DevOps → Boards → Sprint atual → filtrar status Closed','Cliente 360 → highlights'],ans:2,
+    exp:'Work Items com status Closed na sprint atual = entregas confirmadas. É o único status que garante que passou por desenvolvimento E teste.'
+  },
+  {id:'m10',icon:'🏆',title:'MISSÃO FINAL — Rotina semanal completa',xp:80,
+    concept:`Você chegou na missão final. Aqui está sua <strong>rotina semanal completa</strong>:\n\n<strong>☀️ SEGUNDA</strong>\n• CP → verificar saldos de horas (+24h = agir)\n• DevOps → revisar status das sprints ativas\n• Urgências do dia cadastradas no cockpit\n\n<strong>🗓️ QUARTA</strong>\n• SGR → requisitos em ordem? Há novos?\n• DevOps → itens travados (Active >3d, Awaiting QA >2d)?\n• Cliente 360 → pendências abertas?\n\n<strong>📅 SEXTA</strong>\n• CP → sprints lançadas corretamente? Entregas registradas?\n• DevOps → Wiki atualizada? (nota de release, parecer QA)\n• GERAR RELATÓRIO no sistema ← você está aqui!\n• Medição → disponível até 2º dia útil do mês`,
+    tip:'🎯 <strong>Você é a Comandante SEDU.</strong> Com esta rotina, você tem visibilidade de tudo. Nenhum projeto vai te pegar de surpresa.',
+    q:'É sexta-feira. O que você NÃO precisa fazer antes de gerar o relatório?',
+    opts:['Verificar itens Closed na sprint de cada projeto','Checar Wiki com nota de release','Aprovar o código no Repos (função do tech lead)','Verificar chamados abertos na sustentação'],ans:2,
+    exp:'Aprovar código (Merge/Pull Request) é função do Tech Lead ou desenvolvedor sênior, não da gestora de projetos. Você monitora status, não o código.'
+  }
+];
+
+let currentMission=null;
+
+function renderMissions(){
+  const el=document.getElementById('missionMap');if(!el)return;
+  el.innerHTML=MISSIONS.map((m,i)=>{
+    const done=!!state.missions[m.id];
+    const locked=i>0&&!state.missions[MISSIONS[i-1].id];
+    return `<div class="mission-card ${done?'done':''} ${locked?'locked':''}"
+      onclick="${locked?'':'openMission(\''+m.id+'\')'}" >
+      <div class="mc-num">MISSÃO ${m.id.replace('m','').padStart(2,'0')}</div>
+      <div class="mc-icon">${m.icon}</div>
+      <div class="mc-title">${m.title}</div>
+      <div class="mc-desc">${done?'✅ Concluída':'Clique para jogar'}</div>
+      <div class="mc-footer">
+        <span class="mc-xp">+${m.xp} XP</span>
+        ${done?'<span class="mc-check">✓</span>':''}
       </div>
     </div>`;
-    return;
-  }
-  const q=quizQuestions[quizIndex];
-  wrap.innerHTML=`
-    <div class="quiz-progress">${quizQuestions.map((_,i)=>`<div class="quiz-prog-dot${i<quizIndex?' done':i===quizIndex?' current':''}"></div>`).join('')}</div>
-    <div class="quiz-score">Questão ${quizIndex+1} de ${quizQuestions.length} · Pontos: ${quizScore}</div>
-    <div class="quiz-question">${q.q}</div>
-    <div class="quiz-options">
-      ${q.opts.map((o,i)=>`<button class="quiz-option" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+  }).join('');
+  const done=MISSIONS.filter(m=>state.missions[m.id]).length;
+  if(document.getElementById('missionCount'))
+    document.getElementById('missionCount').textContent=done+'/'+MISSIONS.length;
+}
+
+function openMission(id){
+  const m=MISSIONS.find(x=>x.id===id);if(!m)return;
+  currentMission=m;
+  const done=!!state.missions[m.id];
+  const ol=document.getElementById('lessonOverlay');
+  document.getElementById('lessonBox').innerHTML=`
+    <div class="lesson-header">
+      <div class="lesson-icon">${m.icon}</div>
+      <div>
+        <div class="lesson-title">MISSÃO ${m.id.replace('m','').padStart(2,'0')} — ${m.title}</div>
+        <div class="lesson-subtitle">+${m.xp} XP ao completar</div>
+      </div>
     </div>
-    <div class="quiz-feedback" id="qfeedback"></div>
-    <button class="btn btn-primary" id="qnextbtn" style="display:none" onclick="nextQuestion()">Próxima →</button>`;
+    <div class="lesson-concept">${m.concept.replace(/\n/g,'<br>')}</div>
+    <div class="lesson-tip">${m.tip}</div>
+    <div class="divider"></div>
+    <div class="quiz-q">🎯 TESTE RÁPIDO: ${m.q}</div>
+    <div class="quiz-opts" id="quizOpts">
+      ${m.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz('${id}',${i})">${['A','B','C','D'][i]}. ${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="quizFeedback"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;gap:.5rem">
+      <button class="btn btn-ghost" onclick="closeMission()">← Fechar</button>
+      <div id="missionNextBtn"></div>
+    </div>`;
+  if(done){
+    document.querySelectorAll('.quiz-opt').forEach((b,i)=>{
+      b.disabled=true;
+      if(i===m.ans)b.classList.add('correct');
+    });
+    const fb=document.getElementById('quizFeedback');
+    fb.className='quiz-feedback show ok';fb.textContent='✅ Já concluída! '+m.exp;
+    document.getElementById('missionNextBtn').innerHTML=`<button class="btn btn-g btn-sm" onclick="closeMission()">Fechar</button>`;
+  }
+  ol.classList.add('open');
 }
-function answerQuiz(i){
-  const q=quizQuestions[quizIndex];
-  const opts=document.querySelectorAll('.quiz-option');
-  const fb=document.getElementById('qfeedback');
-  opts.forEach(o=>o.disabled=true);
-  opts[q.ans].classList.add('correct');
-  if(i===q.ans){quizScore++;fb.textContent='✅ Correto! '+q.exp;fb.className='quiz-feedback correct';}
-  else{opts[i].classList.add('wrong');fb.textContent='❌ Incorreto. '+q.exp;fb.className='quiz-feedback wrong';}
-  document.getElementById('qnextbtn').style.display='block';
-}
-function nextQuestion(){quizIndex++;renderQuiz();}
 
-// ── DEVOPS STATUS ──
-const statuses=[
-  {name:'Active',tr:'Ativo',dot:'#3B82F6',meaning:'O dev está trabalhando neste item agora.',action:'warn',at:'Acima de 3 dias sem atualização (sprint): pergunte se há impedimento'},
-  {name:'Awaiting QA',tr:'Aguardando Teste',dot:'#F59E0B',meaning:'Dev terminou — aguardando teste do QA.',action:'danger',at:'Acima de 2 dias (sprint): cobre quem vai testar e quando'},
-  {name:'Resolved',tr:'Resolvido',dot:'#F97316',meaning:'Teste passou. Aguarda validação para fechar ou devolver.',action:'danger',at:'Acima de 1 dia (sprint): dev ou PO precisam fechar'},
-  {name:'Closed',tr:'Fechado',dot:'#22C55E',meaning:'Concluído e aceito. Nenhuma ação necessária.',action:'ok',at:'Nenhuma ação necessária ✓'},
-  {name:'Revised',tr:'Devolvido p/ correção',dot:'#EF4444',meaning:'Precisa de ajuste. Dev deve ser notificado imediatamente.',action:'danger',at:'Sem movimento no dia: dev não foi avisado — aja agora'},
-  {name:'Paused',tr:'Pausado',dot:'#EAB308',meaning:'Travado por impedimento. Em sprint ativa é alarme imediato.',action:'danger',at:'Em sprint: escale imediatamente'},
-  {name:'Proposed',tr:'Proposto',dot:'#94A3B8',meaning:'No backlog mas não aprovado para desenvolvimento.',action:'warn',at:'Acúmulo: solicite reunião de priorização'},
-  {name:'Refused',tr:'Recusado',dot:'#DC2626',meaning:'Não vai ser feito. Motivo DEVE estar no Discussion.',action:'warn',at:'Sem motivo registrado: cobre documentação'}
+function answerQuiz(id,ans){
+  const m=MISSIONS.find(x=>x.id===id);if(!m)return;
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach((b,i)=>{b.disabled=true;if(i===m.ans)b.classList.add('correct');else if(i===ans)b.classList.add('wrong');});
+  const fb=document.getElementById('quizFeedback');
+  const correct=ans===m.ans;
+  fb.className='quiz-feedback show '+(correct?'ok':'ko');
+  fb.textContent=(correct?'✅ Correto! ':'❌ Quase! Resposta: '+(m.opts[m.ans])+'. ')+m.exp;
+  if(!state.missions[id]){
+    state.missions[id]=true;
+    gainXP(correct?m.xp:Math.round(m.xp/2));
+    showXP('+'+(correct?m.xp:Math.round(m.xp/2))+' XP — '+(correct?'Perfeito!':'Boa tentativa!'));
+    save();renderMissions();
+  }
+  document.getElementById('missionNextBtn').innerHTML=`<button class="btn btn-g btn-sm" onclick="closeMission()">✓ Concluir missão</button>`;
+}
+function closeMission(){
+  document.getElementById('lessonOverlay').classList.remove('open');
+  renderMissions();
+}
+
+// ═══════════════════════════════════
+// CHECKLIST
+// ═══════════════════════════════════
+const CK_DATA=[
+  {id:'ck_cp1',sec:'⚙️ CP — Controle de Projetos',text:'Verificar saldos de horas: algum dev com +24h positivo ou negativo?',source:'CP → Horas → Saldos',xp:8},
+  {id:'ck_cp2',sec:'⚙️ CP — Controle de Projetos',text:'Planejamentos de sprints lançados corretamente?',source:'CP → Sprints',xp:8},
+  {id:'ck_cp3',sec:'⚙️ CP — Controle de Projetos',text:'Planejamentos de requisitos em ordem?',source:'CP → Requisitos',xp:8},
+  {id:'ck_cp4',sec:'⚙️ CP — Controle de Projetos',text:'Entregas do mês registradas?',source:'CP → Entregas',xp:8},
+  {id:'ck_cp5',sec:'⚙️ CP — Controle de Projetos',text:'Relatório semanal lançado (interno e cliente)?',source:'CP → Relatórios',xp:10},
+  {id:'ck_cp6',sec:'⚙️ CP — Controle de Projetos',text:'Highlights armazenados corretamente? (esteira + demais)',source:'CP → Highlights',xp:6},
+  {id:'ck_sgr1',sec:'📋 SGR — Sistema de Gestão de Requisitos',text:'Projetos com sprints têm entregas semanais?',source:'SGR → Dashboard de projetos',xp:10},
+  {id:'ck_sgr2',sec:'📋 SGR — Sistema de Gestão de Requisitos',text:'Quebra de requisitos feita da melhor forma pelo time?',source:'SGR → Requisitos ativos',xp:8},
+  {id:'ck_c360_1',sec:'👁️ Cliente 360',text:'Pendências atualizadas como issues no DevOps?',source:'Cliente 360 → Issues',xp:8},
+  {id:'ck_c360_2',sec:'👁️ Cliente 360',text:'Riscos cadastrados como risk no DevOps?',source:'Cliente 360 → Risks',xp:8},
+  {id:'ck_c360_3',sec:'👁️ Cliente 360',text:'Dashboard inicial com número dos requisitos conferido?',source:'Cliente 360 → Dashboard',xp:6},
+  {id:'ck_c360_4',sec:'👁️ Cliente 360',text:'Equipe de cada projeto atualizada? Mudanças informadas à gerência?',source:'Cliente 360 → Equipe',xp:6},
+  {id:'ck_dv1',sec:'🔵 DevOps — Azure',text:'Dashboard da sprint conferido? Itens travados identificados?',source:'DevOps → Boards → Sprints',xp:10},
+  {id:'ck_dv2',sec:'🔵 DevOps — Azure',text:'Wiki atualizada? Nota de release + parecer de qualidade?',source:'DevOps → Wiki',xp:10},
+  {id:'ck_dv3',sec:'🔵 DevOps — Azure',text:'Status de atividades acompanhados (Active >3d → agir)',source:'DevOps → Boards',xp:10},
+  {id:'ck_dv4',sec:'🔵 DevOps — Azure',text:'Bugs com classificação correta de prioridade/severidade (QAs)?',source:'DevOps → Work Items → Bugs',xp:8},
+  {id:'ck_med1',sec:'💳 Medições',text:'Medição finalizada dentro do prazo?',source:'CP + DevOps',xp:12},
+  {id:'ck_med2',sec:'💳 Medições',text:'Disponibilizada para validação até 2º dia útil?',source:'CP → Medições',xp:12}
 ];
-function renderDevopsStatus(){
-  document.getElementById('devopsStatusGrid').innerHTML=statuses.map(s=>`
-    <div class="status-card">
-      <div class="status-header"><div class="status-dot-big" style="background:${s.dot}"></div><div class="status-name">${s.name}</div><div class="status-translation">${s.tr}</div></div>
-      <div class="status-meaning">${s.meaning}</div>
-      <span class="status-action sa-${s.action}">${s.at}</span>
-    </div>`).join('');
+
+function renderChecklist(){
+  const el=document.getElementById('ckSections');if(!el)return;
+  const sections={};
+  CK_DATA.forEach(c=>{
+    if(!sections[c.sec])sections[c.sec]=[];
+    sections[c.sec].push(c);
+  });
+  let html='';
+  for(const sec in sections){
+    html+=`<div class="card" style="margin-bottom:.9rem">
+      <div class="card-title">${sec}</div>`;
+    sections[sec].forEach(c=>{
+      const done=!!state.checklist[c.id];
+      html+=`<div class="ck-item ${done?'done-ck':''}" onclick="toggleCk('${c.id}',${c.xp})">
+        <div class="ck-box">${done?'✓':''}</div>
+        <div style="flex:1">
+          <div class="ck-text">${c.text}</div>
+          <div class="ck-source">${c.source}</div>
+        </div>
+        <div class="ck-xp-tag">+${c.xp}xp</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  el.innerHTML=html;
+  updateRing();
+}
+function toggleCk(id,xp){
+  if(!state.checklist[id]){
+    state.checklist[id]=true;
+    gainXP(xp);showXP('+'+xp+' XP');
+  }else{
+    delete state.checklist[id];
+  }
+  save();renderChecklist();
+}
+function updateRing(){
+  const total=CK_DATA.length;
+  const done=CK_DATA.filter(c=>state.checklist[c.id]).length;
+  const pct=Math.round(done/total*100);
+  const circ=163.36;
+  const offset=circ-(circ*pct/100);
+  const ring=document.getElementById('ringCircle');
+  if(ring)ring.style.strokeDashoffset=offset;
+  if(document.getElementById('ringPct'))document.getElementById('ringPct').textContent=pct+'%';
+  const xpEarned=CK_DATA.filter(c=>state.checklist[c.id]).reduce((a,c)=>a+c.xp,0);
+  if(document.getElementById('ckXpEarned'))document.getElementById('ckXpEarned').textContent='+'+xpEarned+' XP ganhos';
+}
+function resetChecklist(){
+  if(!confirm('Reiniciar checklist? (XP não será removido)'))return;
+  state.checklist={};save();renderChecklist();
 }
 
-// ── GLOSSÁRIO ──
-const glossario=[
-  {t:'Sprint',d:'Período fixo de desenvolvimento (2 a 4 semanas) onde o time entrega um conjunto de funcionalidades. Projetos com sprint ativa: SGTER, SIGEST e SEMPRE NOVA.'},
-  {t:'Backlog',d:'Lista de todas as funcionalidades e tarefas do projeto que ainda precisam ser desenvolvidas, ordenadas por prioridade.'},
-  {t:'Planning',d:'Cerimônia no início da sprint onde o time decide quais itens entram na sprint e os devs estimam o esforço.'},
-  {t:'Review',d:'Cerimônia no final da sprint onde o time apresenta ao cliente o que foi desenvolvido e entregue.'},
-  {t:'Retrospectiva',d:'Cerimônia no final da sprint onde o time discute o que funcionou bem e o que pode melhorar no processo.'},
-  {t:'Daily (Standup)',d:'Reunião curta diária (10-15 min): o que fiz, o que vou fazer, há impedimentos?'},
-  {t:'QA (Quality Assurance)',d:'Profissional responsável pelos testes. Valida se o que foi desenvolvido funciona conforme o esperado.'},
-  {t:'Test Case',d:'Roteiro de teste documentado no DevOps descrevendo o que testar e o resultado esperado.'},
-  {t:'Homologação',d:'Ambiente separado de produção onde o cliente valida as funcionalidades antes de ir ao ar.'},
-  {t:'Discussion',d:'Aba dentro de cada item no DevOps onde o time registra comentários, pareceres, erros e decisões.'},
-  {t:'Work Item',d:'Qualquer tarefa, história de usuário ou bug registrado no Azure DevOps.'},
-  {t:'MVP (Mínimo Produto Viável)',d:'A versão mais simples do sistema que entrega valor ao usuário. É a primeira entrega dos projetos que estão iniciando.'},
-  {t:'SEGES',d:'Sistema Estadual de Gestão Escolar — sistema central com dados de alunos, escolas, professores e turmas. Muitos projetos integram com ele.'},
-  {t:'ACESSO CIDADÃO',d:'Sistema de autenticação único (SSO) do Governo do ES. Todos os projetos usam para login via protocolo OAuth 2.0.'},
-  {t:'E-DOCS',d:'Sistema de documentos eletrônicos do ES. Usado no E-GESTÃO (Termo de Recebimento) e no SISPC (assinatura digital).'},
-  {t:'SRE',d:'Superintendência Regional de Educação — as regionais que gerenciam as escolas em cada região do ES.'},
-  {t:'GTI',d:'Gerência de Tecnologia da Informação da SEDU-ES — área interna responsável por orientar e validar os projetos.'},
-  {t:'Tech Lead',d:'Desenvolvedor sênior que lidera tecnicamente o time, toma decisões de arquitetura e resolve problemas complexos.'},
-  {t:'SGR',d:'Sistema de Gestão de Requisitos — onde ficam documentados os requisitos dos projetos da CRP.'},
-  {t:'Code Review',d:'Revisão do código feita por outro desenvolvedor antes de o item ir para o QA. Garante qualidade e padrão técnico.'},
-  {t:'Deploy',d:'Processo de publicar o código desenvolvido em um ambiente (homologação ou produção).'},
-  {t:'Sustentação',d:'Fase onde não há desenvolvimento de novas funcionalidades — apenas correção de bugs e manutenção do que existe.'},
-  {t:'CRP Tecnologia',d:'A fábrica de software responsável pelo desenvolvimento dos projetos da SEDU-ES.'},
-  {t:'CEFOPE',d:'Centro de Formação dos Profissionais da Educação — área da SEDU-ES responsável pelos projetos SGF e PES.'},
-  {t:'GERFE',d:'Gerência de Recursos Físicos Escolares — área da SEDU-ES responsável pelo projeto SEMPRE NOVA.'}
-];
-function renderGlossario(){
-  document.getElementById('glossarioContent').innerHTML=glossario.map(g=>`<div class="gloss-item"><div class="gloss-term">${g.t}</div><div class="gloss-def">${g.d}</div></div>`).join('');
+// ═══════════════════════════════════
+// AUTOSAVE URGÊNCIAS E NOTAS
+// ═══════════════════════════════════
+function setupAutosave(){
+  const urg=document.getElementById('urgencias');
+  const notes=document.getElementById('quickNotes');
+  if(urg){
+    urg.value=state.urgencias||'';
+    urg.addEventListener('input',()=>{state.urgencias=urg.value;save();});
+  }
+  if(notes){
+    notes.value=state.quickNotes||'';
+  }
 }
 
-// ── PERGUNTAS ──
-const situacoes=[
-  {titulo:'🔵 Item parado no mesmo status há dias',perguntas:['Vi que o item [X] está em [status] desde [data]. Qual o status real e há impedimento?','Esse item está sem movimentação há [N] dias — tem algo travando? Posso ajudar?','Notei que o Discussion está vazio. Tem alguma dificuldade que não estou vendo?']},
-  {titulo:'🟡 Awaiting QA parado / falta de teste',perguntas:['Esse item está em Awaiting QA desde [data] e não vejo Test Case criado. Pode criar?','Quem vai testar o item [X] e qual a previsão?','O teste foi executado em homologação ou só em desenvolvimento local?']},
-  {titulo:'🟠 Falta de parecer / Discussion vazio',perguntas:['Por favor, registre o motivo no item do DevOps, aba Discussion.','O item foi de Resolved para Revised mas o Discussion está vazio. O QA pode registrar o que encontrou?','O item está Paused — pode registrar o motivo com previsão de retomada?']},
-  {titulo:'🔴 Acúmulo de Resolved sem validação',perguntas:['Vou fazer uma rodada de validação hoje às [hora]. Quem pode participar?','Tem [N] itens em Resolved desde [data]. Posso fechar os já validados?','Quais desses Resolved precisam de validação do cliente antes de fechar?']},
-  {titulo:'⛔ Item Paused em sprint',perguntas:['Esse item está Paused em sprint ativa — o que está impedindo?','A decisão para desbloqueá-lo está comigo, com o cliente ou com a GTI?','Qual o impacto desse Paused na entrega da sprint?']},
-  {titulo:'📊 Preparando report para a chefe',perguntas:['Qual o percentual de itens concluídos desta sprint até agora?','Tem algum risco que impacta a entrega que eu ainda não sei?','Qual foi a principal entrega desta semana para destacar no report?','Há decisão pendente do cliente impedindo o avanço?']}
-];
-function renderPerguntas(){
-  document.getElementById('perguntasContent').innerHTML=situacoes.map(s=>`
-    <div class="card" style="margin-bottom:.9rem">
-      <div class="proj-section-title" style="font-size:.8rem;margin-bottom:.7rem">${s.titulo}</div>
-      <ul class="questions-list">${s.perguntas.map(q=>`<li><span>💬</span><em>"${q}"</em></li>`).join('')}</ul>
-    </div>`).join('');
-}
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+load();
+renderProjetos();
+renderCiclo();
+renderStatusTable();
+renderChamados();
+renderMedicao();
+setupAutosave();
+carregarRelatorio();
+updateXPBar();
 
-// ── INIT ──
-renderProjects();
-renderSemaforo();
-renderDevopsStatus();
-renderChecklist();
-renderGlossario();
-renderPerguntas();
-renderCalendar();
-renderTimeline();
-startQuiz();
-loadUrg();
-loadNotaDia();
+// Set today's date as default for chamados
+document.getElementById('chData').value=new Date().toISOString().split('T')[0];
 </script>
 </body>
 </html>
